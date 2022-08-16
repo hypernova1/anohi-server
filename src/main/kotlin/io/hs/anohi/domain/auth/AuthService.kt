@@ -23,7 +23,6 @@ class AuthService(
         val authentication: Authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(loginForm.email, loginForm.password)
         )
-
         SecurityContextHolder.getContext().authentication = authentication
 
         return jwtTokenProvider.generateToken(authentication)

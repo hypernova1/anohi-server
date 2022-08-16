@@ -2,13 +2,19 @@ spring:
   jpa:
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
     show-sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MariaDB53Dialect
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/anohi?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 1111
+    driver-class-name: org.mariadb.jdbc.Driver
 
 logging:
   level:
@@ -16,6 +22,6 @@ logging:
       hibernate:
         type: info
 
-app:
-  jwtSecret: MorgothIsMelchor
+key:
+  jwtSecret: anohironniejamesdiorobhalfoldkarstenjagerdavidvincent
   jwtExpirationInMs: 6048000

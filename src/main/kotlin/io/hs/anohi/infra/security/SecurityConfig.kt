@@ -78,9 +78,8 @@ class SecurityConfig(
                 "/**/*.js")
             .permitAll()
             .and()
-            .antMatcher("/v1/**")
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/v1/accounts")
+            .antMatchers(HttpMethod.POST, "/v1/accounts", "/v1/auth")
             .permitAll()
             .anyRequest()
             .hasRole("USER");

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("accounts")
+@RequestMapping("/v1/accounts")
 class AccountController(
     @Autowired
     private val accountService: AccountService

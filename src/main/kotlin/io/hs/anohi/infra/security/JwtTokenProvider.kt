@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -20,10 +22,10 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class JwtTokenProvider(
-    @Value("\${app.jwtSecret")
+    @Value("\${key.jwtSecret}")
     private var jwtSecret: String? = null,
 
-    @Value("\${app.jwtExpirationInMs}")
+    @Value("\${key.jwtExpirationInMs}")
     private var jwtExpirationInMs: Long = 0
 ) {
 
@@ -31,20 +33,21 @@ class JwtTokenProvider(
 
 
     fun generateToken(authentication: Authentication): String {
-
         val claims = HashMap<String, Any>()
         claims["roles"] = authentication.authorities
+
+        val keyBytes = Decoders.BASE64.decode(jwtSecret)
+        val key = Keys.hmacShaKeyFor(keyBytes)
 
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(authentication.name)
             .setExpiration(Date(Date().time + TimeUnit.HOURS.toMillis(jwtExpirationInMs)))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }
 
     fun getAuthentication(token: String): Authentication? {
-
         val tokenBody = Jwts.parser()
             .setSigningKey(jwtSecret)
             .parseClaimsJws(token)
