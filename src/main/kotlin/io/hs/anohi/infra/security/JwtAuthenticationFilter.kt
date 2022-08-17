@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StringUtils
 import org.springframework.web.client.HttpClientErrorException.Unauthorized
 import org.springframework.web.filter.OncePerRequestFilter
@@ -12,6 +13,7 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Transactional
 class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     @Autowired
@@ -35,6 +37,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     ) {
         try {
             val jwt = this.getJwtFromRequest(request)
+            print(jwt)
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validationToken(jwt!!)) {
                 val email = jwtTokenProvider.getEmailFromJwt(jwt)
 

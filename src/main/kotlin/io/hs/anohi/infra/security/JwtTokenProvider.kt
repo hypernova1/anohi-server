@@ -1,5 +1,6 @@
 package io.hs.anohi.infra.security
 
+import io.hs.anohi.domain.auth.RefreshTokenRepository
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -9,12 +10,14 @@ import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
+import java.security.Principal
 import java.security.SignatureException
 import java.util.Date
 import java.util.LinkedList
@@ -22,27 +25,38 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class JwtTokenProvider(
+    @Autowired
+    private val refreshTokenRepository: RefreshTokenRepository,
+
     @Value("\${key.jwtSecret}")
     private var jwtSecret: String? = null,
-
-    @Value("\${key.jwtExpirationInMs}")
-    private var jwtExpirationInMs: Long = 0
 ) {
 
     private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java.name)
 
 
     fun generateToken(authentication: Authentication): String {
-        val claims = HashMap<String, Any>()
-        claims["roles"] = authentication.authorities
+        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 1;
+        val principal = authentication.principal as UserPrincipal
+        return createToken(principal.email, tokenInvalidTime, authentication.authorities)
+    }
 
+    fun generateRefreshToken(authentication: Authentication): String {
+        val principal = authentication.principal as UserPrincipal
+        val tokenInvalidTime: Long = 1000L * 60 * 60 * 24 * 3
+        return this.createToken(principal.email, tokenInvalidTime, authentication.authorities)
+    }
+
+    fun createToken(name: String, expiredTime: Long, roles: MutableCollection<out GrantedAuthority>): String {
+        val claims = HashMap<String, Any>()
+        claims["roles"] = roles;
         val keyBytes = Decoders.BASE64.decode(jwtSecret)
         val key = Keys.hmacShaKeyFor(keyBytes)
 
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(authentication.name)
-            .setExpiration(Date(Date().time + TimeUnit.HOURS.toMillis(jwtExpirationInMs)))
+            .setSubject(name)
+            .setExpiration(Date(Date().time + TimeUnit.HOURS.toMillis(expiredTime)))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }

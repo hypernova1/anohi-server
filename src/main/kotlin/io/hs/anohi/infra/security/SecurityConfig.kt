@@ -66,6 +66,12 @@ class SecurityConfig(
             .and()
             .csrf()
             .disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
         .authorizeRequests()
             .antMatchers("/",
                 "/favicon.ico",

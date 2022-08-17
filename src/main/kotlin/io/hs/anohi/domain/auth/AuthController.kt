@@ -1,6 +1,8 @@
 package io.hs.anohi.domain.auth
 
 import io.hs.anohi.domain.auth.payload.LoginForm
+import io.hs.anohi.domain.auth.payload.TokenRequest
+import io.hs.anohi.domain.auth.payload.TokenResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,12 +15,15 @@ import javax.validation.Valid
 class AuthController(private val authService: AuthService) {
 
     @PostMapping
-    fun login(@Valid @RequestBody loginForm: LoginForm): ResponseEntity<HashMap<String, String>> {
+    fun login(@Valid @RequestBody loginForm: LoginForm): ResponseEntity<TokenResponse> {
         val token = authService.login(loginForm)
 
-        val result = HashMap<String, String>();
-        result["token"] = token;
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(token)
+    }
+
+    @PostMapping("/token")
+    fun reissueToken(@Valid @RequestBody refreshToken: TokenRequest) {
+        authService.reissueToken(refreshToken);
     }
 
 }

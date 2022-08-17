@@ -24,4 +24,3 @@ logging:
 
 key:
   jwtSecret: anohironniejamesdiorobhalfoldkarstenjagerdavidvincent
-  jwtExpirationInMs: 6048000

@@ -4,6 +4,7 @@ import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.hs.anohi.infra.security.AuthAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -51,7 +52,6 @@ class AccountController(
 
     @GetMapping("/{id}")
     fun getUserDetail(@PathVariable id: Long): ResponseEntity<AccountDetail> {
-
         val account = accountService.findById(id)
 
         return ResponseEntity.ok(account)
