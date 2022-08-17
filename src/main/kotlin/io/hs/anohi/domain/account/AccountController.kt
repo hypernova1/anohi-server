@@ -27,9 +27,9 @@ class AccountController(
 ) {
     @PostMapping
     fun create(
-        @Valid @RequestBody accountJoinForm: AccountJoinForm
+        @RequestBody @Valid accountJoinForm: AccountJoinForm
     ): ResponseEntity<Any> {
-        val accountId = accountService.create(accountJoinForm);
+        val accountId = accountService.create(accountJoinForm)
 
         val location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -66,7 +66,7 @@ class AccountController(
         accountService.updateInfo(id, request)
         val account = accountService.findById(id)
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{id}")

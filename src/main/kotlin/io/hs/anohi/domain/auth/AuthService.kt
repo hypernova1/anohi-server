@@ -21,7 +21,7 @@ class AuthService(
     val jwtTokenProvider: JwtTokenProvider,
     val passwordEncoder: PasswordEncoder
 ) {
-    fun countByEmail(email: String) = accountRepository.countByEmail(email);
+    fun countByEmail(email: String) = accountRepository.countByEmail(email)
 
     fun login(loginForm: LoginForm): TokenResponse {
         val authentication: Authentication = authenticationManager.authenticate(
@@ -30,7 +30,7 @@ class AuthService(
         SecurityContextHolder.getContext().authentication = authentication
 
         val accessToken = jwtTokenProvider.generateToken(authentication)
-        val refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+        val refreshToken = jwtTokenProvider.generateRefreshToken(authentication)
         val authorities = authentication.authorities
         return TokenResponse(accessToken, refreshToken)
     }

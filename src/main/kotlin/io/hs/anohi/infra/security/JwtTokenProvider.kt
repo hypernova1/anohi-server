@@ -36,7 +36,7 @@ class JwtTokenProvider(
 
 
     fun generateToken(authentication: Authentication): String {
-        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 1;
+        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 1
         val principal = authentication.principal as UserPrincipal
         return createToken(principal.email, tokenInvalidTime, authentication.authorities)
     }
@@ -49,7 +49,7 @@ class JwtTokenProvider(
 
     fun createToken(name: String, expiredTime: Long, roles: MutableCollection<out GrantedAuthority>): String {
         val claims = HashMap<String, Any>()
-        claims["roles"] = roles;
+        claims["roles"] = roles
         val keyBytes = Decoders.BASE64.decode(jwtSecret)
         val key = Keys.hmacShaKeyFor(keyBytes)
 

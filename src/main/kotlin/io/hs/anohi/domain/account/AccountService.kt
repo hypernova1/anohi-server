@@ -7,6 +7,7 @@ import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleName
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.infra.exception.AccountNotFoundException
+import io.hs.anohi.infra.exception.DuplicatedEmailException
 import io.hs.anohi.infra.exception.RoleNotFoundException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -23,6 +24,11 @@ class AccountService(
 ) {
 
     fun create(accountJoinForm: AccountJoinForm) {
+        val existsEmail = accountRepository.existsByEmail(accountJoinForm.email)
+        if (existsEmail) {
+            throw DuplicatedEmailException()
+        }
+
         accountJoinForm.password = passwordEncoder.encode(accountJoinForm.password)
         val account = Account.from(accountJoinForm)
         val role = roleRepository.findByName(RoleName.ROLE_USER)

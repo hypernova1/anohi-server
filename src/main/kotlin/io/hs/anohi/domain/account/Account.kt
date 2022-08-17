@@ -42,16 +42,16 @@ class Account(
     companion object {
         fun from(joinForm: AccountJoinForm): Account {
             val account = Account()
-            account.name = joinForm.name;
-            account.password = joinForm.password;
-            account.email = joinForm.email;
-            account.isActive = true;
+            account.name = joinForm.name
+            account.password = joinForm.password
+            account.email = joinForm.email
+            account.isActive = true
 
-            return account;
+            return account
         }
     }
 
     fun setRole(role: Role) {
-        this.roles.add(role);
+        this.roles.add(role)
     }
 }

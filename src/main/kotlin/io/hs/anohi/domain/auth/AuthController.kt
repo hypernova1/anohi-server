@@ -23,7 +23,7 @@ class AuthController(private val authService: AuthService) {
 
     @PostMapping("/token")
     fun reissueToken(@Valid @RequestBody refreshToken: TokenRequest) {
-        authService.reissueToken(refreshToken);
+        authService.reissueToken(refreshToken)
     }
 
 }

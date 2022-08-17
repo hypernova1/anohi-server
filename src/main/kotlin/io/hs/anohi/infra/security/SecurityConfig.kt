@@ -88,7 +88,7 @@ class SecurityConfig(
             .antMatchers(HttpMethod.POST, "/v1/accounts", "/v1/auth")
             .permitAll()
             .anyRequest()
-            .hasRole("USER");
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java);
+            .hasRole("USER")
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }
