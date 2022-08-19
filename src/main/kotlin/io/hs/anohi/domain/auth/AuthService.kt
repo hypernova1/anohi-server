@@ -5,6 +5,7 @@ import io.hs.anohi.domain.account.AccountRepository
 import io.hs.anohi.domain.auth.payload.TokenRequest
 import io.hs.anohi.domain.auth.payload.TokenResponse
 import io.hs.anohi.infra.exception.RefreshTokenNotFoundException
+import io.hs.anohi.infra.exception.UnauthorizedException
 import io.hs.anohi.infra.security.JwtTokenProvider
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -35,9 +36,21 @@ class AuthService(
         return TokenResponse(accessToken, refreshToken)
     }
 
-    fun reissueToken(request: TokenRequest) {
-        val refreshToken = this.refreshTokenRepository.findByAccountEmail(request.email)
-            .orElseThrow { RefreshTokenNotFoundException() }
+    fun reissueToken(request: TokenRequest): TokenResponse {
+        val existsRefreshToken = this.refreshTokenRepository.existsByAccountEmail(request.email)
+        if (!existsRefreshToken) {
+            throw RefreshTokenNotFoundException()
+        }
 
+        val isValid = jwtTokenProvider.validationToken(request.refreshToken)
+        if (!isValid) {
+            throw UnauthorizedException();
+        }
+
+        val authentication = SecurityContextHolder.getContext().authentication
+        val accessToken = jwtTokenProvider.generateToken(authentication)
+        val refreshToken = jwtTokenProvider.generateRefreshToken(authentication)
+
+        return TokenResponse(accessToken, refreshToken)
     }
 }

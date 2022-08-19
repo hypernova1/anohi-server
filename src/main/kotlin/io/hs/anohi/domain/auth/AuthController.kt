@@ -17,13 +17,13 @@ class AuthController(private val authService: AuthService) {
     @PostMapping
     fun login(@Valid @RequestBody loginForm: LoginForm): ResponseEntity<TokenResponse> {
         val token = authService.login(loginForm)
-
         return ResponseEntity.ok(token)
     }
 
     @PostMapping("/token")
-    fun reissueToken(@Valid @RequestBody refreshToken: TokenRequest) {
-        authService.reissueToken(refreshToken)
+    fun reissueToken(@Valid @RequestBody refreshToken: TokenRequest): ResponseEntity<TokenResponse> {
+        val token = authService.reissueToken(refreshToken)
+        return ResponseEntity.ok(token);
     }
 
 }

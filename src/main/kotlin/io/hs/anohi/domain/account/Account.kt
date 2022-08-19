@@ -2,7 +2,7 @@ package io.hs.anohi.domain.account
 
 import io.hs.anohi.domain.auth.Role
 import io.hs.anohi.domain.diary.Diary
-import io.hs.anohi.domain.BaseEntity
+import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import javax.persistence.CascadeType

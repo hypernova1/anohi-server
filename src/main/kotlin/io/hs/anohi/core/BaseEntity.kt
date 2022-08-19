@@ -1,4 +1,4 @@
-package io.hs.anohi.domain
+package io.hs.anohi.core
 
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import org.springframework.data.annotation.CreatedDate

@@ -1,6 +1,6 @@
 package io.hs.anohi.domain.auth
 
-import io.hs.anohi.domain.BaseEntity
+import io.hs.anohi.core.BaseEntity
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated

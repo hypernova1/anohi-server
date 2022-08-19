@@ -1,6 +1,6 @@
 package io.hs.anohi.domain.auth
 
-import io.hs.anohi.domain.BaseEntity
+import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
 import javax.persistence.Column
 import javax.persistence.Entity

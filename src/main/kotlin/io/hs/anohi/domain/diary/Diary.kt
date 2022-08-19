@@ -1,6 +1,6 @@
 package io.hs.anohi.domain.diary
 
-import io.hs.anohi.domain.BaseEntity
+import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
 import javax.persistence.Entity
 import javax.persistence.ManyToOne
