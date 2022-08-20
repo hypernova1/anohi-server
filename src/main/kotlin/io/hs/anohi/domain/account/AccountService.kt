@@ -69,4 +69,11 @@ class AccountService(
         accountRepository.delete(account)
     }
 
+    fun existsEmail(email: String) {
+        val existsAccount = accountRepository.existsByEmail(email)
+        if (!existsAccount) {
+            throw NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT)
+        }
+    }
+
 }

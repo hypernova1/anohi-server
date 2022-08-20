@@ -4,7 +4,6 @@ import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
-import io.hs.anohi.infra.security.AuthAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -38,6 +37,12 @@ class AccountController(
             .toUri()
 
         return ResponseEntity.created(location).build()
+    }
+
+    @GetMapping("/email/{email}/existence")
+    fun existsEmail(@PathVariable email: String): ResponseEntity<Any> {
+        accountService.existsEmail(email)
+        return ResponseEntity.noContent().build()
     }
 
     @GetMapping

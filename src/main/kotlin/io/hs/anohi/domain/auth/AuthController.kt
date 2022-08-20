@@ -4,6 +4,8 @@ import io.hs.anohi.domain.auth.payload.LoginForm
 import io.hs.anohi.domain.auth.payload.TokenRequest
 import io.hs.anohi.domain.auth.payload.TokenResponse
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -20,10 +22,10 @@ class AuthController(private val authService: AuthService) {
         return ResponseEntity.ok(token)
     }
 
-    @PostMapping("/token")
+    @PatchMapping("/token")
     fun reissueToken(@Valid @RequestBody refreshToken: TokenRequest): ResponseEntity<TokenResponse> {
         val token = authService.reissueToken(refreshToken)
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(token)
     }
 
 }

@@ -52,7 +52,7 @@ class AuthService(
 
         val isValid = jwtTokenProvider.validationToken(request.refreshToken)
         if (!isValid) {
-            throw UnauthorizedException(ErrorCode.INVALID_TOKEN);
+            throw UnauthorizedException(ErrorCode.INVALID_TOKEN)
         }
 
         val account = accountRepository.findByEmail(request.email)
