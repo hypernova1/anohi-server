@@ -62,7 +62,10 @@ class AuthService(
             SimpleGrantedAuthority(it.name.toString())
         }
 
-        val accessToken = jwtTokenProvider.generateToken(request.email, authorities)
+        val authentication = jwtTokenProvider.getAuthentication(request.refreshToken)
+            ?: throw UnauthorizedException(ErrorCode.CANNOT_FOUND_ACCOUNT)
+
+        val accessToken = jwtTokenProvider.generateToken(request.email, authentication.authorities)
         val refreshToken = jwtTokenProvider.generateRefreshToken(request.email, authorities)
 
         return TokenResponse(accessToken, refreshToken)
