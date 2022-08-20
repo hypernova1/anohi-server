@@ -17,7 +17,7 @@ class CustomUserDetailsService(
         val account = accountRepository.findByEmail(email)
             .orElseThrow { AccountNotFoundException(email) }
 
-        return UserPrincipal.create(account)
+        return UserAccount(account)
     }
 
 }

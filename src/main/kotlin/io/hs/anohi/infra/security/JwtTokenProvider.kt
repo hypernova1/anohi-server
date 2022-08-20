@@ -29,12 +29,12 @@ class JwtTokenProvider(
 
 
     fun generateToken(email: String, authorities: MutableCollection<out GrantedAuthority>): String {
-        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 1
+        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 7
         return createToken(email, tokenInvalidTime, authorities)
     }
 
     fun generateRefreshToken(email: String, authorities: MutableCollection<out GrantedAuthority>): String {
-        val tokenInvalidTime: Long = 1000L * 60 * 60 * 24 * 3
+        val tokenInvalidTime: Long = 1000L * 60 * 60 * 24 * 30
         return this.createToken(email, tokenInvalidTime, authorities)
     }
 

@@ -1,6 +1,6 @@
 package io.hs.anohi.core
 
-import io.hs.anohi.infra.exception.HttpException
+import io.hs.anohi.core.exception.HttpException
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler

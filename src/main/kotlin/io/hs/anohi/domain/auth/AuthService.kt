@@ -5,8 +5,8 @@ import io.hs.anohi.domain.auth.payload.LoginForm
 import io.hs.anohi.domain.account.AccountRepository
 import io.hs.anohi.domain.auth.payload.TokenRequest
 import io.hs.anohi.domain.auth.payload.TokenResponse
-import io.hs.anohi.infra.exception.NotFoundException
-import io.hs.anohi.infra.exception.UnauthorizedException
+import io.hs.anohi.core.exception.NotFoundException
+import io.hs.anohi.core.exception.UnauthorizedException
 import io.hs.anohi.infra.security.JwtTokenProvider
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -25,7 +25,6 @@ class AuthService(
     val authenticationManager: AuthenticationManager,
     val jwtTokenProvider: JwtTokenProvider,
 ) {
-    fun countByEmail(email: String) = accountRepository.countByEmail(email)
 
     fun login(loginForm: LoginForm): TokenResponse {
         val authentication: Authentication = authenticationManager.authenticate(

@@ -1,4 +1,4 @@
-package io.hs.anohi.infra.exception
+package io.hs.anohi.core.exception
 
 import io.hs.anohi.core.ErrorCode
 import org.springframework.http.HttpStatus

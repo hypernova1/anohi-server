@@ -1,7 +1,7 @@
 package io.hs.anohi.infra.security
 
 import io.hs.anohi.core.ErrorCode
-import io.hs.anohi.infra.exception.UnauthorizedException
+import io.hs.anohi.core.exception.UnauthorizedException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -38,7 +38,6 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     ) {
         try {
             val jwt = this.getJwtFromRequest(request)
-            print(jwt)
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validationToken(jwt!!)) {
                 val email = jwtTokenProvider.getEmailFromJwt(jwt)
 
