@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
-import java.security.Principal
 import java.security.SignatureException
 import java.util.Date
 import java.util.LinkedList
@@ -35,16 +34,14 @@ class JwtTokenProvider(
     private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java.name)
 
 
-    fun generateToken(authentication: Authentication): String {
+    fun generateToken(email: String, authorities: MutableCollection<out GrantedAuthority>): String {
         val tokenInvalidTime = 1000L * 60 * 60 * 24 * 1
-        val principal = authentication.principal as UserPrincipal
-        return createToken(principal.email, tokenInvalidTime, authentication.authorities)
+        return createToken(email, tokenInvalidTime, authorities)
     }
 
-    fun generateRefreshToken(authentication: Authentication): String {
-        val principal = authentication.principal as UserPrincipal
+    fun generateRefreshToken(email: String, authorities: MutableCollection<out GrantedAuthority>): String {
         val tokenInvalidTime: Long = 1000L * 60 * 60 * 24 * 3
-        return this.createToken(principal.email, tokenInvalidTime, authentication.authorities)
+        return this.createToken(email, tokenInvalidTime, authorities)
     }
 
     fun createToken(name: String, expiredTime: Long, roles: MutableCollection<out GrantedAuthority>): String {

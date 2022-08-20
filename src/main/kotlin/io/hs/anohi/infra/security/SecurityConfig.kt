@@ -85,7 +85,7 @@ class SecurityConfig(
             .permitAll()
             .and()
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/v1/accounts", "/v1/auth")
+            .antMatchers(HttpMethod.POST, "/v1/accounts", "/v1/auth", "/v1/auth/token")
             .permitAll()
             .anyRequest()
             .hasRole("USER")

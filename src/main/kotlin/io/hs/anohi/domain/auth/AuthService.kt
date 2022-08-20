@@ -11,9 +11,12 @@ import io.hs.anohi.infra.security.JwtTokenProvider
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class AuthService(
@@ -21,7 +24,6 @@ class AuthService(
     val refreshTokenRepository: RefreshTokenRepository,
     val authenticationManager: AuthenticationManager,
     val jwtTokenProvider: JwtTokenProvider,
-    val passwordEncoder: PasswordEncoder
 ) {
     fun countByEmail(email: String) = accountRepository.countByEmail(email)
 
@@ -31,9 +33,14 @@ class AuthService(
         )
         SecurityContextHolder.getContext().authentication = authentication
 
-        val accessToken = jwtTokenProvider.generateToken(authentication)
-        val refreshToken = jwtTokenProvider.generateRefreshToken(authentication)
-        val authorities = authentication.authorities
+        val accessToken = jwtTokenProvider.generateToken(authentication.name, authentication.authorities)
+        val refreshToken = jwtTokenProvider.generateRefreshToken(authentication.name, authentication.authorities)
+
+        val account = accountRepository.findByEmail(loginForm.email)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
+
+        refreshTokenRepository.save(RefreshToken(refreshToken, account))
+
         return TokenResponse(accessToken, refreshToken)
     }
 
@@ -48,9 +55,15 @@ class AuthService(
             throw UnauthorizedException(ErrorCode.INVALID_TOKEN);
         }
 
-        val authentication = SecurityContextHolder.getContext().authentication
-        val accessToken = jwtTokenProvider.generateToken(authentication)
-        val refreshToken = jwtTokenProvider.generateRefreshToken(authentication)
+        val account = accountRepository.findByEmail(request.email)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
+
+        val authorities = account.roles.mapTo(LinkedList<GrantedAuthority>()) {
+            SimpleGrantedAuthority(it.name.toString())
+        }
+
+        val accessToken = jwtTokenProvider.generateToken(request.email, authorities)
+        val refreshToken = jwtTokenProvider.generateRefreshToken(request.email, authorities)
 
         return TokenResponse(accessToken, refreshToken)
     }
