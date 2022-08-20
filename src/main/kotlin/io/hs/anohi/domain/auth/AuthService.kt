@@ -1,10 +1,11 @@
 package io.hs.anohi.domain.auth
 
+import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.domain.auth.payload.LoginForm
 import io.hs.anohi.domain.account.AccountRepository
 import io.hs.anohi.domain.auth.payload.TokenRequest
 import io.hs.anohi.domain.auth.payload.TokenResponse
-import io.hs.anohi.infra.exception.RefreshTokenNotFoundException
+import io.hs.anohi.infra.exception.NotFoundException
 import io.hs.anohi.infra.exception.UnauthorizedException
 import io.hs.anohi.infra.security.JwtTokenProvider
 import org.springframework.security.authentication.AuthenticationManager
@@ -39,12 +40,12 @@ class AuthService(
     fun reissueToken(request: TokenRequest): TokenResponse {
         val existsRefreshToken = this.refreshTokenRepository.existsByAccountEmail(request.email)
         if (!existsRefreshToken) {
-            throw RefreshTokenNotFoundException()
+            throw NotFoundException(ErrorCode.CANNOT_FOUND_REFRESH_TOKEN)
         }
 
         val isValid = jwtTokenProvider.validationToken(request.refreshToken)
         if (!isValid) {
-            throw UnauthorizedException();
+            throw UnauthorizedException(ErrorCode.INVALID_TOKEN);
         }
 
         val authentication = SecurityContextHolder.getContext().authentication

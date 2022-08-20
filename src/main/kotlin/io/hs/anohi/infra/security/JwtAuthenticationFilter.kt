@@ -1,5 +1,6 @@
 package io.hs.anohi.infra.security
 
+import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.infra.exception.UnauthorizedException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -51,7 +52,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             }
         } catch (e: Exception) {
             logger.error("Could not set user authentication in security context, $e")
-            throw UnauthorizedException()
+            throw UnauthorizedException(ErrorCode.INVALID_TOKEN)
         }
         filterChain.doFilter(request, response)
     }

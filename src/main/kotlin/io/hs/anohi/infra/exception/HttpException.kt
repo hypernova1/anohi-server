@@ -1,0 +1,1 @@
+package io.hs.anohi.infra.exceptionimport io.hs.anohi.core.ErrorCodeopen class HttpException(    val status: Int,    val errorCode: ErrorCode,): RuntimeException() {}

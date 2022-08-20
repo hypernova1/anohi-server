@@ -1,0 +1,15 @@
+package io.hs.anohi.core
+
+enum class ErrorCode(val message: String, val code: String) {
+    CANNOT_FOUND_ACCOUNT("CANNOT_FOUND_ACCOUNT", ""),
+    CANNOT_FOUND_ROLE("CANNOT_FOUND_ROLE", ""),
+    CANNOT_FOUND_REFRESH_TOKEN("CANNOT_FOUND_REFRESH_TOKEN", ""),
+
+    CONFLICT_EMAIL("CONFLICT_EMAIL", ""),
+
+    INVALID_TOKEN("INVALID_TOKEN", ""),
+
+    REQUIRE_ARGUMENT_NOT_FOUND("REQUIRE_ARGUMENT_NOT_FOUND", ""),
+
+
+}
