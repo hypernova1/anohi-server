@@ -18,7 +18,11 @@ class ExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     protected fun handleHttpMessageNotReadableException(e: MethodArgumentNotValidException): ResponseEntity<Any> {
-        val errorResponse = ErrorResponse(ErrorCode.REQUIRE_ARGUMENT_NOT_FOUND.code, ErrorCode.REQUIRE_ARGUMENT_NOT_FOUND.message, "Required request body is missing")
+        val errorResponse = ErrorResponse(
+            ErrorCode.REQUIRE_ARGUMENT_NOT_FOUND.code,
+            ErrorCode.REQUIRE_ARGUMENT_NOT_FOUND.message,
+            "Required request body is missing"
+        )
         return ResponseEntity.status(422).body(errorResponse)
     }
 
