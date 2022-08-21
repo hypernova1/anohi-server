@@ -5,25 +5,21 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.EntityListeners
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.MappedSuperclass
+import javax.persistence.*
 
 @EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
-abstract class BaseEntity(
-
+abstract class BaseEntity {
     @Id
-    @GeneratedValue
-    var id: Long = 0,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    var id: Long = 0
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdDate: LocalDateTime? = null,
+    var createdDate: LocalDateTime? = null
 
     @LastModifiedDate
     @Column(updatable = false)
-    var updatedDate: LocalDateTime? = null,
-    )
+    var updatedDate: LocalDateTime? = null
+}

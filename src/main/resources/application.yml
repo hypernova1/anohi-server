@@ -20,9 +20,9 @@ logging:
   level:
     org:
       springframework:
-        web: DEBUG
+        web: debug
       hibernate:
-        type: info
+        type: trace
 
 key:
   jwtSecret: anohironniejamesdiorobhalfoldkarstenjagerdavidvincent

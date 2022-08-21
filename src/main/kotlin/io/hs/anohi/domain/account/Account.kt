@@ -8,31 +8,29 @@ import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 
 @Entity
-class Account(
+open class Account: BaseEntity() {
+
     @Column(unique = true)
-    var email: String = "",
+    var email: String = ""
 
     @Column
-    var name: String = "",
+    var name: String = ""
 
     @Column
-    var password: String = "",
+    var password: String = ""
 
     @OneToMany
-    var diaries: MutableList<Diary> = mutableListOf(),
+    var diaries: MutableList<Diary> = mutableListOf()
 
     @Column
-    var isActive: Boolean,
+    var isActive: Boolean = false
 
-    @OneToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()
-
-
-    ): BaseEntity() {
-    constructor() : this("", "", "", mutableListOf(), false) {}
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name
