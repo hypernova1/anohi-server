@@ -53,8 +53,7 @@ class AccountService(
     }
 
     @Transactional
-    fun updateInfo(id: Long, request: AccountUpdateForm) {
-
+    fun update(id: Long, request: AccountUpdateForm) {
         val account = accountRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 

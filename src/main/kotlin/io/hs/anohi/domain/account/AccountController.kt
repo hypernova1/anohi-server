@@ -68,7 +68,7 @@ class AccountController(
         @Valid @RequestBody request: AccountUpdateForm
     ): ResponseEntity<Any> {
 
-        accountService.updateInfo(id, request)
+        accountService.update(id, request)
         val account = accountService.findById(id)
 
         return ResponseEntity.ok().build()

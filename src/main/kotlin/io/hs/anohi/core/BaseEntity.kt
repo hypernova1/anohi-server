@@ -1,6 +1,5 @@
 package io.hs.anohi.core
 
-import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -13,17 +12,20 @@ import javax.persistence.MappedSuperclass
 
 @EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
-abstract class BaseEntity(
+abstract class BaseEntity {
 
     @Id
     @GeneratedValue
-    var id: Long = 0,
+    var id: Long = 0
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdDate: LocalDateTime? = null,
+    var createdDate: LocalDateTime? = null
 
     @LastModifiedDate
     @Column(updatable = false)
-    var updatedDate: LocalDateTime? = null,
-    )
+    var updatedDate: LocalDateTime? = null
+
+    @Column(nullable = true)
+    var deletedAt: LocalDateTime? = null
+}

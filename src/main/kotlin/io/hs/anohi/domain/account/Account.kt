@@ -5,12 +5,16 @@ import io.hs.anohi.domain.diary.Diary
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.Where
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
+@Where(clause = "deleted_at is null")
+@SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
 class Account(
     @Column(unique = true)
     var email: String = "",
