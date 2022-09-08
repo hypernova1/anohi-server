@@ -30,6 +30,7 @@ class AccountService(
         }
 
         accountJoinForm.password = passwordEncoder.encode(accountJoinForm.password)
+
         val account = Account.from(accountJoinForm)
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
@@ -41,7 +42,7 @@ class AccountService(
         val userList =
             accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
 
-        return userList.map { u -> AccountSummary(u.id, u.email, u.name) }
+        return userList.map { AccountSummary(it.id, it.email, it.name) }
     }
 
     fun findById(id: Long): AccountDetail {

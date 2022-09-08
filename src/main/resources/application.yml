@@ -9,6 +9,9 @@ spring:
         default_batch_fetch_size: 100
     show-sql: true
     database-platform: org.hibernate.dialect.MariaDB53Dialect
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #스웨거 설정ㅎ
 
   datasource:
     url: jdbc:mariadb://localhost:3306/anohi?serverTimezone=UTC&characterEncoding=UTF-8
@@ -20,9 +23,9 @@ logging:
   level:
     org:
       springframework:
-        web: DEBUG
+        web: debug
       hibernate:
-        type: info
+        type: trace
 
 key:
   jwtSecret: anohironniejamesdiorobhalfoldkarstenjagerdavidvincent

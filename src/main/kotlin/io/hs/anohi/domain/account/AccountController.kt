@@ -4,6 +4,8 @@ import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.swagger.annotations.ApiResponses
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,6 +26,7 @@ class AccountController(
     @Autowired
     private val accountService: AccountService
 ) {
+    @Operation(summary = "test hello", description = "hello api example")
     @PostMapping
     fun create(
         @RequestBody @Valid accountJoinForm: AccountJoinForm
@@ -48,7 +51,8 @@ class AccountController(
     @GetMapping
     fun getUsers(
         @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue ="10") size: Int): ResponseEntity<List<AccountSummary>> {
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<List<AccountSummary>> {
 
         val accountList = accountService.findAll(page, size)
 

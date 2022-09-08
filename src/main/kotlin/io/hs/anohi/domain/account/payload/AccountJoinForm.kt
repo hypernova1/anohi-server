@@ -6,14 +6,14 @@ import javax.validation.constraints.Size
 
 class AccountJoinForm(
 
-    @Email(message = "이메일 형식이 아닙니다.")
-    @NotBlank
+    @field:Email(message = "이메일 형식이 아닙니다.")
+    @field:NotBlank
     val email: String,
 
-    @NotBlank
+    @field:NotBlank
     val name: String,
 
-    @NotBlank
-    @Size(min = 4, max = 20)
+    @field:NotBlank
+    @field:Size(min = 4, max = 20)
     var password: String,
 )

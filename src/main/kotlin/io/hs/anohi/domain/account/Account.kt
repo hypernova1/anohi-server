@@ -10,33 +10,31 @@ import org.hibernate.annotations.Where
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 
 @Entity
 @Where(clause = "deleted_at is null")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
-class Account(
-    @Column(unique = true)
-    var email: String = "",
+class Account: BaseEntity() {
 
-    @Column
-    var name: String = "",
+    @Column(unique = true, nullable = false)
+    var email: String = ""
 
-    @Column
-    var password: String = "",
+    @Column(nullable = false)
+    var name: String = ""
+
+    @Column(nullable = false)
+    var password: String = ""
 
     @OneToMany
-    var diaries: MutableList<Diary> = mutableListOf(),
+    var diaries: MutableList<Diary> = mutableListOf()
 
-    @Column
-    var isActive: Boolean,
+    @Column(nullable = false)
+    var isActive: Boolean = false
 
-    @OneToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()
-
-
-    ): BaseEntity() {
-    constructor() : this("", "", "", mutableListOf(), false) {}
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name
