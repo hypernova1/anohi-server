@@ -3,6 +3,7 @@ package io.hs.anohi.domain.diary
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.diary.payload.DiaryRequest
+import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.Column
@@ -22,6 +23,11 @@ class Diary: BaseEntity() {
 
     @ManyToOne
     var account: Account? = null
+
+    fun update(diaryUpdateForm: DiaryUpdateForm) {
+        this.title = diaryUpdateForm.title ?: this.title
+        this.content = diaryUpdateForm.content ?: this.content
+    }
 
     companion object {
         fun of(diaryRequest: DiaryRequest, account: Account): Diary {

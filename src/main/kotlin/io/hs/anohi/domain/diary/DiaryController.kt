@@ -2,15 +2,10 @@ package io.hs.anohi.domain.diary
 
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.diary.payload.DiaryRequest
+import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.infra.security.AuthAccount
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.validation.Valid
 
@@ -33,9 +28,15 @@ class DiaryController(
         return ResponseEntity.created(location).build()
     }
 
-    @GetMapping
-    fun findAll() {
+    @PatchMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody diaryUpdateForm: DiaryUpdateForm, @AuthAccount account: Account) {
+        diaryService.update(id, diaryUpdateForm, account)
+    }
 
+    @GetMapping
+    fun findAll(@RequestParam(defaultValue = "1") page: Int,
+                @RequestParam(defaultValue = "10") size: Int) {
+        val diaries = diaryService.findAll(page, size);
     }
 
     @DeleteMapping("/{id}")

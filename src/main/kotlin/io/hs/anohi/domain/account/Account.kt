@@ -53,7 +53,7 @@ class Account: BaseEntity() {
         }
     }
 
-    fun setRole(role: Role) {
+    fun addRole(role: Role) {
         this.roles.add(role)
     }
 }

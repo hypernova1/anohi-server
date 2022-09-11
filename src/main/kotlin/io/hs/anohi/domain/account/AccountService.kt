@@ -23,7 +23,7 @@ class AccountService(
     private val passwordEncoder: PasswordEncoder,
 ) {
 
-    fun create(accountJoinForm: AccountJoinForm) {
+    fun create(accountJoinForm: AccountJoinForm): Account {
         val existsEmail = accountRepository.existsByEmail(accountJoinForm.email)
         if (existsEmail) {
             throw ConflictException(ErrorCode.CONFLICT_EMAIL)
@@ -32,11 +32,13 @@ class AccountService(
         accountJoinForm.password = passwordEncoder.encode(accountJoinForm.password)
 
         val account = Account.from(accountJoinForm)
+
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
-        account.setRole(role)
 
-        this.accountRepository.save(account)
+        account.addRole(role)
+
+        return this.accountRepository.save(account)
     }
     fun findAll(page: Int, size: Int): List<AccountSummary> {
         val userList =
