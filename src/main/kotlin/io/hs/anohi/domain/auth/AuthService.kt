@@ -16,9 +16,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
+@Transactional(readOnly = true)
 class AuthService(
     val accountRepository: AccountRepository,
     val refreshTokenRepository: RefreshTokenRepository,
@@ -26,6 +28,7 @@ class AuthService(
     val jwtTokenProvider: JwtTokenProvider,
 ) {
 
+    @Transactional
     fun login(loginForm: LoginForm): TokenResponse {
         val authentication: Authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(loginForm.email, loginForm.password)
@@ -43,6 +46,7 @@ class AuthService(
         return TokenResponse(accessToken, refreshToken)
     }
 
+    @Transactional
     fun reissueToken(request: TokenRequest): TokenResponse {
         val existsRefreshToken = this.refreshTokenRepository.existsByAccountEmail(request.email)
         if (!existsRefreshToken) {

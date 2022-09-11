@@ -12,9 +12,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
@@ -22,6 +22,7 @@ class AccountService(
     private val passwordEncoder: PasswordEncoder,
 ) {
 
+    @Transactional
     fun create(accountJoinForm: AccountJoinForm): Account {
         val existsEmail = accountRepository.existsByEmail(accountJoinForm.email)
         if (existsEmail) {
