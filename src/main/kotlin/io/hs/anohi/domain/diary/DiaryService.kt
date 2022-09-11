@@ -32,6 +32,13 @@ class DiaryService(
         return diaryRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
     }
 
+    fun findById(id: Long): Diary {
+        val diary = diaryRepository.findById(id)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_DIARY) }
+
+        return diary
+    }
+
     @Transactional
     fun update(id: Long, diaryUpdateForm: DiaryUpdateForm, account: Account): Diary {
         val diary = diaryRepository.findById(id).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_DIARY) }

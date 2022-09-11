@@ -1,7 +1,9 @@
 package io.hs.anohi.domain.diary
 
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.diary.payload.DiaryDetail
 import io.hs.anohi.domain.diary.payload.DiaryRequest
+import io.hs.anohi.domain.diary.payload.DiarySummary
 import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.infra.security.AuthAccount
 import org.springframework.http.ResponseEntity
@@ -35,8 +37,19 @@ class DiaryController(
 
     @GetMapping
     fun findAll(@RequestParam(defaultValue = "1") page: Int,
-                @RequestParam(defaultValue = "10") size: Int) {
-        val diaries = diaryService.findAll(page, size);
+                @RequestParam(defaultValue = "10") size: Int): ResponseEntity<List<DiarySummary>> {
+        val diaries = diaryService.findAll(page, size)
+        val diarySummaries = diaries.map { DiarySummary(it.title, it.content) }
+
+        return ResponseEntity.ok(diarySummaries)
+    }
+
+    @GetMapping("/{id}")
+    fun findOne(@PathVariable id: Long): ResponseEntity<DiaryDetail> {
+        val diary = diaryService.findById(id)
+        val diaryDetail = DiaryDetail(diary.title, diary.content)
+
+        return ResponseEntity.ok(diaryDetail)
     }
 
     @DeleteMapping("/{id}")

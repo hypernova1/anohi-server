@@ -56,7 +56,9 @@ class AccountController(
 
         val accountList = accountService.findAll(page, size)
 
-        return ResponseEntity.ok(accountList)
+        val accountSummaries = accountList.map { AccountSummary(it.id, it.email, it.name) }
+
+        return ResponseEntity.ok(accountSummaries)
     }
 
     @GetMapping("/{id}")

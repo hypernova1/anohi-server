@@ -40,11 +40,11 @@ class AccountService(
 
         return this.accountRepository.save(account)
     }
-    fun findAll(page: Int, size: Int): List<AccountSummary> {
+    fun findAll(page: Int, size: Int): List<Account> {
         val userList =
             accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
 
-        return userList.map { AccountSummary(it.id, it.email, it.name) }
+        return userList
     }
 
     fun findById(id: Long): AccountDetail {
