@@ -53,9 +53,9 @@ class DiaryController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) {
+    fun delete(@PathVariable id: Long): ResponseEntity<Any> {
         diaryService.delete(id)
-        ResponseEntity.noContent()
+        return ResponseEntity.noContent().build()
     }
 
 }

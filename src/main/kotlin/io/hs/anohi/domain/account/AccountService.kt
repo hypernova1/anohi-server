@@ -3,7 +3,6 @@ package io.hs.anohi.domain.account
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
-import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleName
 import io.hs.anohi.domain.auth.RoleRepository
@@ -40,6 +39,8 @@ class AccountService(
 
         return this.accountRepository.save(account)
     }
+
+
     fun findAll(page: Int, size: Int): List<Account> {
         val userList =
             accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
@@ -64,6 +65,7 @@ class AccountService(
         account.update(request)
     }
 
+    @Transactional
     fun delete(id: Long) {
         val account = accountRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }

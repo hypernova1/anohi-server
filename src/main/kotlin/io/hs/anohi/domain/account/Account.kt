@@ -37,8 +37,8 @@ class Account: BaseEntity() {
     var roles: MutableSet<Role> = HashSet()
 
     fun update(updateForm: AccountUpdateForm) {
-        this.name = updateForm.name
-        this.password = updateForm.password
+        this.name = updateForm.name ?: this.name
+        this.password = updateForm.password ?: this.name
     }
 
     companion object {
