@@ -19,8 +19,7 @@ class DiaryService(
     @Transactional
     fun create(diaryRequest: DiaryRequest, account: Account): Diary {
         val diary = Diary.of(diaryRequest, account)
-        diaryRepository.save(diary)
-        return diary
+        return diaryRepository.save(diary)
     }
 
     @Transactional

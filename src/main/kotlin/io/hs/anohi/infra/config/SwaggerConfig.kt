@@ -1,5 +1,6 @@
 package io.hs.anohi.infra.config
 
+import io.hs.anohi.infra.security.AuthAccount
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.ApiInfoBuilder
@@ -14,9 +15,10 @@ class SwaggerConfig {
     @Bean
     fun api(): Docket {
         return Docket(DocumentationType.OAS_30)
+            .ignoredParameterTypes(AuthAccount::class.java)
             .useDefaultResponseMessages(false)
             .select()
-            .apis(RequestHandlerSelectors.any())
+            .apis(RequestHandlerSelectors.basePackage("io.hs.anohi.domain"))
             .paths(PathSelectors.any())
             .build()
             .apiInfo(apiInfo())
@@ -26,7 +28,7 @@ class SwaggerConfig {
         return ApiInfoBuilder()
             .title("Anohi Api Documents")
             .description("아노히 서버 API 문서입니다.")
-            .version("3.0")
+            .version("1.0")
             .build()
     }
 }
