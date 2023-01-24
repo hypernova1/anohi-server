@@ -4,9 +4,9 @@ import io.swagger.annotations.ApiModelProperty
 
 class DiaryUpdateForm {
     
-    @ApiModelProperty(value = "제목", required = false)
+    @ApiModelProperty("제목", required = false)
     val title: String? = null
 
-    @ApiModelProperty(value = "내용", required = false)
+    @ApiModelProperty("내용", required = false)
     val content: String? = null
 }

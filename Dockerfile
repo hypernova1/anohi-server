@@ -1,7 +1,7 @@
-FROM adoptopenjdk/openjdk11
+FROM adoptopenjdk/openjdk11 as builder
 
 EXPOSE 8080
 
-ADD ./build/libs/*.jar app.jar
+ADD ./build/libs/*SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java","-jar","/app.jar"]

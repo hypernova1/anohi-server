@@ -43,10 +43,7 @@ class AccountService(
 
 
     fun findAll(page: Int, size: Int): List<Account> {
-        val userList =
-            accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
-
-        return userList
+        return accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
     }
 
     fun findById(id: Long): AccountDetail {

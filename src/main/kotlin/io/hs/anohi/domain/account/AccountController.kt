@@ -4,6 +4,7 @@ import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -19,13 +20,15 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.validation.Valid
 
+
+@Api(tags = ["계정"])
 @RestController
 @RequestMapping("/v1/accounts")
 class AccountController(
     @Autowired
     private val accountService: AccountService
 ) {
-    @ApiOperation(value = "계정 생성")
+    @ApiOperation("계정 생성")
     @PostMapping
     fun create(
         @RequestBody @Valid accountJoinForm: AccountJoinForm
@@ -41,14 +44,14 @@ class AccountController(
         return ResponseEntity.created(location).build()
     }
 
-    @ApiOperation(value = "이메일 존재 여부 확인")
+    @ApiOperation("이메일 존재 여부 확인")
     @GetMapping("/email/{email}/existence")
     fun existsEmail(@PathVariable email: String): ResponseEntity<Any> {
         accountService.existsEmail(email)
         return ResponseEntity.ok().build()
     }
 
-    @ApiOperation(value = "계정 목록 조회")
+    @ApiOperation("계정 목록 조회")
     @GetMapping
     fun getUsers(
         @RequestParam(defaultValue = "1") page: Int,
@@ -62,7 +65,7 @@ class AccountController(
         return ResponseEntity.ok(accountSummaries)
     }
 
-    @ApiOperation(value = "유저 상세 정보 조회")
+    @ApiOperation("유저 상세 정보 조회")
     @GetMapping("/{id}")
     fun getUserDetail(@PathVariable id: Long): ResponseEntity<AccountDetail> {
         val account = accountService.findById(id)
@@ -70,7 +73,7 @@ class AccountController(
         return ResponseEntity.ok(account)
     }
 
-    @ApiOperation(value = "계정 정보 수정")
+    @ApiOperation("계정 정보 수정")
     @PutMapping("/{id}")
     fun modifyUserInfo(
         @PathVariable id: Long,
@@ -84,10 +87,9 @@ class AccountController(
     }
 
 
-    @ApiOperation(value = "계정 삭제")
+    @ApiOperation("계정 삭제")
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: Long): ResponseEntity<Any> {
-
         accountService.delete(id)
 
         return ResponseEntity.ok().build()

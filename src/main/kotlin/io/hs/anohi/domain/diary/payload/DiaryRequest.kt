@@ -5,11 +5,11 @@ import javax.validation.constraints.NotBlank
 
 class DiaryRequest {
 
-    @ApiModelProperty(value = "제목", example = "안녕하세요.", required = true)
+    @ApiModelProperty("제목", example = "안녕하세요.", required = true)
     @NotBlank
     val title: String = ""
 
-    @ApiModelProperty(value = "내용", example = "반갑습니다.", required = true)
+    @ApiModelProperty("내용", example = "반갑습니다.", required = true)
     @NotBlank
     val content: String = ""
 }
