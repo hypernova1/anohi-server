@@ -1,4 +1,4 @@
-package io.hs.anohi.domain.auth
+package io.hs.anohi.domain.auth.constant
 
 enum class RoleName {
     ROLE_USER, ROLE_ADMIN

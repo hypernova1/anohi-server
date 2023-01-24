@@ -1,8 +1,8 @@
-package io.hs.anohi.domain.auth
+package io.hs.anohi.domain.auth.entity
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
-import org.apache.catalina.User
+import io.hs.anohi.domain.auth.constant.RoleName
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated

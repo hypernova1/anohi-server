@@ -1,4 +1,4 @@
-package io.hs.anohi.domain.auth
+package io.hs.anohi.domain.auth.entity
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account

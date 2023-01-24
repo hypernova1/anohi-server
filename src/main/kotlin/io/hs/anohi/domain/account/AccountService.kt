@@ -4,7 +4,7 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
-import io.hs.anohi.domain.auth.RoleName
+import io.hs.anohi.domain.auth.constant.RoleName
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.core.exception.ConflictException
