@@ -14,9 +14,9 @@ spring:
       matching-strategy: ant_path_matcher #스웨거 설정ㅎ
 
   datasource:
-    url: jdbc:mariadb://localhost:3306/anohi?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1111
+    url: jdbc:mariadb://rds-anohi-prod.cmjvnjxgjlx4.ap-northeast-2.rds.amazonaws.com/anohi?serverTimezone=UTC&characterEncoding=UTF-8
+    username: admin
+    password: anohihansam
     driver-class-name: org.mariadb.jdbc.Driver
 
 logging:

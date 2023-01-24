@@ -1,5 +1,7 @@
 FROM adoptopenjdk/openjdk11
-CMD ["./gradlew", "clean", "build"]
-ARG JAR_FILE_PATH=build/libs/*.jar
-COPY ${JAR_FILE_PATH} /
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+EXPOSE 8080
+
+ADD ./build/libs/*.jar app.jar
+
+ENTRYPOINT ["java","-jar","/app.jar"]
