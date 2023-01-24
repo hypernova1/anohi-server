@@ -45,7 +45,7 @@ class AccountController(
     @GetMapping("/email/{email}/existence")
     fun existsEmail(@PathVariable email: String): ResponseEntity<Any> {
         accountService.existsEmail(email)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok().build()
     }
 
     @ApiOperation(value = "계정 목록 조회")
