@@ -85,6 +85,8 @@ class SecurityConfig(
             .permitAll()
             .and()
             .authorizeRequests()
+            .antMatchers(HttpMethod.GET, "/health")
+            .permitAll()
             .antMatchers(HttpMethod.GET, "/swagger*/**", "/v3/api-docs")
             .permitAll()
             .antMatchers(HttpMethod.POST, "/v1/accounts", "/v1/auth")
