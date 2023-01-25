@@ -5,7 +5,8 @@ import java.util.Optional
 
 interface AccountRepository: JpaRepository<Account, Long> {
 
-    fun findByEmail(email: String): Optional<Account>;
-    fun countByEmail(email: String): Int;
+    fun existsByEmail(email: String): Boolean
+    fun findByEmail(email: String): Optional<Account>
+    fun countByEmail(email: String): Int
 
 }

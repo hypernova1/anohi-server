@@ -1,11 +1,15 @@
 package io.hs.anohi.domain.auth.payload
 
+import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotBlank
 
 class TokenRequest(
-    @NotBlank
+
+    @ApiModelProperty("이메일", example = "hello@naver.com", required = true)
+    @field:NotBlank
     val email: String,
 
-    @NotBlank
+    @ApiModelProperty("리프레시토큰", example = "", required = true)
+    @field:NotBlank
     val refreshToken: String
 )

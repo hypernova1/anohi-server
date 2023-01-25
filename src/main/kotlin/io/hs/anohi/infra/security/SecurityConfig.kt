@@ -85,10 +85,18 @@ class SecurityConfig(
             .permitAll()
             .and()
             .authorizeRequests()
+            .antMatchers(HttpMethod.GET, "/health")
+            .permitAll()
+            .antMatchers(HttpMethod.GET, "/swagger*/**", "/v3/api-docs")
+            .permitAll()
             .antMatchers(HttpMethod.POST, "/v1/accounts", "/v1/auth")
             .permitAll()
+            .antMatchers(HttpMethod.PATCH, "/v1/auth/token")
+            .permitAll()
+            .antMatchers(HttpMethod.GET, "/v1/accounts/email/**")
+            .permitAll()
             .anyRequest()
-            .hasRole("USER");
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java);
+            .hasRole("USER")
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }

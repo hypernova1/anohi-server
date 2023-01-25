@@ -27,7 +27,7 @@ data class UserPrincipal(
     companion object {
         fun create(user: Account): UserPrincipal {
             val authorities = user.roles.stream()
-                .map { role -> SimpleGrantedAuthority(role.name.name) }
+                .map { SimpleGrantedAuthority(it.name.name) }
                 .collect(Collectors.toSet())
 
             return UserPrincipal(user.id, user.email, user.name, user.password, authorities)
