@@ -1,9 +1,6 @@
 package io.hs.anohi.domain.account
 
-import io.hs.anohi.domain.account.payload.AccountDetail
-import io.hs.anohi.domain.account.payload.AccountJoinForm
-import io.hs.anohi.domain.account.payload.AccountSummary
-import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.hs.anohi.domain.account.payload.*
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,10 +34,11 @@ class AccountController(
     }
 
     @ApiOperation("이메일 존재 여부 확인")
-    @GetMapping("/email/{email}/existence")
-    fun existsEmail(@PathVariable email: String): ResponseEntity<Any> {
-        accountService.existsEmail(email)
-        return ResponseEntity.ok().build()
+    @PostMapping("/check-email-duplication")
+    fun existsEmail(@RequestBody @Valid request: ExistsEmailRequest): ResponseEntity<ExistsEmailResponse> {
+        val existsEmail = accountService.existsEmail(request.email)
+        println(existsEmail)
+        return ResponseEntity.ok().body(ExistsEmailResponse(existsEmail));
     }
 
     @ApiOperation("계정 목록 조회")
