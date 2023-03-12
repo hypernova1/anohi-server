@@ -8,11 +8,7 @@ import io.hs.anohi.domain.tag.Tag
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import java.util.Collections
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 @Entity
 @Where(clause = "deleted_at is null")
@@ -26,23 +22,26 @@ class Diary: BaseEntity() {
     var content: String = ""
 
     @ManyToMany
-    val categories: MutableList<Category> = mutableListOf()
+    var categories: MutableList<Category> = mutableListOf()
 
     @ManyToMany
-    val tags: MutableList<Tag> = mutableListOf()
+    var tags: MutableList<Tag> = mutableListOf()
 
     @ManyToMany
-    val emotions: MutableList<Emotion> = mutableListOf()
+    var emotions: MutableList<Emotion> = mutableListOf()
 
     @OneToMany
-    val images: MutableList<Image> = mutableListOf()
+    var images: MutableList<Image> = mutableListOf()
 
     @ManyToOne
     var account: Account? = null
 
-    fun update(diaryUpdateForm: DiaryUpdateForm) {
+    fun update(diaryUpdateForm: DiaryUpdateForm, categories: List<Category>?, tags: List<Tag>?, emotions: List<Emotion>?) {
         this.title = diaryUpdateForm.title ?: this.title
         this.content = diaryUpdateForm.content ?: this.content
+        this.categories = (categories ?: mutableListOf()).toMutableList()
+        this.tags = (tags ?: mutableListOf()).toMutableList()
+        this.emotions = (emotions ?: mutableListOf()).toMutableList()
     }
 
     companion object {

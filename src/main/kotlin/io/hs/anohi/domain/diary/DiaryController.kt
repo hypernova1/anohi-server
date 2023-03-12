@@ -2,15 +2,12 @@ package io.hs.anohi.domain.diary
 
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.diary.entity.Diary
 import io.hs.anohi.domain.diary.payload.DiaryDetail
 import io.hs.anohi.domain.diary.payload.DiaryRequest
-import io.hs.anohi.domain.diary.payload.DiarySummary
 import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -39,8 +36,9 @@ class DiaryController(
 
     @ApiOperation("다이어리 수정")
     @PatchMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody diaryUpdateForm: DiaryUpdateForm, @AuthAccount account: Account) {
+    fun update(@PathVariable id: Long, @RequestBody diaryUpdateForm: DiaryUpdateForm, @AuthAccount account: Account): ResponseEntity<Any> {
         diaryService.update(id, diaryUpdateForm, account)
+        return ResponseEntity.noContent().build()
     }
 
     @ApiOperation("다이어리 목록 조회")

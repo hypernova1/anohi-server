@@ -4,14 +4,16 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.diary.entity.Category
 import io.hs.anohi.domain.diary.entity.Diary
+import io.hs.anohi.domain.diary.entity.Emotion
 import io.hs.anohi.domain.diary.payload.DiaryDetail
 import io.hs.anohi.domain.diary.payload.DiaryRequest
-import io.hs.anohi.domain.diary.payload.DiarySummary
 import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.domain.diary.repository.CategoryRepository
 import io.hs.anohi.domain.diary.repository.DiaryRepository
 import io.hs.anohi.domain.diary.repository.EmotionRepository
+import io.hs.anohi.domain.tag.Tag
 import io.hs.anohi.domain.tag.TagService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -30,7 +32,6 @@ class DiaryService(
     @Transactional
     fun create(diaryRequest: DiaryRequest, account: Account): Diary {
         val categories = categoryRepository.findAllById(diaryRequest.categoryIds)
-        println(categories)
         val emotions = emotionRepository.findAllById(diaryRequest.emotionIds)
         val tags = tagService.findAllOrCreate(diaryRequest.tags)
         val diary = Diary.of(diaryRequest = diaryRequest, account = account, categories = categories, emotions = emotions, tags = tags)
@@ -58,8 +59,20 @@ class DiaryService(
 
     @Transactional
     fun update(id: Long, diaryUpdateForm: DiaryUpdateForm, account: Account): Diary {
+        var categories: List<Category>? = null
+        if (diaryUpdateForm.categoryIds != null) {
+            categories = categoryRepository.findAllById(diaryUpdateForm.categoryIds!!)
+        }
+        var emotions: List<Emotion>? = null
+        if (diaryUpdateForm.emotionIds != null) {
+            emotions = emotionRepository.findAllById(diaryUpdateForm.emotionIds!!)
+        }
+        var tags: List<Tag>? = null
+        if (diaryUpdateForm.tags != null) {
+            tags = tagService.findAllOrCreate(diaryUpdateForm.tags!!)
+        }
         val diary = diaryRepository.findById(id).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_DIARY) }
-        diary.update(diaryUpdateForm)
+        diary.update(diaryUpdateForm, categories = categories, tags = tags, emotions = emotions)
 
         return diary
     }

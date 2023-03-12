@@ -19,11 +19,14 @@ data class DiaryDetail(
     )
     val content: String,
 
+    @ApiModelProperty("태그 목록")
     var tags: List<String>,
 
-    var emotions: List<String>,
+    @ApiModelProperty("감정 인덱스 목록")
+    var emotionIds: List<Long>,
 
-    var categories: List<String>,
+    @ApiModelProperty("카테고리 인덱스 목록")
+    var categoryIds: List<Long>,
 
     @ApiModelProperty("생성일")
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
@@ -33,9 +36,9 @@ data class DiaryDetail(
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
     val updatedAt: String
 ) {
-    constructor(diary: Diary) : this(diary.id, diary.title, diary.content,  emptyList(), emptyList(), emptyList(), diary.createdDate.toString(), diary.updatedDate.toString()) {
-        this.categories = diary.categories.map { it.name }
+    constructor(diary: Diary) : this(diary.id, diary.title, diary.content,  emptyList(), emptyList(), emptyList(), diary.createdAt.toString(), diary.updatedAt.toString()) {
+        this.categoryIds = diary.categories.map { it.id }
         this.tags = diary.tags.map { it.name }
-        this.emotions = diary.emotions.map { it.name }
+        this.emotionIds = diary.emotions.map { it.id }
     }
 }
