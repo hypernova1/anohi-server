@@ -53,12 +53,20 @@ class DiaryController(
 
     @ApiOperation("다이어리 상세 조회")
     @GetMapping("/{id}")
-    fun findOne(@PathVariable id: Long): ResponseEntity<DiaryDetail> {
-        val diary = diaryService.findById(id)
+    fun findOne(@PathVariable id: Long, @AuthAccount account: Account): ResponseEntity<DiaryDetail> {
+        val diary = diaryService.findById(id, account)
         val diaryDetail = DiaryDetail(diary)
 
         return ResponseEntity.ok(diaryDetail)
     }
+
+    @ApiOperation("다이어리 좋아요")
+    @PatchMapping("/{id}/like")
+    fun registerFavorite(@PathVariable id: Long, @AuthAccount account: Account) {
+        diaryService.registerFavorite(id, account)
+    }
+
+
 
     @ApiOperation("다이어리 삭제")
     @DeleteMapping("/{id}")

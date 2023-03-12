@@ -7,12 +7,14 @@ import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.diary.entity.Category
 import io.hs.anohi.domain.diary.entity.Diary
 import io.hs.anohi.domain.diary.entity.Emotion
+import io.hs.anohi.domain.diary.entity.FavoriteDiary
 import io.hs.anohi.domain.diary.payload.DiaryDetail
 import io.hs.anohi.domain.diary.payload.DiaryRequest
 import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.domain.diary.repository.CategoryRepository
 import io.hs.anohi.domain.diary.repository.DiaryRepository
 import io.hs.anohi.domain.diary.repository.EmotionRepository
+import io.hs.anohi.domain.diary.repository.FavoriteDiaryRepository
 import io.hs.anohi.domain.tag.Tag
 import io.hs.anohi.domain.tag.TagService
 import org.springframework.data.domain.PageRequest
@@ -26,7 +28,8 @@ class DiaryService(
     private val diaryRepository: DiaryRepository,
     private val tagService: TagService,
     private val categoryRepository: CategoryRepository,
-    private val emotionRepository: EmotionRepository
+    private val emotionRepository: EmotionRepository,
+    private val favoriteDiaryRepository: FavoriteDiaryRepository,
 ) {
 
     @Transactional
@@ -47,12 +50,18 @@ class DiaryService(
         val pageDiaries =
             diaryRepository.findAllByAccount(account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
         val diarySummaries = pageDiaries.content.map { DiaryDetail(it) }
-        return Pagination.load(pageDiaries, diarySummaries);
+        return Pagination.load(pageDiaries, diarySummaries)
     }
 
-    fun findById(id: Long): Diary {
+    @Transactional
+    fun findById(id: Long, account: Account): Diary {
         val diary = diaryRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_DIARY) }
+
+        if (account.id != diary.account.id) {
+            diary.hit++
+            this.diaryRepository.save(diary)
+        }
 
         return diary
     }
@@ -75,6 +84,24 @@ class DiaryService(
         diary.update(diaryUpdateForm, categories = categories, tags = tags, emotions = emotions)
 
         return diary
+    }
+
+    @Transactional
+    fun registerFavorite(id: Long, account: Account) {
+        val diary = diaryRepository.findById(id)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_DIARY) }
+
+        val exist = favoriteDiaryRepository.existsByDiaryAndAccount(diary, account)
+        if (exist) {
+            favoriteDiaryRepository.deleteByDiaryAndAccount(diary, account)
+            diary.favoriteCount--
+        } else {
+            val favoriteDiary = FavoriteDiary.of(diary, account)
+            favoriteDiaryRepository.save(favoriteDiary)
+            diary.favoriteCount++
+        }
+
+        diaryRepository.save(diary)
     }
 
 }

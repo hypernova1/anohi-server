@@ -5,6 +5,7 @@ import io.hs.anohi.domain.diary.entity.Diary
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.hs.anohi.domain.diary.entity.FavoriteDiary
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.CascadeType
@@ -35,6 +36,9 @@ class Account: BaseEntity() {
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()
+
+    @OneToMany
+    val favoriteDiaries: MutableList<FavoriteDiary> = mutableListOf()
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name

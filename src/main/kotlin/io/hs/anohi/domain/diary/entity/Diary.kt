@@ -21,6 +21,13 @@ class Diary: BaseEntity() {
     @Column(nullable = false)
     var content: String = ""
 
+    @Column(nullable = false)
+    var hit: Long = 0
+
+    @Column(nullable = false)
+    var favoriteCount: Long = 0
+
+
     @ManyToMany
     var categories: MutableList<Category> = mutableListOf()
 
@@ -34,7 +41,10 @@ class Diary: BaseEntity() {
     var images: MutableList<Image> = mutableListOf()
 
     @ManyToOne
-    var account: Account? = null
+    lateinit var account: Account
+
+    @OneToMany
+    val favoriteDiaries: MutableList<FavoriteDiary> = mutableListOf()
 
     fun update(diaryUpdateForm: DiaryUpdateForm, categories: List<Category>?, tags: List<Tag>?, emotions: List<Emotion>?) {
         this.title = diaryUpdateForm.title ?: this.title

@@ -9,6 +9,7 @@ import javax.persistence.*
 @EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
 abstract class BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -24,4 +25,5 @@ abstract class BaseEntity {
 
     @Column(nullable = true)
     var deletedAt: LocalDateTime? = null
+
 }
