@@ -27,7 +27,6 @@ class Diary: BaseEntity() {
     @Column(nullable = false)
     var favoriteCount: Long = 0
 
-
     @ManyToMany
     var categories: MutableList<Category> = mutableListOf()
 

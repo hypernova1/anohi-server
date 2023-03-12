@@ -44,6 +44,8 @@ dependencies {
 
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.425")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }

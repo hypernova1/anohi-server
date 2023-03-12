@@ -66,8 +66,6 @@ class DiaryController(
         diaryService.registerFavorite(id, account)
     }
 
-
-
     @ApiOperation("다이어리 삭제")
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Any> {
