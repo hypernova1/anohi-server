@@ -27,19 +27,19 @@ class JwtTokenProvider(
 
     private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java.name)
 
-
     fun generateToken(email: String, authorities: MutableCollection<out GrantedAuthority>): String {
-        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 7
+        val tokenInvalidTime = 1000L * 60 * 60 * 24 * 30
         return createToken(email, tokenInvalidTime, authorities)
     }
 
     fun generateRefreshToken(email: String, authorities: MutableCollection<out GrantedAuthority>): String {
-        val tokenInvalidTime: Long = 1000L * 60 * 60 * 24 * 30
+        val tokenInvalidTime: Long = 1000L * 60 * 60 * 24 * 90
         return this.createToken(email, tokenInvalidTime, authorities)
     }
 
     fun createToken(name: String, expiredTime: Long, roles: MutableCollection<out GrantedAuthority>): String {
         val claims = HashMap<String, Any>()
+
         claims["roles"] = roles
         val keyBytes = Decoders.BASE64.decode(jwtSecret)
         val key = Keys.hmacShaKeyFor(keyBytes)

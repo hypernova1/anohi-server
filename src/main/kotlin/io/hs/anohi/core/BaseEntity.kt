@@ -16,11 +16,11 @@ abstract class BaseEntity {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdDate: LocalDateTime? = null
+    var createdDate: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate
     @Column(updatable = false)
-    var updatedDate: LocalDateTime? = null
+    var updatedDate: LocalDateTime = LocalDateTime.now()
 
     @Column(nullable = true)
     var deletedAt: LocalDateTime? = null

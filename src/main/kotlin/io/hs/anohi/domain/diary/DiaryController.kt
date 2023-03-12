@@ -45,7 +45,7 @@ class DiaryController(
     fun findAll(@RequestParam(defaultValue = "1") page: Int,
                 @RequestParam(defaultValue = "10") size: Int): ResponseEntity<List<DiarySummary>> {
         val diaries = diaryService.findAll(page, size)
-        val diarySummaries = diaries.map { DiarySummary(it.title, it.content) }
+        val diarySummaries = diaries.map { DiarySummary(it.id, it.title, it.content) }
 
         return ResponseEntity.ok(diarySummaries)
     }
@@ -54,7 +54,7 @@ class DiaryController(
     @GetMapping("/{id}")
     fun findOne(@PathVariable id: Long): ResponseEntity<DiaryDetail> {
         val diary = diaryService.findById(id)
-        val diaryDetail = DiaryDetail(diary.title, diary.content)
+        val diaryDetail = DiaryDetail(id, diary.title, diary.content, diary.createdDate, diary.updatedDate)
 
         return ResponseEntity.ok(diaryDetail)
     }
