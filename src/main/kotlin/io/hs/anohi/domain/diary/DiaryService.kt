@@ -4,10 +4,7 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.diary.entity.Category
-import io.hs.anohi.domain.diary.entity.Diary
-import io.hs.anohi.domain.diary.entity.Emotion
-import io.hs.anohi.domain.diary.entity.FavoriteDiary
+import io.hs.anohi.domain.diary.entity.*
 import io.hs.anohi.domain.diary.payload.DiaryDetail
 import io.hs.anohi.domain.diary.payload.DiaryRequest
 import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
@@ -37,6 +34,7 @@ class DiaryService(
         val categories = categoryRepository.findAllById(diaryRequest.categoryIds)
         val emotions = emotionRepository.findAllById(diaryRequest.emotionIds)
         val tags = tagService.findAllOrCreate(diaryRequest.tags)
+
         val diary = Diary.of(diaryRequest = diaryRequest, account = account, categories = categories, emotions = emotions, tags = tags)
         return diaryRepository.save(diary)
     }
@@ -80,8 +78,11 @@ class DiaryService(
         if (diaryUpdateForm.tags != null) {
             tags = tagService.findAllOrCreate(diaryUpdateForm.tags!!)
         }
+
         val diary = diaryRepository.findById(id).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_DIARY) }
+
         diary.update(diaryUpdateForm, categories = categories, tags = tags, emotions = emotions)
+        diaryRepository.save(diary)
 
         return diary
     }

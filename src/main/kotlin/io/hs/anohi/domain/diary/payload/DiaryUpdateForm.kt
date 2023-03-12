@@ -19,4 +19,8 @@ class DiaryUpdateForm {
 
     @ApiModelProperty("감정 인덱스 목록", dataType = "List", example = "[1, 2, 3]")
     var emotionIds: List<Long>? = null
+
+    @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[1, 2, 3]")
+    val imagePaths: List<String>? = null
+
 }

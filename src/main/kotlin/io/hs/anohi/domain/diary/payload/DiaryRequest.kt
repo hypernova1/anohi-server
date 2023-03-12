@@ -24,4 +24,7 @@ class DiaryRequest {
     @ApiModelProperty("감정 인덱스 목록", dataType = "List", example = "[1, 2, 3]", required = true)
     val emotionIds: List<Long> = Collections.emptyList()
 
+    @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[\"https://google.com\"]", required = false)
+    val imagePaths: List<String> = Collections.emptyList()
+
 }

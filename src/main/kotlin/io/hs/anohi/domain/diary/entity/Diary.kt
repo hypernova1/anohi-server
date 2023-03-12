@@ -7,7 +7,6 @@ import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.domain.tag.Tag
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-import java.util.Collections
 import javax.persistence.*
 
 @Entity
@@ -36,7 +35,7 @@ class Diary: BaseEntity() {
     @ManyToMany
     var emotions: MutableList<Emotion> = mutableListOf()
 
-    @OneToMany
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "diary")
     var images: MutableList<Image> = mutableListOf()
 
     @ManyToOne
@@ -51,6 +50,19 @@ class Diary: BaseEntity() {
         this.categories = (categories ?: mutableListOf()).toMutableList()
         this.tags = (tags ?: mutableListOf()).toMutableList()
         this.emotions = (emotions ?: mutableListOf()).toMutableList()
+
+        setImages(diaryUpdateForm)
+    }
+
+    private fun setImages(diaryUpdateForm: DiaryUpdateForm) {
+        val imagePaths = diaryUpdateForm.imagePaths ?: return
+
+        if (imagePaths.isEmpty()) {
+            this.images.forEach { it.diary = null }
+            return
+        }
+
+        this.images = mutableListOf(Image.from(imagePaths[0], this))
     }
 
     companion object {
@@ -63,6 +75,8 @@ class Diary: BaseEntity() {
             diary.categories.addAll(categories)
             diary.tags.addAll(tags)
             diary.emotions.addAll(emotions)
+            val images = diaryRequest.imagePaths.map { Image.from(it, diary) }
+            diary.images.addAll(images)
             return diary
         }
     }

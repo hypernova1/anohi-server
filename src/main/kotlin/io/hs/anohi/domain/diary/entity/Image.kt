@@ -5,6 +5,7 @@ import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 
@@ -14,12 +15,21 @@ import javax.persistence.ManyToOne
 class Image: BaseEntity() {
 
     @Column()
-    val originPath: String = ""
+    var originPath: String = ""
 
     @Column()
-    val thumbnailPath: String = ""
+    var thumbnailPath: String = ""
 
     @ManyToOne
     var diary: Diary? = null
+
+    companion object {
+        fun from(imagePath: String, diary: Diary): Image {
+            val image = Image()
+            image.originPath = imagePath
+            image.diary = diary
+            return image
+        }
+    }
 
 }
