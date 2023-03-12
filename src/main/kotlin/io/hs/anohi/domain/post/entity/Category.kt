@@ -1,9 +1,8 @@
-package io.hs.anohi.domain.diary.entity
+package io.hs.anohi.domain.post.entity
 
 import io.hs.anohi.core.BaseEntity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.ManyToMany
@@ -16,5 +15,5 @@ class Category: BaseEntity() {
     val name: String = "";
 
     @ManyToMany(mappedBy = "categories")
-    val diaries: MutableList<Diary> = mutableListOf()
+    val posts: MutableList<Post> = mutableListOf()
 }

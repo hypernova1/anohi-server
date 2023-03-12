@@ -1,4 +1,4 @@
-package io.hs.anohi.domain.diary.constant
+package io.hs.anohi.domain.post.constant
 
 enum class EmotionType {
     HAPPY,

@@ -1,10 +1,10 @@
-package io.hs.anohi.domain.diary.payload
+package io.hs.anohi.domain.post.payload
 
 import io.swagger.annotations.ApiModelProperty
 import java.util.Collections
 import javax.validation.constraints.NotBlank
 
-class DiaryRequest {
+class PostRequestForm {
 
     @ApiModelProperty("제목", example = "안녕하세요.", required = true)
     @NotBlank

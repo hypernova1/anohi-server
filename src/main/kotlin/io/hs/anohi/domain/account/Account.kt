@@ -1,11 +1,11 @@
 package io.hs.anohi.domain.account
 
 import io.hs.anohi.domain.auth.entity.Role
-import io.hs.anohi.domain.diary.entity.Diary
+import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
-import io.hs.anohi.domain.diary.entity.FavoriteDiary
+import io.hs.anohi.domain.post.entity.FavoritePost
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.CascadeType
@@ -28,8 +28,8 @@ class Account: BaseEntity() {
     @Column(nullable = false)
     var password: String = ""
 
-    @OneToMany
-    var diaries: MutableList<Diary> = mutableListOf()
+    @OneToMany(mappedBy = "account")
+    var posts: MutableList<Post> = mutableListOf()
 
     @Column(nullable = false)
     var isActive: Boolean = false
@@ -37,8 +37,8 @@ class Account: BaseEntity() {
     @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()
 
-    @OneToMany
-    val favoriteDiaries: MutableList<FavoriteDiary> = mutableListOf()
+    @OneToMany(mappedBy = "account")
+    val favoritePosts: MutableList<FavoritePost> = mutableListOf()
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name

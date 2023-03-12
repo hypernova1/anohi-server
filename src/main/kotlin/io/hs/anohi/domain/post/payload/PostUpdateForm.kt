@@ -1,8 +1,8 @@
-package io.hs.anohi.domain.diary.payload
+package io.hs.anohi.domain.post.payload
 
 import io.swagger.annotations.ApiModelProperty
 
-class DiaryUpdateForm {
+class PostUpdateForm {
 
     @ApiModelProperty("제목", example = "안녕하세요.")
     var title: String? = null

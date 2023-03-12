@@ -1,12 +1,10 @@
-package io.hs.anohi.domain.diary.entity
+package io.hs.anohi.domain.post.entity
 
 import io.hs.anohi.core.BaseEntity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 
 @Entity
@@ -21,13 +19,13 @@ class Image: BaseEntity() {
     var thumbnailPath: String = ""
 
     @ManyToOne
-    var diary: Diary? = null
+    var post: Post? = null
 
     companion object {
-        fun from(imagePath: String, diary: Diary): Image {
+        fun from(imagePath: String, post: Post): Image {
             val image = Image()
             image.originPath = imagePath
-            image.diary = diary
+            image.post = post
             return image
         }
     }

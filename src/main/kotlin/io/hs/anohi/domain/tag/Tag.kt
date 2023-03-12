@@ -1,10 +1,9 @@
 package io.hs.anohi.domain.tag
 
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.diary.entity.Diary
+import io.hs.anohi.domain.post.entity.Post
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.ManyToMany
@@ -17,7 +16,7 @@ class Tag: BaseEntity() {
     var name: String = "";
 
     @ManyToMany(mappedBy = "tags")
-    val diaries: MutableList<Diary> = mutableListOf()
+    val posts: MutableList<Post> = mutableListOf()
 
     companion object {
         fun create(name: String): Tag {

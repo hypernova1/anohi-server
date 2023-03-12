@@ -1,7 +1,7 @@
-package io.hs.anohi.domain.diary.entity
+package io.hs.anohi.domain.post.entity
 
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.diary.constant.EmotionType
+import io.hs.anohi.domain.post.constant.EmotionType
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import java.util.*
@@ -16,5 +16,5 @@ class Emotion: BaseEntity() {
     val name: EmotionType = EmotionType.HAPPY;
 
     @ManyToMany(mappedBy = "emotions")
-    val diaries: MutableList<Diary> = mutableListOf()
+    val posts: MutableList<Post> = mutableListOf()
 }
