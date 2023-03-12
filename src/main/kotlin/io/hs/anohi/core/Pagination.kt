@@ -1,13 +1,24 @@
 package io.hs.anohi.core
 
-import io.swagger.annotations.ApiModelProperty
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
+import org.springframework.data.domain.Page
 
-class Pagination(
-    @ApiModelProperty("페이지 번호", example = "1", required = false)
-    val page: Int,
 
-    @ApiModelProperty("페이지 크기", example = "20", required = true)
-    val size: Int,
-)
+data class Pagination<T> (
+    var pageSize: Int = 0,
+    var totalCount: Long = 0,
+    var totalPage: Int = 0,
+    var items: List<T>? = null,
+) {
+
+    companion object {
+        fun <T, U> load(page: Page<U>, items: List<T>): Pagination<T> {
+            val pagination = Pagination<T>()
+            pagination.pageSize = page.size
+            pagination.totalCount = page.totalElements
+            pagination.totalPage = page.totalPages;
+            pagination.items = items;
+            return pagination
+        }
+    }
+
+}

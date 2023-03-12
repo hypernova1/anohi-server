@@ -4,7 +4,7 @@ import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.diary.payload.DiaryRequest
 import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
-import io.hs.anohi.domain.diary.tag.Tag
+import io.hs.anohi.domain.tag.Tag
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import java.util.Collections
@@ -25,7 +25,7 @@ class Diary: BaseEntity() {
     @Column(nullable = false)
     var content: String = ""
 
-    @ManyToMany(mappedBy = "diaries")
+    @ManyToMany
     val categories: MutableList<Category> = mutableListOf()
 
     @ManyToMany

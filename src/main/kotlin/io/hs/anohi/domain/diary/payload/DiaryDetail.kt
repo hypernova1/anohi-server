@@ -1,10 +1,11 @@
 package io.hs.anohi.domain.diary.payload
 
+import io.hs.anohi.domain.diary.entity.Diary
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
-class DiaryDetail(
+data class DiaryDetail(
     @ApiModelProperty("인덱스", example = "1")
     val id: Long,
 
@@ -18,11 +19,23 @@ class DiaryDetail(
     )
     val content: String,
 
-    @ApiModelProperty("생성일")
-    @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
-    val createdAt: LocalDateTime,
+    var tags: List<String>,
+
+    var emotions: List<String>,
+
+    var categories: List<String>,
 
     @ApiModelProperty("생성일")
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
-    val updatedAt: LocalDateTime
-)
+    val createdAt: String,
+
+    @ApiModelProperty("생성일")
+    @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
+    val updatedAt: String
+) {
+    constructor(diary: Diary) : this(diary.id, diary.title, diary.content,  emptyList(), emptyList(), emptyList(), diary.createdDate.toString(), diary.updatedDate.toString()) {
+        this.categories = diary.categories.map { it.name }
+        this.tags = diary.tags.map { it.name }
+        this.emotions = diary.emotions.map { it.name }
+    }
+}

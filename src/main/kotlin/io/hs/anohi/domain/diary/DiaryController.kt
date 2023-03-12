@@ -1,6 +1,8 @@
 package io.hs.anohi.domain.diary
 
+import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.diary.entity.Diary
 import io.hs.anohi.domain.diary.payload.DiaryDetail
 import io.hs.anohi.domain.diary.payload.DiaryRequest
 import io.hs.anohi.domain.diary.payload.DiarySummary
@@ -8,6 +10,7 @@ import io.hs.anohi.domain.diary.payload.DiaryUpdateForm
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -43,18 +46,18 @@ class DiaryController(
     @ApiOperation("다이어리 목록 조회")
     @GetMapping
     fun findAll(@RequestParam(defaultValue = "1") page: Int,
-                @RequestParam(defaultValue = "10") size: Int): ResponseEntity<List<DiarySummary>> {
-        val diaries = diaryService.findAll(page, size)
-        val diarySummaries = diaries.map { DiarySummary(it.id, it.title, it.content) }
-
-        return ResponseEntity.ok(diarySummaries)
+                @RequestParam(defaultValue = "10") size: Int,
+                @AuthAccount account: Account
+    ): ResponseEntity<Pagination<DiaryDetail>> {
+        val result = diaryService.findAll(account, page, size)
+        return ResponseEntity.ok(result)
     }
 
     @ApiOperation("다이어리 상세 조회")
     @GetMapping("/{id}")
     fun findOne(@PathVariable id: Long): ResponseEntity<DiaryDetail> {
         val diary = diaryService.findById(id)
-        val diaryDetail = DiaryDetail(id, diary.title, diary.content, diary.createdDate, diary.updatedDate)
+        val diaryDetail = DiaryDetail(diary)
 
         return ResponseEntity.ok(diaryDetail)
     }

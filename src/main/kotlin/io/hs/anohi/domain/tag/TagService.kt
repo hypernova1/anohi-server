@@ -1,4 +1,4 @@
-package io.hs.anohi.domain.diary.tag
+package io.hs.anohi.domain.tag
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

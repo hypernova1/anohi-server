@@ -1,4 +1,4 @@
-package io.hs.anohi.domain.diary.tag
+package io.hs.anohi.domain.tag
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.diary.entity.Diary
