@@ -1,31 +1,28 @@
 package io.hs.anohi.domain.auth
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
 import io.hs.anohi.core.ErrorCode
-import io.hs.anohi.domain.auth.payload.LoginForm
-import io.hs.anohi.domain.account.AccountRepository
-import io.hs.anohi.domain.auth.payload.TokenRequest
-import io.hs.anohi.domain.auth.payload.TokenResponse
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.core.exception.UnauthorizedException
+import io.hs.anohi.domain.account.AccountRepository
+import io.hs.anohi.domain.account.AccountService
+import io.hs.anohi.domain.auth.constant.SocialType
+import io.hs.anohi.domain.auth.entity.RefreshToken
+import io.hs.anohi.domain.auth.payload.LoginForm
+import io.hs.anohi.domain.auth.payload.TokenRequest
+import io.hs.anohi.domain.auth.payload.TokenResponse
 import io.hs.anohi.infra.security.JwtTokenProvider
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.gson.GsonFactory
-import io.hs.anohi.core.exception.ConflictException
-import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.auth.constant.RoleName
-import io.hs.anohi.domain.auth.constant.SocialType
-import io.hs.anohi.domain.auth.entity.RefreshToken
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 
 @Service
 @Transactional(readOnly = true)
@@ -34,8 +31,7 @@ class AuthService(
     val refreshTokenRepository: RefreshTokenRepository,
     val authenticationManager: AuthenticationManager,
     val jwtTokenProvider: JwtTokenProvider,
-    val roleRepository: RoleRepository,
-    val passwordEncoder: PasswordEncoder,
+    val accountService: AccountService,
 ) {
 
     @Transactional
@@ -61,14 +57,7 @@ class AuthService(
 
             val existsEmail = accountRepository.existsByEmail(email)
             if (!existsEmail) {
-                val hashedPassword = passwordEncoder.encode(password)
-                val account = Account.from(name = name, email = email, password = hashedPassword, profileImagePath = pictureUrl)
-
-                val role = roleRepository.findByName(RoleName.ROLE_USER)
-                    .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
-
-                account.addRole(role)
-                accountRepository.save(account)
+                accountService.create(password, email, name, pictureUrl)
             }
         }
 
@@ -95,7 +84,7 @@ class AuthService(
     fun reissueToken(request: TokenRequest): TokenResponse {
         val existsRefreshToken = this.refreshTokenRepository.existsByAccountEmail(request.email)
         if (!existsRefreshToken) {
-            throw NotFoundException(ErrorCode.CANNOT_FOUND_REFRESH_TOKEN)
+            throw UnauthorizedException(ErrorCode.CANNOT_FOUND_REFRESH_TOKEN)
         }
 
         val isValid = jwtTokenProvider.validationToken(request.refreshToken)
@@ -104,7 +93,7 @@ class AuthService(
         }
 
         val account = accountRepository.findByEmail(request.email)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
+            .orElseThrow { UnauthorizedException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
         val authorities = account.roles.mapTo(LinkedList<GrantedAuthority>()) {
             SimpleGrantedAuthority(it.name.toString())

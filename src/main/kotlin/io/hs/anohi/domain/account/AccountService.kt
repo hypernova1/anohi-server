@@ -1,13 +1,13 @@
 package io.hs.anohi.domain.account
 
 import io.hs.anohi.core.ErrorCode
+import io.hs.anohi.core.exception.ConflictException
+import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
-import io.hs.anohi.domain.auth.constant.RoleName
 import io.hs.anohi.domain.auth.RoleRepository
-import io.hs.anohi.core.exception.NotFoundException
-import io.hs.anohi.core.exception.ConflictException
+import io.hs.anohi.domain.auth.constant.RoleName
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,6 +21,23 @@ class AccountService(
     private val roleRepository: RoleRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
+
+    @Transactional
+    fun create(
+        email: String,
+        password: String,
+        name: String?,
+        pictureUrl: String?
+    ) {
+        val hashedPassword = passwordEncoder.encode(password)
+        val account = Account.from(name = name, email = email, password = hashedPassword, profileImagePath = pictureUrl)
+
+        val role = roleRepository.findByName(RoleName.ROLE_USER)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
+
+        account.addRole(role)
+        accountRepository.save(account)
+    }
 
     @Transactional
     fun create(accountJoinForm: AccountJoinForm): Account {
