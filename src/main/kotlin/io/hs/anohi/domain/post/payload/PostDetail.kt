@@ -27,6 +27,9 @@ data class PostDetail(
     @ApiModelProperty("카테고리 인덱스 목록")
     var categoryIds: List<Long>,
 
+    @ApiModelProperty("이미지 주소 목록")
+    var imagePaths: List<String>,
+
     @ApiModelProperty("생성일")
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
     val createdAt: String,
@@ -35,9 +38,10 @@ data class PostDetail(
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
     val updatedAt: String
 ) {
-    constructor(post: Post) : this(post.id, post.title, post.content,  emptyList(), emptyList(), emptyList(), post.createdAt.toString(), post.updatedAt.toString()) {
+    constructor(post: Post) : this(post.id, post.title, post.content,  emptyList(), emptyList(), emptyList(), emptyList(), post.createdAt.toString(), post.updatedAt.toString()) {
         this.categoryIds = post.categories.map { it.id }
         this.tags = post.tags.map { it.name }
         this.emotionIds = post.emotions.map { it.id }
+        this.imagePaths = post.images.map { it.originPath }
     }
 }

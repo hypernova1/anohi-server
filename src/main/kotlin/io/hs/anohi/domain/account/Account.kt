@@ -28,6 +28,9 @@ class Account: BaseEntity() {
     @Column(nullable = false)
     var password: String = ""
 
+    @Column(nullable = true)
+    var profileImagePath: String = ""
+
     @OneToMany(mappedBy = "account")
     var posts: MutableList<Post> = mutableListOf()
 
@@ -46,13 +49,13 @@ class Account: BaseEntity() {
     }
 
     companion object {
-        fun from(joinForm: AccountJoinForm): Account {
+        fun from(email: String, password: String, name: String?, profileImagePath: String?): Account {
             val account = Account()
-            account.name = joinForm.name
-            account.password = joinForm.password
-            account.email = joinForm.email
+            account.name = name ?: ""
+            account.password = password
+            account.email = email
             account.isActive = true
-
+            account.profileImagePath = profileImagePath ?: ""
             return account
         }
     }

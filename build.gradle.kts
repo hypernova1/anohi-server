@@ -34,13 +34,14 @@ dependencies {
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 
     runtimeOnly("com.h2database:h2")
-    compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    compileOnly("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
     implementation("com.querydsl:querydsl-jpa:$querydslVersion")
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("com.google.api-client:google-api-client:2.2.0")
 
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 

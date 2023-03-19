@@ -1,16 +1,20 @@
 package io.hs.anohi.domain.auth.payload
 
+import io.hs.anohi.domain.auth.constant.SocialType
+import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotEmpty
 
+@ApiModel
 class LoginForm {
 
-    @ApiModelProperty("이메일", example = "hello@naver.com", required = true)
-    @NotBlank(message = "이메일은 필수입니다.")
-    var email: String = ""
+    @ApiModelProperty("소셜 타입", example = "GOOGLE", required = true)
+    var socialType: SocialType = SocialType.GOOGLE
 
-    @ApiModelProperty("비밀번호", example = "1234", required = true)
-    @NotEmpty(message = "비밀번호는 필수입니다.")
-    var password: String = ""
+    @ApiModelProperty("토큰", example = "hello@naver.com", required = true)
+    @NotBlank(message = "토큰은 필수입니다.")
+    var token: String = ""
+
+
+
 }

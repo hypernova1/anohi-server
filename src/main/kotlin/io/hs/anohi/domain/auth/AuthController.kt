@@ -21,8 +21,8 @@ class AuthController(private val authService: AuthService) {
     @ApiOperation("로그인")
     @PostMapping
     fun login(@Valid @RequestBody loginForm: LoginForm): ResponseEntity<TokenResponse> {
-        val token = authService.login(loginForm)
-        return ResponseEntity.ok(token)
+        val response = authService.login(loginForm)
+        return ResponseEntity.ok(response)
     }
 
     @ApiOperation("JWT 재발급")

@@ -31,7 +31,7 @@ class AccountService(
 
         accountJoinForm.password = passwordEncoder.encode(accountJoinForm.password)
 
-        val account = Account.from(accountJoinForm)
+        val account = Account.from(email = accountJoinForm.email, password = accountJoinForm.password, name = accountJoinForm.name, profileImagePath = "")
 
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
