@@ -1,6 +1,7 @@
 package io.hs.anohi.domain.account
 
 import io.hs.anohi.domain.account.payload.*
+import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,6 +54,13 @@ class AccountController(
         val accountSummaries = accountList.map { AccountSummary(it.id, it.email, it.name) }
 
         return ResponseEntity.ok(accountSummaries)
+    }
+
+    @ApiOperation("유저 본인 정보 조회")
+    @GetMapping("/me")
+    fun getUserMe(@AuthAccount account: Account): ResponseEntity<AccountDetail> {
+        val profile = accountService.findById(account.id)
+        return ResponseEntity.ok(profile)
     }
     
     @ApiOperation("유저 상세 정보 조회")

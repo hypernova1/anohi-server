@@ -32,4 +32,10 @@ class AuthController(private val authService: AuthService) {
         return ResponseEntity.ok(token)
     }
 
+    @ApiOperation("JWT 토큰 검증")
+    @PostMapping("/verify")
+    fun verifyToken(): ResponseEntity<TokenResponse> {
+        return ResponseEntity.ok().build()
+    }
+
 }
