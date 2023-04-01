@@ -31,6 +31,9 @@ class Account: BaseEntity() {
     @Column(nullable = true)
     var profileImagePath: String = ""
 
+    @Column(nullable = true)
+    var description: String = ""
+
     @OneToMany(mappedBy = "account")
     var posts: MutableList<Post> = mutableListOf()
 
@@ -44,8 +47,10 @@ class Account: BaseEntity() {
     val favoritePosts: MutableList<FavoritePost> = mutableListOf()
 
     fun update(updateForm: AccountUpdateForm) {
-        this.name = updateForm.name ?: this.name
+        this.name = updateForm.nickname ?: this.name
         this.password = updateForm.password ?: this.name
+        this.profileImagePath = updateForm.profileImagePath ?: this.profileImagePath
+        this.description = updateForm.description ?: this.description
     }
 
     companion object {

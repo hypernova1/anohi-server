@@ -62,7 +62,7 @@ class AccountController(
         val profile = accountService.findById(account.id)
         return ResponseEntity.ok(profile)
     }
-    
+
     @ApiOperation("유저 상세 정보 조회")
     @GetMapping("/{id}")
     fun getUserDetail(@PathVariable id: Long): ResponseEntity<AccountDetail> {
@@ -71,15 +71,12 @@ class AccountController(
     }
 
     @ApiOperation("계정 정보 수정")
-    @PutMapping("/{id}")
+    @PutMapping("/me")
     fun modifyUserInfo(
-        @PathVariable id: Long,
+        @AuthAccount account: Account,
         @Valid @RequestBody request: AccountUpdateForm
     ): ResponseEntity<Any> {
-
-        accountService.update(id, request)
-        val account = accountService.findById(id)
-
+        accountService.update(account, request)
         return ResponseEntity.ok().build()
     }
 

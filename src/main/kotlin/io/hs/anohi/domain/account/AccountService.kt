@@ -72,11 +72,10 @@ class AccountService(
     }
 
     @Transactional
-    fun update(id: Long, request: AccountUpdateForm) {
-        val account = accountRepository.findById(id)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
-
-        account.password = passwordEncoder.encode(account.password)
+    fun update(account: Account, request: AccountUpdateForm) {
+        if (request.password != null) {
+            account.password = passwordEncoder.encode(request.password)
+        }
         account.update(request)
     }
 
