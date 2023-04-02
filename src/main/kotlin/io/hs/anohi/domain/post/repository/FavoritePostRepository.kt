@@ -15,5 +15,7 @@ interface FavoritePostRepository: JpaRepository<FavoritePost, Long> {
     @Transactional
     fun deleteByPostAndAccount(post: Post, account: Account)
 
+    fun countByAccount(account: Account): Int
+
 
 }

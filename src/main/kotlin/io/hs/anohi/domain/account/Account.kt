@@ -6,6 +6,7 @@ import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.post.entity.FavoritePost
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.CascadeType
@@ -33,6 +34,9 @@ class Account: BaseEntity() {
 
     @Column(nullable = true)
     var description: String = ""
+
+    @Column(nullable = false)
+    var numberOfVisitors: Int = 0
 
     @OneToMany(mappedBy = "account")
     var posts: MutableList<Post> = mutableListOf()

@@ -66,7 +66,7 @@ class AccountController(
     @ApiOperation("유저 상세 정보 조회")
     @GetMapping("/{id}")
     fun getUserDetail(@PathVariable id: Long): ResponseEntity<AccountDetail> {
-        val account = accountService.findById(id)
+        val account = accountService.findById(id, true)
         return ResponseEntity.ok(account)
     }
 
@@ -77,16 +77,15 @@ class AccountController(
         @Valid @RequestBody request: AccountUpdateForm
     ): ResponseEntity<Any> {
         accountService.update(account, request)
-        return ResponseEntity.ok().build()
+        return ResponseEntity.noContent().build()
     }
 
 
     @ApiOperation("계정 삭제")
-    @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id: Long): ResponseEntity<Any> {
-        accountService.delete(id)
-
-        return ResponseEntity.ok().build()
+    @DeleteMapping("/me")
+    fun deleteUser(@AuthAccount account: Account): ResponseEntity<Any> {
+        accountService.delete(account)
+        return ResponseEntity.noContent().build()
     }
 
 }

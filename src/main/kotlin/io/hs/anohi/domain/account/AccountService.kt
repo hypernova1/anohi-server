@@ -8,6 +8,8 @@ import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.domain.auth.constant.RoleName
+import io.hs.anohi.domain.post.repository.FavoritePostRepository
+import io.hs.anohi.domain.post.repository.PostRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -20,6 +22,8 @@ class AccountService(
     private val accountRepository: AccountRepository,
     private val roleRepository: RoleRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val postRepository: PostRepository,
+    private val favoritePostRepository: FavoritePostRepository,
 ) {
 
     @Transactional
@@ -63,12 +67,16 @@ class AccountService(
         return accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
     }
 
-    fun findById(id: Long): AccountDetail {
-
+    @Transactional
+    fun findById(id: Long, isVisit: Boolean = false): AccountDetail {
         val account = accountRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
-        return AccountDetail(account.id, account.email, account.name)
+        account.numberOfVisitors++
+
+        val numberOfPosts = this.postRepository.countByAccount(account)
+        val numberOfLikes = this.favoritePostRepository.countByAccount(account);
+        return AccountDetail(account, numberOfPosts, numberOfLikes)
     }
 
     @Transactional
@@ -80,10 +88,7 @@ class AccountService(
     }
 
     @Transactional
-    fun delete(id: Long) {
-        val account = accountRepository.findById(id)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
-
+    fun delete(account: Account) {
         accountRepository.delete(account)
     }
 
