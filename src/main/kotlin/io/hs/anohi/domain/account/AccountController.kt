@@ -13,7 +13,7 @@ import javax.validation.Valid
 
 @Api(tags = ["계정"])
 @RestController
-@RequestMapping("/v1/accounts")
+@RequestMapping("/v1/users")
 class AccountController(
     @Autowired
     private val accountService: AccountService
