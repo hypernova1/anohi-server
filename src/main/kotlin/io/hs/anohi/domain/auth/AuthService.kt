@@ -1,18 +1,14 @@
 package io.hs.anohi.domain.auth
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
-import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.gson.GsonFactory
+import com.google.firebase.auth.FirebaseAuth
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.core.exception.UnauthorizedException
 import io.hs.anohi.domain.account.AccountRepository
 import io.hs.anohi.domain.account.AccountService
-import io.hs.anohi.domain.auth.constant.SocialType
-import io.hs.anohi.domain.auth.entity.RefreshToken
-import io.hs.anohi.domain.auth.payload.LoginForm
 import io.hs.anohi.domain.auth.payload.TokenRequest
 import io.hs.anohi.domain.auth.payload.TokenResponse
+import io.hs.anohi.infra.security.CustomUserDetailsService
 import io.hs.anohi.infra.security.JwtTokenProvider
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -32,50 +28,30 @@ class AuthService(
     val authenticationManager: AuthenticationManager,
     val jwtTokenProvider: JwtTokenProvider,
     val accountService: AccountService,
+    val userDetailsService: CustomUserDetailsService,
+    val firebaseAuth: FirebaseAuth,
 ) {
 
     @Transactional
-    fun login(loginForm: LoginForm): TokenResponse {
-        var email: String? = null
-        var password: String? = null
-        if (loginForm.socialType == SocialType.GOOGLE) {
-            val transport = NetHttpTransport()
-            val jsonFactory = GsonFactory()
-            val verifier = GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-//            .setAudience(Collections.singletonList())
-                .build()
+    fun login(token: String): TokenResponse {
+        val decodedToken = this.firebaseAuth.verifyIdToken(token.split(" ")[1])
 
-            val idToken = verifier.verify(loginForm.token) ?: throw UnauthorizedException(ErrorCode.CANNOT_FOUND_ACCOUNT)
 
-            val payload = idToken.payload
+        val existsUid = accountRepository.existsByUid(decodedToken.uid)
 
-            password = payload.subject
-            email = payload.email
-
-            val name = payload["name"] as String?
-            val pictureUrl = payload["picture"] as String?
-
-            val existsEmail = accountRepository.existsByEmail(email)
-            if (!existsEmail) {
-                accountService.create(password, email, name, pictureUrl)
-            }
+        if (!existsUid) {
+            accountService.create(decodedToken.email, decodedToken.name, decodedToken.picture)
         }
 
-        if (email == null || password == null) {
-            throw UnauthorizedException(ErrorCode.CANNOT_FOUND_ACCOUNT)
-        }
+        val userDetails = userDetailsService.loadUserByUsername(decodedToken.uid)
 
         val authentication: Authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(email, password)
+            UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
         )
         SecurityContextHolder.getContext().authentication = authentication
         val accessToken = jwtTokenProvider.generateToken(authentication.name, authentication.authorities)
         val refreshToken = jwtTokenProvider.generateRefreshToken(authentication.name, authentication.authorities)
 
-        val account = accountRepository.findByEmail(email)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
-
-        refreshTokenRepository.save(RefreshToken(refreshToken, account))
 
         return TokenResponse(accessToken, refreshToken)
     }
@@ -92,7 +68,7 @@ class AuthService(
             throw UnauthorizedException(ErrorCode.INVALID_TOKEN)
         }
 
-        val account = accountRepository.findByEmail(request.email)
+        val account = accountRepository.findByUid(request.email)
             .orElseThrow { UnauthorizedException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
         val authorities = account.roles.mapTo(LinkedList<GrantedAuthority>()) {

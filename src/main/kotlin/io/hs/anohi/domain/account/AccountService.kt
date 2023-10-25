@@ -1,15 +1,16 @@
 package io.hs.anohi.domain.account
 
+import com.google.firebase.auth.FirebaseAuth
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.payload.AccountDetail
-import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.domain.auth.constant.RoleName
 import io.hs.anohi.domain.post.repository.FavoritePostRepository
 import io.hs.anohi.domain.post.repository.PostRepository
+import io.hs.anohi.infra.security.CustomUserDetailsService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,20 +22,18 @@ import org.springframework.transaction.annotation.Transactional
 class AccountService(
     private val accountRepository: AccountRepository,
     private val roleRepository: RoleRepository,
-    private val passwordEncoder: PasswordEncoder,
     private val postRepository: PostRepository,
     private val favoritePostRepository: FavoritePostRepository,
+    private val firebaseAuth: FirebaseAuth,
 ) {
 
     @Transactional
     fun create(
         email: String,
-        password: String,
         name: String?,
         pictureUrl: String?
     ) {
-        val hashedPassword = passwordEncoder.encode(password)
-        val account = Account.from(name = name, email = email, password = hashedPassword, profileImagePath = pictureUrl)
+        val account = Account.from(name = name, email = email, profileImagePath = pictureUrl)
 
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
@@ -44,15 +43,17 @@ class AccountService(
     }
 
     @Transactional
-    fun create(accountJoinForm: AccountJoinForm): Account {
-        val existsEmail = accountRepository.existsByEmail(accountJoinForm.email)
+    fun create(token: String): Account {
+        val decodedToken = this.firebaseAuth.verifyIdToken(token.split(" ")[1]);
+
+        println(decodedToken);
+
+        val existsEmail = accountRepository.existsByUid(decodedToken.uid)
         if (existsEmail) {
             throw ConflictException(ErrorCode.CONFLICT_EMAIL)
         }
 
-        accountJoinForm.password = passwordEncoder.encode(accountJoinForm.password)
-
-        val account = Account.from(email = accountJoinForm.email, password = accountJoinForm.password, name = accountJoinForm.name, profileImagePath = "")
+        val account = Account.from(email = decodedToken.email, name = decodedToken.name, profileImagePath = decodedToken.picture)
 
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
@@ -80,20 +81,12 @@ class AccountService(
     }
 
     @Transactional
-    fun update(account: Account, request: AccountUpdateForm) {
-        if (request.password != null) {
-            account.password = passwordEncoder.encode(request.password)
-        }
-        account.update(request)
-    }
-
-    @Transactional
     fun delete(account: Account) {
         accountRepository.delete(account)
     }
 
-    fun existsEmail(email: String): Boolean {
-        return accountRepository.existsByEmail(email)
+    fun existsByUid(uid: String): Boolean {
+        return accountRepository.existsByUid(uid)
     }
 
 }

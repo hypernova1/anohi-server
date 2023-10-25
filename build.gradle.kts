@@ -42,6 +42,7 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     implementation("com.google.api-client:google-api-client:2.2.0")
+    implementation ("com.google.firebase:firebase-admin:9.2.0")
 
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 

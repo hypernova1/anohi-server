@@ -89,7 +89,7 @@ class SecurityConfig(
             .permitAll()
             .antMatchers(HttpMethod.GET, "/swagger*/**", "/v3/api-docs")
             .permitAll()
-            .antMatchers(HttpMethod.POST, "/v1/accounts/check-email-duplication", "/v1/accounts", "/v1/auth")
+            .antMatchers(HttpMethod.POST, "/v1/users/check-email-duplication", "/v1/users", "/v1/auth")
             .permitAll()
             .antMatchers(HttpMethod.PATCH, "/v1/auth/token")
             .permitAll()

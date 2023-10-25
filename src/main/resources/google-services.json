@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "205541604996",
+    "project_id": "anohinonikki",
+    "storage_bucket": "anohinonikki.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205541604996:android:d2b0d3afd29e5d446f4cd1",
+        "android_client_info": {
+          "package_name": "com.anohi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205541604996-htmmmot4u3sn9kid3upcvs1gd64vsm9m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anohi",
+            "certificate_hash": "99b1cae37dc54da4e8de24ebaea9eeb01946d5a3"
+          }
+        },
+        {
+          "client_id": "205541604996-5fcd0c36ei53tfpqbpm584u03pf5j0ek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnVlFc4EiDiCl7G4dFGrJ_4ZGR7JpH2Mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205541604996-5fcd0c36ei53tfpqbpm584u03pf5j0ek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "205541604996-r7981crgb7ihdm82me5fcjra09j728gt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anohi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

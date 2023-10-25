@@ -21,9 +21,9 @@ class AccountController(
     @ApiOperation("계정 생성")
     @PostMapping
     fun create(
-        @RequestBody @Valid accountJoinForm: AccountJoinForm
+        @RequestHeader("Authorization") token: String
     ): ResponseEntity<Any> {
-        val account = accountService.create(accountJoinForm)
+        val account = accountService.create(token)
 
         val location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -37,7 +37,7 @@ class AccountController(
     @ApiOperation("이메일 존재 여부 확인")
     @PostMapping("/check-email-duplication")
     fun existsEmail(@RequestBody @Valid request: ExistsEmailRequest): ResponseEntity<ExistsEmailResponse> {
-        val existsEmail = accountService.existsEmail(request.email)
+        val existsEmail = accountService.existsByUid(request.uid)
         println(existsEmail)
         return ResponseEntity.ok().body(ExistsEmailResponse(existsEmail));
     }
@@ -68,16 +68,6 @@ class AccountController(
     fun getUserDetail(@PathVariable id: Long): ResponseEntity<AccountDetail> {
         val account = accountService.findById(id, true)
         return ResponseEntity.ok(account)
-    }
-
-    @ApiOperation("계정 정보 수정")
-    @PutMapping("/me")
-    fun modifyUserInfo(
-        @AuthAccount account: Account,
-        @Valid @RequestBody request: AccountUpdateForm
-    ): ResponseEntity<Any> {
-        accountService.update(account, request)
-        return ResponseEntity.noContent().build()
     }
 
 

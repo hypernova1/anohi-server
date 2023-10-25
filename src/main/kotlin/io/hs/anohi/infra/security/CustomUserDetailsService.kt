@@ -13,9 +13,9 @@ import javax.security.auth.login.AccountNotFoundException
 class CustomUserDetailsService(
     @Autowired val accountRepository: AccountRepository) : UserDetailsService {
 
-    override fun loadUserByUsername(email: String): UserDetails {
-        val account = accountRepository.findByEmail(email)
-            .orElseThrow { AccountNotFoundException(email) }
+    override fun loadUserByUsername(uid: String): UserDetails {
+        val account = accountRepository.findByUid(uid)
+            .orElseThrow { AccountNotFoundException(uid) }
 
         return UserAccount(account)
     }
