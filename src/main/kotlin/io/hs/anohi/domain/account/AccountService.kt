@@ -29,6 +29,11 @@ class AccountService(
     fun create(token: String): Account {
         val decodedToken = this.firebaseAuth.verifyIdToken(token)
 
+        val existsUid = accountRepository.existsByUid(decodedToken.uid)
+        if (existsUid) {
+            throw ConflictException(ErrorCode.CONFLICT_UID)
+        }
+
         val firebase = decodedToken.claims["firebase"] as Map<*, *>
         val identities = firebase["identities"] as Map<*, *>
 
@@ -42,11 +47,6 @@ class AccountService(
                 loginType = LoginType.APPLE
             }
 
-        }
-
-        val existsUid = accountRepository.existsByUid(decodedToken.uid)
-        if (existsUid) {
-            throw ConflictException(ErrorCode.CONFLICT_UID)
         }
 
         val account =

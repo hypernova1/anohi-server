@@ -7,11 +7,14 @@ class AccountDetail(
     @ApiModelProperty("인덱스", example = "1")
     var id: Long,
 
-    @ApiModelProperty("이메일", example = "hypemova@gmail.com")
-    var email: String,
-
     @ApiModelProperty("이름", example = "멜코르")
     var name: String,
+
+    @ApiModelProperty("프로필 이미지", example = "https://www.naver.com")
+    var profileImagePath: String,
+
+    @ApiModelProperty("배경 이미지", example = "https://www.naver.com")
+    var backgroundImageUrl: String,
 
     @ApiModelProperty("설명", example = "안녕하세요")
     var description: String,
@@ -25,9 +28,8 @@ class AccountDetail(
     @ApiModelProperty("좋아요 글 수", example = "1")
     var numberOfLikes: Int = 0,
 ) {
-    constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(0, "", "", "") {
+    constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(0, account.name, account.profileImagePath, "", account.description, numberOfPosts, account.numberOfVisitors, numberOfLikes) {
         this.id = account.id
-        this.email = account.email
         this.name = account.name
         this.description = account.description
         this.numberOfPosts = numberOfPosts
