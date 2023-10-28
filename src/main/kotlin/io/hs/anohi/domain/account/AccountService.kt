@@ -80,6 +80,7 @@ class AccountService(
     @Transactional
     fun delete(account: Account) {
         accountRepository.delete(account)
+        firebaseAuth.deleteUser(account.uid);
     }
 
 }
