@@ -28,7 +28,7 @@ data class PostDetail(
     var imagePaths: List<String>,
 
     @ApiModelProperty("작성자 요약")
-    var userProfile: UserProfile?,
+    var author: Author?,
 
     @ApiModelProperty("생성일")
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
@@ -38,14 +38,13 @@ data class PostDetail(
     @DateTimeFormat(pattern = "YYYY-MM-DDThh:mm:ss")
     var updatedAt: String,
 
-    @ApiModelProperty("좋아요 누른 유저 목록")
-    var likedUsers: List<LikedUser>,
+    @ApiModelProperty("조회수")
+    val hit: Long
 ) {
-    constructor(post: Post) : this(post.id, post.title, post.content, emptyList(), emptyList(), emptyList(), null, post.createdAt.toString(), post.updatedAt.toString(), emptyList()) {
+    constructor(post: Post) : this(post.id, post.title, post.content, emptyList(), emptyList(), emptyList(), null, post.createdAt.toString(), post.updatedAt.toString(), post.hit) {
         this.tags = post.tags.map { it.name }
         this.emotionIds = post.emotions.map { it.id }
         this.imagePaths = post.images.map { it.originPath }
-        this.likedUsers = post.favoritePosts.map { LikedUser(it.account.id, it.account.name, it.account.profileImagePath) }
-        this.userProfile = UserProfile(post.account.id, post.account.name, post.account.profileImagePath)
+        this.author = Author(post.account.id, post.account.name, post.account.profileImagePath)
     }
 }

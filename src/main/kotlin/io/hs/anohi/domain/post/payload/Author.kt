@@ -1,7 +1,7 @@
 package io.hs.anohi.domain.post.payload
 
-data class LikedUser(
+data class Author(
     var id: Long,
-    var nickname: String,
+    var name: String,
     var profileImagePath: String? = "",
 )

@@ -4,14 +4,15 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.post.entity.*
+import io.hs.anohi.domain.post.entity.Emotion
+import io.hs.anohi.domain.post.entity.FavoritePost
+import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.domain.post.payload.PostDetail
 import io.hs.anohi.domain.post.payload.PostRequestForm
 import io.hs.anohi.domain.post.payload.PostUpdateForm
-import io.hs.anohi.domain.post.repository.CategoryRepository
-import io.hs.anohi.domain.post.repository.PostRepository
 import io.hs.anohi.domain.post.repository.EmotionRepository
 import io.hs.anohi.domain.post.repository.FavoritePostRepository
+import io.hs.anohi.domain.post.repository.PostRepository
 import io.hs.anohi.domain.tag.Tag
 import io.hs.anohi.domain.tag.TagService
 import org.springframework.data.domain.PageRequest
@@ -45,6 +46,7 @@ class PostService(
     fun findAll(account: Account, page: Int, size: Int): Pagination<PostDetail> {
         val pagePosts =
             postRepository.findAllByAccount(account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
+        println(pagePosts.content[0])
         val postDtos = pagePosts.content.map { PostDetail(it) }
         return Pagination.load(pagePosts, postDtos)
     }

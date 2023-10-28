@@ -44,7 +44,6 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             val jwt = this.getJwtFromRequest(request)
             if (StringUtils.hasText(jwt)) {
                 val verifyIdToken = firebaseAuth.verifyIdToken(jwt)
-                println(verifyIdToken)
 
                 val userDetails = userDetailsService.loadUserByUsername(verifyIdToken.uid)
 
