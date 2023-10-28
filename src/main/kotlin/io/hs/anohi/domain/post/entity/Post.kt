@@ -24,10 +24,7 @@ class Post: BaseEntity() {
     var hit: Long = 0
 
     @Column(nullable = false)
-    var favoriteCount: Long = 0
-
-    @ManyToMany
-    var categories: MutableList<Category> = mutableListOf()
+    var numberOfLikes: Long = 0
 
     @ManyToMany
     var tags: MutableList<Tag> = mutableListOf()
@@ -44,10 +41,9 @@ class Post: BaseEntity() {
     @OneToMany(mappedBy = "post")
     val favoritePosts: MutableList<FavoritePost> = mutableListOf()
 
-    fun update(postUpdateForm: PostUpdateForm, categories: List<Category>?, tags: List<Tag>?, emotions: List<Emotion>?) {
+    fun update(postUpdateForm: PostUpdateForm, tags: List<Tag>?, emotions: List<Emotion>?) {
         this.title = postUpdateForm.title ?: this.title
         this.content = postUpdateForm.content ?: this.content
-        this.categories = (categories ?: mutableListOf()).toMutableList()
         this.tags = (tags ?: mutableListOf()).toMutableList()
         this.emotions = (emotions ?: mutableListOf()).toMutableList()
 
@@ -67,12 +63,11 @@ class Post: BaseEntity() {
 
     companion object {
 
-        fun of(postRequestForm: PostRequestForm, account: Account, categories: List<Category>, tags: List<Tag>, emotions: List<Emotion>): Post {
+        fun of(postRequestForm: PostRequestForm, account: Account, tags: List<Tag>, emotions: List<Emotion>): Post {
             val post = Post()
             post.title = postRequestForm.title
             post.content = postRequestForm.content
             post.account = account
-            post.categories.addAll(categories)
             post.tags.addAll(tags)
             post.emotions.addAll(emotions)
             val images = postRequestForm.imagePaths.map { Image.from(it, post) }

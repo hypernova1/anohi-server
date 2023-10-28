@@ -24,18 +24,16 @@ import org.springframework.transaction.annotation.Transactional
 class PostService(
     private val postRepository: PostRepository,
     private val tagService: TagService,
-    private val categoryRepository: CategoryRepository,
     private val emotionRepository: EmotionRepository,
     private val favoritePostRepository: FavoritePostRepository,
 ) {
 
     @Transactional
     fun create(postRequestForm: PostRequestForm, account: Account): Post {
-        val categories = categoryRepository.findAllById(postRequestForm.categoryIds)
         val emotions = emotionRepository.findAllById(postRequestForm.emotionIds)
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
 
-        val post = Post.of(postRequestForm = postRequestForm, account = account, categories = categories, emotions = emotions, tags = tags)
+        val post = Post.of(postRequestForm = postRequestForm, account = account, emotions = emotions, tags = tags)
         return postRepository.save(post)
     }
 
@@ -66,10 +64,6 @@ class PostService(
 
     @Transactional
     fun update(id: Long, postUpdateForm: PostUpdateForm, account: Account): Post {
-        var categories: List<Category>? = null
-        if (postUpdateForm.categoryIds != null) {
-            categories = categoryRepository.findAllById(postUpdateForm.categoryIds!!)
-        }
         var emotions: List<Emotion>? = null
         if (postUpdateForm.emotionIds != null) {
             emotions = emotionRepository.findAllById(postUpdateForm.emotionIds!!)
@@ -81,7 +75,7 @@ class PostService(
 
         val post = postRepository.findById(id).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
-        post.update(postUpdateForm, categories = categories, tags = tags, emotions = emotions)
+        post.update(postUpdateForm, tags = tags, emotions = emotions)
         postRepository.save(post)
 
         return post
@@ -95,11 +89,11 @@ class PostService(
         val exist = favoritePostRepository.existsByPostAndAccount(post, account)
         if (exist) {
             favoritePostRepository.deleteByPostAndAccount(post, account)
-            post.favoriteCount--
+            post.numberOfLikes--
         } else {
             val favoritePost = FavoritePost.of(post, account)
             favoritePostRepository.save(favoritePost)
-            post.favoriteCount++
+            post.numberOfLikes++
         }
 
         postRepository.save(post)

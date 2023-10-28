@@ -14,6 +14,4 @@ class Category: BaseEntity() {
     @Column
     val name: String = "";
 
-    @ManyToMany(mappedBy = "categories")
-    val posts: MutableList<Post> = mutableListOf()
 }

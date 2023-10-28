@@ -42,8 +42,9 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     ) {
         try {
             val jwt = this.getJwtFromRequest(request)
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validationToken(jwt!!)) {
+            if (StringUtils.hasText(jwt)) {
                 val verifyIdToken = firebaseAuth.verifyIdToken(jwt)
+                println(verifyIdToken)
 
                 val userDetails = userDetailsService.loadUserByUsername(verifyIdToken.uid)
 
@@ -54,7 +55,8 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } catch (e: Exception) {
-            logger.error("Could not set user authentication in security context, $e")
+            e.printStackTrace()
+//            logger.error("Could not set user authentication in security context, $e")
             throw UnauthorizedException(ErrorCode.INVALID_TOKEN)
         }
         filterChain.doFilter(request, response)

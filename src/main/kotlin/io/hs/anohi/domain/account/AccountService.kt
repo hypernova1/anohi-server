@@ -27,7 +27,7 @@ class AccountService(
 
     @Transactional
     fun create(token: String): Account {
-        val decodedToken = this.firebaseAuth.verifyIdToken(token.split(" ")[1])
+        val decodedToken = this.firebaseAuth.verifyIdToken(token)
 
         val firebase = decodedToken.claims["firebase"] as Map<*, *>
         val identities = firebase["identities"] as Map<*, *>
@@ -50,7 +50,7 @@ class AccountService(
         }
 
         val account =
-            Account.from(email = decodedToken.email, loginType, name = decodedToken.name, profileImagePath = decodedToken.picture)
+            Account.from(uid = decodedToken.uid ,email = decodedToken.email, loginType, name = decodedToken.name, profileImagePath = decodedToken.picture)
 
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }

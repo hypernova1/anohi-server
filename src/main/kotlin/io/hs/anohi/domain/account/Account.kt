@@ -17,7 +17,7 @@ import javax.persistence.*
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
 class Account: BaseEntity() {
 
-    @Column()
+    @Column(unique = true, nullable = false)
     var uid: String = ""
 
     @Column(nullable = false)
@@ -58,8 +58,9 @@ class Account: BaseEntity() {
     }
 
     companion object {
-        fun from(email: String, loginType: LoginType, name: String?, profileImagePath: String?): Account {
+        fun from(uid: String, email: String, loginType: LoginType, name: String?, profileImagePath: String?): Account {
             val account = Account()
+            account.uid = uid
             account.name = name ?: ""
             account.email = email
             account.isActive = true

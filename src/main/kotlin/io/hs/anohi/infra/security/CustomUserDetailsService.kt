@@ -17,6 +17,8 @@ class CustomUserDetailsService(
         val account = accountRepository.findByUid(uid)
             .orElseThrow { AccountNotFoundException(uid) }
 
+        println(account.roles)
+        println(account.email)
         return UserAccount(account)
     }
 

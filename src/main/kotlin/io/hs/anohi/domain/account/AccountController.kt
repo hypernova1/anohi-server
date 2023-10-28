@@ -1,6 +1,7 @@
 package io.hs.anohi.domain.account
 
 import io.hs.anohi.domain.account.payload.AccountDetail
+import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
@@ -21,9 +22,9 @@ class AccountController(
     @ApiOperation("계정 생성")
     @PostMapping
     fun create(
-        @RequestHeader("Authorization") token: String
+        @RequestBody joinForm: AccountJoinForm
     ): ResponseEntity<Any> {
-        val account = accountService.create(token)
+        val account = accountService.create(joinForm.token)
 
         val location = ServletUriComponentsBuilder
             .fromCurrentRequest()

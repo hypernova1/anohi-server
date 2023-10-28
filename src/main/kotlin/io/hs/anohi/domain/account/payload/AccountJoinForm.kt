@@ -7,17 +7,7 @@ import javax.validation.constraints.Size
 
 class AccountJoinForm(
 
-    @ApiModelProperty("이메일", example = "hello@naver.com", required = true)
-    @field:Email(message = "이메일 형식이 아닙니다.")
+    @ApiModelProperty("구글 파이어베이스 토큰", example = "1234", required = true)
     @field:NotBlank
-    val email: String,
-
-    @ApiModelProperty("이름", example = "김민호", required = true)
-    @field:NotBlank
-    val name: String,
-
-    @ApiModelProperty("비밀번호", example = "1234", required = true)
-    @field:NotBlank
-    @field:Size(min = 4, max = 20)
-    var password: String,
+    var token: String,
 )

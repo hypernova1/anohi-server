@@ -24,9 +24,6 @@ data class PostDetail(
     @ApiModelProperty("감정 인덱스 목록")
     var emotionIds: List<Long>,
 
-    @ApiModelProperty("카테고리 인덱스 목록")
-    var categoryIds: List<Long>,
-
     @ApiModelProperty("이미지 주소 목록")
     var imagePaths: List<String>,
 
@@ -44,8 +41,7 @@ data class PostDetail(
     @ApiModelProperty("좋아요 누른 유저 목록")
     var likedUsers: List<LikedUser>,
 ) {
-    constructor(post: Post) : this(post.id, post.title, post.content, emptyList(), emptyList(), emptyList(), emptyList(), null, post.createdAt.toString(), post.updatedAt.toString(), emptyList()) {
-        this.categoryIds = post.categories.map { it.id }
+    constructor(post: Post) : this(post.id, post.title, post.content, emptyList(), emptyList(), emptyList(), null, post.createdAt.toString(), post.updatedAt.toString(), emptyList()) {
         this.tags = post.tags.map { it.name }
         this.emotionIds = post.emotions.map { it.id }
         this.imagePaths = post.images.map { it.originPath }
