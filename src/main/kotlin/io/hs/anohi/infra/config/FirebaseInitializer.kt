@@ -14,7 +14,7 @@ class FirebaseInitializer {
     @Bean
     fun firebaseApp(): FirebaseApp? {
         val fileInputStream =
-            this.javaClass.getClassLoader().getResource("anohinonikki-firebase-adminsdk-yq9nu-df5178cd09.json")?.path?.let {
+            this.javaClass.classLoader.getResource("anohinonikki-firebase-adminsdk-yq9nu-df5178cd09.json")?.path?.let {
                 FileInputStream(
                     it
                 )
@@ -23,7 +23,7 @@ class FirebaseInitializer {
             .setCredentials(GoogleCredentials.fromStream(fileInputStream))
             .build()
 
-        return FirebaseApp.initializeApp(options)
+        return FirebaseApp.initializeApp(options, "anohi")
     }
 
     @Bean

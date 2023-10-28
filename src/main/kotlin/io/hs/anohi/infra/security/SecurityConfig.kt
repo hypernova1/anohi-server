@@ -7,8 +7,10 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -62,18 +64,17 @@ class SecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-        http.cors()
-            .and()
-            .csrf()
+        http.csrf()
             .disable()
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-        .authorizeRequests()
-            .antMatchers("/",
+
+        http.authorizeRequests()
+            .antMatchers(
+                "/",
                 "/favicon.ico",
                 "/**/*.png",
                 "/**/*.gif",
@@ -81,20 +82,22 @@ class SecurityConfig(
                 "/**/*.jpg",
                 "/**/*.html",
                 "/**/*.css",
-                "/**/*.js")
-            .permitAll()
-            .and()
-            .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/health")
+                "/**/*.js"
+            )
             .permitAll()
             .antMatchers(HttpMethod.GET, "/swagger*/**", "/v3/api-docs")
             .permitAll()
-            .antMatchers(HttpMethod.POST, "/v1/users/check-email-duplication", "/v1/users", "/v1/auth")
+            .antMatchers(HttpMethod.GET, "/health")
+            .permitAll()
+            .antMatchers(HttpMethod.POST, "/v1/accounts")
             .permitAll()
             .antMatchers(HttpMethod.PATCH, "/v1/auth/token")
             .permitAll()
+            .and()
+            .authorizeRequests()
             .anyRequest()
-            .hasRole("USER")
+            .authenticated()
+
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }

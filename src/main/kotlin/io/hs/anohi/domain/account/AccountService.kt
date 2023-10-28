@@ -5,15 +5,12 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.payload.AccountDetail
-import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.domain.auth.constant.RoleName
 import io.hs.anohi.domain.post.repository.FavoritePostRepository
 import io.hs.anohi.domain.post.repository.PostRepository
-import io.hs.anohi.infra.security.CustomUserDetailsService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -46,11 +43,11 @@ class AccountService(
     fun create(token: String): Account {
         val decodedToken = this.firebaseAuth.verifyIdToken(token.split(" ")[1]);
 
-        println(decodedToken);
+        println(decodedToken.claims["firebase"])
 
-        val existsEmail = accountRepository.existsByUid(decodedToken.uid)
-        if (existsEmail) {
-            throw ConflictException(ErrorCode.CONFLICT_EMAIL)
+        val existsUid = accountRepository.existsByUid(decodedToken.uid)
+        if (existsUid) {
+            throw ConflictException(ErrorCode.CONFLICT_UID)
         }
 
         val account = Account.from(email = decodedToken.email, name = decodedToken.name, profileImagePath = decodedToken.picture)

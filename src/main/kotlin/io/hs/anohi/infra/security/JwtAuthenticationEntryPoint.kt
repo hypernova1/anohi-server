@@ -7,6 +7,9 @@ import javax.naming.AuthenticationException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * 인증 예외 발생시 호출
+ * */
 @Component
 class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
 

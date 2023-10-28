@@ -34,14 +34,6 @@ class AccountController(
         return ResponseEntity.created(location).build()
     }
 
-    @ApiOperation("이메일 존재 여부 확인")
-    @PostMapping("/check-email-duplication")
-    fun existsEmail(@RequestBody @Valid request: ExistsEmailRequest): ResponseEntity<ExistsEmailResponse> {
-        val existsEmail = accountService.existsByUid(request.uid)
-        println(existsEmail)
-        return ResponseEntity.ok().body(ExistsEmailResponse(existsEmail));
-    }
-
     @ApiOperation("계정 목록 조회")
     @GetMapping
     fun getUsers(
