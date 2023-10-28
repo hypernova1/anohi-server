@@ -19,13 +19,6 @@ import javax.validation.Valid
 @RequestMapping("/v1/auth")
 class AuthController(private val authService: AuthService) {
 
-    @ApiOperation("로그인")
-    @PostMapping
-    fun login(@RequestHeader("Authorization") token: String): ResponseEntity<TokenResponse> {
-        val response = authService.login(token)
-        return ResponseEntity.ok(response)
-    }
-
     @ApiOperation("JWT 재발급")
     @PatchMapping("/token")
     fun reissueToken(@Valid @RequestBody refreshToken: TokenRequest): ResponseEntity<TokenResponse> {

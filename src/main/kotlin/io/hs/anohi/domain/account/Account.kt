@@ -58,12 +58,13 @@ class Account: BaseEntity() {
     }
 
     companion object {
-        fun from(email: String, name: String?, profileImagePath: String?): Account {
+        fun from(email: String, loginType: LoginType, name: String?, profileImagePath: String?): Account {
             val account = Account()
             account.name = name ?: ""
             account.email = email
             account.isActive = true
             account.profileImagePath = profileImagePath ?: ""
+            account.loginType = loginType
             return account
         }
     }

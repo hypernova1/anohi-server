@@ -1,6 +1,7 @@
 package io.hs.anohi.domain.account
 
-import io.hs.anohi.domain.account.payload.*
+import io.hs.anohi.domain.account.payload.AccountDetail
+import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import javax.validation.Valid
 
 
 @Api(tags = ["계정"])

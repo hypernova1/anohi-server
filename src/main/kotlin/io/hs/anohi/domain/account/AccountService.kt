@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
+import io.hs.anohi.domain.account.contants.LoginType
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.domain.auth.constant.RoleName
@@ -25,32 +26,31 @@ class AccountService(
 ) {
 
     @Transactional
-    fun create(
-        email: String,
-        name: String?,
-        pictureUrl: String?
-    ) {
-        val account = Account.from(name = name, email = email, profileImagePath = pictureUrl)
-
-        val role = roleRepository.findByName(RoleName.ROLE_USER)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
-
-        account.addRole(role)
-        accountRepository.save(account)
-    }
-
-    @Transactional
     fun create(token: String): Account {
-        val decodedToken = this.firebaseAuth.verifyIdToken(token.split(" ")[1]);
+        val decodedToken = this.firebaseAuth.verifyIdToken(token.split(" ")[1])
 
-        println(decodedToken.claims["firebase"])
+        val firebase = decodedToken.claims["firebase"] as Map<*, *>
+        val identities = firebase["identities"] as Map<*, *>
+
+        var loginType: LoginType = LoginType.NONE;
+        val identitiesKeys = identities.keys
+        if (identitiesKeys.isNotEmpty()) {
+            val socialType = identitiesKeys.iterator().next()
+            if (socialType === "google.com") {
+                loginType = LoginType.GOOGLE
+            } else if (socialType === "apple.com") {
+                loginType = LoginType.APPLE
+            }
+
+        }
 
         val existsUid = accountRepository.existsByUid(decodedToken.uid)
         if (existsUid) {
             throw ConflictException(ErrorCode.CONFLICT_UID)
         }
 
-        val account = Account.from(email = decodedToken.email, name = decodedToken.name, profileImagePath = decodedToken.picture)
+        val account =
+            Account.from(email = decodedToken.email, loginType, name = decodedToken.name, profileImagePath = decodedToken.picture)
 
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
@@ -80,10 +80,6 @@ class AccountService(
     @Transactional
     fun delete(account: Account) {
         accountRepository.delete(account)
-    }
-
-    fun existsByUid(uid: String): Boolean {
-        return accountRepository.existsByUid(uid)
     }
 
 }
