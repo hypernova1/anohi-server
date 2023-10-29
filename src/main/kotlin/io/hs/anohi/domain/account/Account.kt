@@ -59,10 +59,10 @@ class Account: BaseEntity() {
         fun from(uid: String, email: String, loginType: LoginType, name: String?, profileImageUrl: String?): Account {
             val account = Account()
             account.uid = uid
-            account.name = name ?: ""
+            account.name = name.orEmpty()
             account.email = email
             account.isActive = true
-            account.profileImageUrl = profileImageUrl ?: ""
+            account.profileImageUrl = profileImageUrl.orEmpty()
             account.loginType = loginType
             return account
         }

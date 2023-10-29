@@ -28,12 +28,14 @@ class AccountDetail(
     @ApiModelProperty("좋아요 글 수", example = "1")
     var numberOfLikes: Int = 0,
 ) {
-    constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(0, account.name, account.profileImageUrl, "", account.description, numberOfPosts, account.numberOfVisitors, numberOfLikes) {
-        this.id = account.id
-        this.name = account.name
-        this.description = account.description
-        this.numberOfPosts = numberOfPosts
-        this.numberOfVisitors = account.numberOfVisitors
-        this.numberOfLikes = numberOfLikes
-    }
+    constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(
+        account.id,
+        account.name,
+        account.profileImageUrl,
+        "",
+        account.description,
+        numberOfPosts,
+        account.numberOfVisitors,
+        numberOfLikes
+    )
 }

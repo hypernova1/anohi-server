@@ -41,10 +41,16 @@ data class PostDetail(
     @ApiModelProperty("조회수")
     val hit: Long
 ) {
-    constructor(post: Post) : this(post.id, post.title, post.content, emptyList(), emptyList(), emptyList(), null, post.createdAt.toString(), post.updatedAt.toString(), post.hit) {
-        this.tags = post.tags.map { it.name }
-        this.emotionIds = post.emotions.map { it.id }
-        this.imagePaths = post.images.map { it.originPath }
-        this.author = Author(post.account.id, post.account.name, post.account.profileImageUrl)
-    }
+    constructor(post: Post) : this(
+        post.id,
+        post.title,
+        post.content,
+        post.tags.map { it.name },
+        post.emotions.map { it.id },
+        post.images.map { it.originPath },
+        Author(post.account.id, post.account.name, post.account.profileImageUrl),
+        post.createdAt.toString(),
+        post.updatedAt.toString(),
+        post.hit
+    )
 }
