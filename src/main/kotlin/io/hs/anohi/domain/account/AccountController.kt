@@ -4,6 +4,7 @@ import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
+import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.post.PostService
 import io.hs.anohi.domain.post.payload.PostDetail
 import io.hs.anohi.infra.security.AuthAccount
@@ -84,6 +85,13 @@ class AccountController(
     fun getUserDetail(@PathVariable id: Long): ResponseEntity<AccountDetail> {
         val account = accountService.findById(id, true)
         return ResponseEntity.ok(account)
+    }
+
+    @ApiOperation("유저 정보 수정")
+    @PutMapping("/me")
+    fun update(@AuthAccount account: Account, @RequestBody updateForm: AccountUpdateForm): ResponseEntity<Any> {
+        this.accountService.update(account, updateForm)
+        return ResponseEntity.noContent().build()
     }
 
 

@@ -6,6 +6,7 @@ import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.contants.LoginType
 import io.hs.anohi.domain.account.payload.AccountDetail
+import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.domain.auth.constant.RoleName
 import io.hs.anohi.domain.post.repository.FavoritePostRepository
@@ -81,6 +82,11 @@ class AccountService(
     fun delete(account: Account) {
         accountRepository.delete(account)
         firebaseAuth.deleteUser(account.uid);
+    }
+
+    @Transactional
+    fun update(account: Account, updateForm: AccountUpdateForm) {
+        account.update(updateForm)
     }
 
 }

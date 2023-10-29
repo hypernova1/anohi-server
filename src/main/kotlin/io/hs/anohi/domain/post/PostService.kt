@@ -48,7 +48,6 @@ class PostService(
     fun findAll(account: Account, page: Int, size: Int): Pagination<PostDetail> {
         val pagePosts =
             postRepository.findAllByAccount(account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
-        println(pagePosts.content[0])
         val postDtos = pagePosts.content.map { PostDetail(it) }
         return Pagination.load(pagePosts, postDtos)
     }
