@@ -11,7 +11,7 @@ class AccountDetail(
     var name: String,
 
     @ApiModelProperty("프로필 이미지", example = "https://www.naver.com")
-    var profileImagePath: String,
+    var profileImageUrl: String,
 
     @ApiModelProperty("배경 이미지", example = "https://www.naver.com")
     var backgroundImageUrl: String,
@@ -28,7 +28,7 @@ class AccountDetail(
     @ApiModelProperty("좋아요 글 수", example = "1")
     var numberOfLikes: Int = 0,
 ) {
-    constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(0, account.name, account.profileImagePath, "", account.description, numberOfPosts, account.numberOfVisitors, numberOfLikes) {
+    constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(0, account.name, account.profileImageUrl, "", account.description, numberOfPosts, account.numberOfVisitors, numberOfLikes) {
         this.id = account.id
         this.name = account.name
         this.description = account.description

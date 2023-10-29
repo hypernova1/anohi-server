@@ -1,8 +1,11 @@
 package io.hs.anohi.domain.account
 
+import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
+import io.hs.anohi.domain.post.PostService
+import io.hs.anohi.domain.post.payload.PostDetail
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -10,14 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.net.http.HttpResponse
 
 
 @Api(tags = ["계정"])
 @RestController
 @RequestMapping("/v1/users")
 class AccountController(
-    @Autowired
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val postService: PostService
 ) {
     @ApiOperation("계정 생성")
     @PostMapping
@@ -54,6 +58,25 @@ class AccountController(
     fun getUserMe(@AuthAccount account: Account): ResponseEntity<AccountDetail> {
         val profile = accountService.findById(account.id)
         return ResponseEntity.ok(profile)
+    }
+
+    @ApiOperation("본인이 작성한 게시글 목록 조회")
+    @GetMapping("/me/posts")
+    fun getMyPosts(
+        @AuthAccount account: Account, @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Pagination<PostDetail>> {
+        val result = postService.findAll(account, page, size)
+        return ResponseEntity.ok(result)
+    }
+
+    @ApiOperation("본인이 작성한 게시글 목록 조회")
+    @GetMapping("/{id}/posts")
+    fun getUserPosts(@PathVariable id: Long, @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Pagination<PostDetail>> {
+        val result = postService.findByUserId(id, page, size)
+        return ResponseEntity.ok(result)
     }
 
     @ApiOperation("유저 상세 정보 조회")

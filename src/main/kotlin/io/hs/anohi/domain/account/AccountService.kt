@@ -50,7 +50,7 @@ class AccountService(
         }
 
         val account =
-            Account.from(uid = decodedToken.uid ,email = decodedToken.email, loginType, name = decodedToken.name, profileImagePath = decodedToken.picture)
+            Account.from(uid = decodedToken.uid ,email = decodedToken.email, loginType, name = decodedToken.name, profileImageUrl = decodedToken.picture)
 
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }

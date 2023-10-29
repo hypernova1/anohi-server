@@ -4,10 +4,8 @@ import io.hs.anohi.domain.auth.entity.Role
 import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.contants.LoginType
-import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.post.entity.FavoritePost
-import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*
@@ -31,7 +29,7 @@ class Account: BaseEntity() {
     var loginType: LoginType = LoginType.NONE;
 
     @Column(nullable = true)
-    var profileImagePath: String = ""
+    var profileImageUrl: String = ""
 
     @Column(nullable = true)
     var description: String = ""
@@ -53,18 +51,18 @@ class Account: BaseEntity() {
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.nickname ?: this.name
-        this.profileImagePath = updateForm.profileImagePath ?: this.profileImagePath
+        this.profileImageUrl = updateForm.profileImageUrl ?: this.profileImageUrl
         this.description = updateForm.description ?: this.description
     }
 
     companion object {
-        fun from(uid: String, email: String, loginType: LoginType, name: String?, profileImagePath: String?): Account {
+        fun from(uid: String, email: String, loginType: LoginType, name: String?, profileImageUrl: String?): Account {
             val account = Account()
             account.uid = uid
             account.name = name ?: ""
             account.email = email
             account.isActive = true
-            account.profileImagePath = profileImagePath ?: ""
+            account.profileImageUrl = profileImageUrl ?: ""
             account.loginType = loginType
             return account
         }

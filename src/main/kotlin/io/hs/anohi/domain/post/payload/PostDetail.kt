@@ -45,6 +45,6 @@ data class PostDetail(
         this.tags = post.tags.map { it.name }
         this.emotionIds = post.emotions.map { it.id }
         this.imagePaths = post.images.map { it.originPath }
-        this.author = Author(post.account.id, post.account.name, post.account.profileImagePath)
+        this.author = Author(post.account.id, post.account.name, post.account.profileImageUrl)
     }
 }

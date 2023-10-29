@@ -4,6 +4,7 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.account.AccountRepository
 import io.hs.anohi.domain.post.entity.Emotion
 import io.hs.anohi.domain.post.entity.FavoritePost
 import io.hs.anohi.domain.post.entity.Post
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class PostService(
     private val postRepository: PostRepository,
+    private val accountRepository: AccountRepository,
     private val tagService: TagService,
     private val emotionRepository: EmotionRepository,
     private val favoritePostRepository: FavoritePostRepository,
@@ -99,6 +101,12 @@ class PostService(
         }
 
         postRepository.save(post)
+    }
+
+    fun findByUserId(userId: Long, page: Int, size: Int): Pagination<PostDetail> {
+        val account = this.accountRepository.findById(userId)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) };
+        return this.findAll(account, page, size)
     }
 
 }
