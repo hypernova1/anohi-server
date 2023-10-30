@@ -13,10 +13,10 @@ import javax.persistence.ManyToOne
 class Image: BaseEntity() {
 
     @Column()
-    var originPath: String = ""
+    var originUrl: String = ""
 
     @Column()
-    var thumbnailPath: String = ""
+    var thumbnailUrl: String = ""
 
     @ManyToOne
     var post: Post? = null
@@ -24,7 +24,7 @@ class Image: BaseEntity() {
     companion object {
         fun from(imagePath: String, post: Post): Image {
             val image = Image()
-            image.originPath = imagePath
+            image.originUrl = imagePath
             image.post = post
             return image
         }

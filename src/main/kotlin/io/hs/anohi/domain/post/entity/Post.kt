@@ -14,7 +14,7 @@ import javax.persistence.*
 @SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
 class Post: BaseEntity() {
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     var title: String = ""
 
     @Column(nullable = false)
@@ -51,14 +51,14 @@ class Post: BaseEntity() {
     }
 
     private fun setImages(postUpdateForm: PostUpdateForm) {
-        val imagePaths = postUpdateForm.imagePaths ?: return
+        val imageUrls = postUpdateForm.imageUrls ?: return
 
-        if (imagePaths.isEmpty()) {
+        if (imageUrls.isEmpty()) {
             this.images.forEach { it.post = null }
             return
         }
 
-        this.images = mutableListOf(Image.from(imagePaths[0], this))
+        this.images = mutableListOf(Image.from(imageUrls[0], this))
     }
 
     companion object {
@@ -70,7 +70,7 @@ class Post: BaseEntity() {
             post.account = account
             post.tags.addAll(tags)
             post.emotions.addAll(emotions)
-            val images = postRequestForm.imagePaths.map { Image.from(it, post) }
+            val images = postRequestForm.imageUrls.map { Image.from(it, post) }
             post.images.addAll(images)
             return post
         }

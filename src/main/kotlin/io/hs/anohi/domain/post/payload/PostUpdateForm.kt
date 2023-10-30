@@ -17,6 +17,6 @@ class PostUpdateForm {
     var emotionIds: List<Long>? = null
 
     @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[1, 2, 3]")
-    val imagePaths: List<String>? = null
+    val imageUrls: List<String>? = null
 
 }

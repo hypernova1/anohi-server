@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank
 
 class PostRequestForm {
 
-    @ApiModelProperty("제목", example = "안녕하세요.", required = true)
+    @ApiModelProperty("제목", example = "안녕하세요.", required = false)
     @NotBlank
     val title: String = ""
 
@@ -22,6 +22,6 @@ class PostRequestForm {
     val emotionIds: List<Long> = Collections.emptyList()
 
     @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[\"https://google.com\"]", required = false)
-    val imagePaths: List<String> = Collections.emptyList()
+    val imageUrls: List<String> = Collections.emptyList()
 
 }

@@ -25,7 +25,7 @@ data class PostDetail(
     var emotionIds: List<Long>,
 
     @ApiModelProperty("이미지 주소 목록")
-    var imagePaths: List<String>,
+    var ImageUrls: List<String>,
 
     @ApiModelProperty("작성자 요약")
     var author: Author?,
@@ -47,7 +47,7 @@ data class PostDetail(
         post.content,
         post.tags.map { it.name },
         post.emotions.map { it.id },
-        post.images.map { it.originPath },
+        post.images.map { it.originUrl },
         Author(post.account.id, post.account.name, post.account.profileImageUrl),
         post.createdAt.toString(),
         post.updatedAt.toString(),
