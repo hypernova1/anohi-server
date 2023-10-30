@@ -13,8 +13,8 @@ class PostUpdateForm {
     @ApiModelProperty("태그 목록",  dataType = "List", example = "[\"str1\", \"str2\", \"str3\"]")
     var tags: List<String>? = null
 
-    @ApiModelProperty("감정 인덱스 목록", dataType = "List", example = "[1, 2, 3]")
-    var emotionIds: List<Long>? = null
+    @ApiModelProperty("감정 인덱스 목록", dataType = "List", example = "1")
+    var emotionId: Long? = null
 
     @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[1, 2, 3]")
     val imageUrls: List<String>? = null

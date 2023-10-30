@@ -15,6 +15,6 @@ class Emotion: BaseEntity() {
     @Enumerated(EnumType.STRING)
     val name: EmotionType = EmotionType.HAPPY;
 
-    @ManyToMany(mappedBy = "emotions")
+    @OneToMany
     val posts: MutableList<Post> = mutableListOf()
 }

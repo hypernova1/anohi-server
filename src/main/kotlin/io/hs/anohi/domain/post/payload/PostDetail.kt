@@ -22,7 +22,7 @@ data class PostDetail(
     var tags: List<String>,
 
     @ApiModelProperty("감정 인덱스 목록")
-    var emotionIds: List<Long>,
+    var emotionId: Long?,
 
     @ApiModelProperty("이미지 주소 목록")
     var ImageUrls: List<String>,
@@ -46,7 +46,7 @@ data class PostDetail(
         post.title,
         post.content,
         post.tags.map { it.name },
-        post.emotions.map { it.id },
+        post.emotion?.id,
         post.images.map { it.originUrl },
         Author(post.account.id, post.account.name, post.account.profileImageUrl),
         post.createdAt.toString(),

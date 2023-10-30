@@ -33,10 +33,15 @@ class PostService(
 
     @Transactional
     fun create(postRequestForm: PostRequestForm, account: Account): Post {
-        val emotions = emotionRepository.findAllById(postRequestForm.emotionIds)
+        var emotion: Emotion? = null
+        if (postRequestForm.emotionId != null) {
+            emotion = emotionRepository.findById(postRequestForm.emotionId)
+                .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
+        }
+
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
 
-        val post = Post.of(postRequestForm = postRequestForm, account = account, emotions = emotions, tags = tags)
+        val post = Post.of(postRequestForm = postRequestForm, account = account, emotion = emotion, tags = tags)
         return postRepository.save(post)
     }
 
@@ -67,9 +72,10 @@ class PostService(
 
     @Transactional
     fun update(id: Long, postUpdateForm: PostUpdateForm, account: Account): Post {
-        var emotions: List<Emotion>? = null
-        if (postUpdateForm.emotionIds != null) {
-            emotions = emotionRepository.findAllById(postUpdateForm.emotionIds!!)
+        var emotion: Emotion? = null
+        if (postUpdateForm.emotionId != null) {
+            emotion = emotionRepository.findById(postUpdateForm.emotionId!!)
+                .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
         }
         var tags: List<Tag>? = null
         if (postUpdateForm.tags != null) {
@@ -78,7 +84,7 @@ class PostService(
 
         val post = postRepository.findById(id).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
-        post.update(postUpdateForm, tags = tags, emotions = emotions)
+        post.update(postUpdateForm, tags = tags, emotion = emotion)
         postRepository.save(post)
 
         return post
@@ -104,7 +110,7 @@ class PostService(
 
     fun findByUserId(userId: Long, page: Int, size: Int): Pagination<PostDetail> {
         val account = this.accountRepository.findById(userId)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) };
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
         return this.findAll(account, page, size)
     }
 

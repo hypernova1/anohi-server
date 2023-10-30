@@ -29,8 +29,8 @@ class Post: BaseEntity() {
     @ManyToMany
     var tags: MutableList<Tag> = mutableListOf()
 
-    @ManyToMany
-    var emotions: MutableList<Emotion> = mutableListOf()
+    @ManyToOne
+    var emotion: Emotion? = null
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "post")
     var images: MutableList<Image> = mutableListOf()
@@ -41,11 +41,11 @@ class Post: BaseEntity() {
     @OneToMany(mappedBy = "post")
     val favoritePosts: MutableList<FavoritePost> = mutableListOf()
 
-    fun update(postUpdateForm: PostUpdateForm, tags: List<Tag>?, emotions: List<Emotion>?) {
+    fun update(postUpdateForm: PostUpdateForm, tags: List<Tag>?, emotion: Emotion?) {
         this.title = postUpdateForm.title ?: this.title
         this.content = postUpdateForm.content ?: this.content
         this.tags = (tags ?: mutableListOf()).toMutableList()
-        this.emotions = (emotions ?: mutableListOf()).toMutableList()
+        this.emotion = emotion ?: this.emotion
 
         setImages(postUpdateForm)
     }
@@ -63,13 +63,14 @@ class Post: BaseEntity() {
 
     companion object {
 
-        fun of(postRequestForm: PostRequestForm, account: Account, tags: List<Tag>, emotions: List<Emotion>): Post {
+        fun of(postRequestForm: PostRequestForm, account: Account, tags: List<Tag>, emotion: Emotion?): Post {
+            println(emotion)
             val post = Post()
             post.title = postRequestForm.title
             post.content = postRequestForm.content
             post.account = account
             post.tags.addAll(tags)
-            post.emotions.addAll(emotions)
+            post.emotion = emotion
             val images = postRequestForm.imageUrls.map { Image.from(it, post) }
             post.images.addAll(images)
             return post
