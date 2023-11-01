@@ -11,8 +11,8 @@ import java.util.UUID
 @Service
 class CommonService(private val amazonS3Config: AmazonS3Config) {
 
-    fun getPreSignedUrl(size: Int): Map<String, Serializable>? {
-        val fileName = UUID.randomUUID().toString()
+    fun getPreSignedUrl(folder: String, extensions: String): Map<String, Serializable>? {
+        val fileName = folder + "/" + UUID.randomUUID().toString() + "." + extensions
         val expiration = Date()
         var expirationTimeMills = expiration.time
         expirationTimeMills += (3 * 60 * 1000).toLong()

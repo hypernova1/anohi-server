@@ -12,10 +12,10 @@ import javax.persistence.ManyToOne
 @SQLDelete(sql = "UPDATE image SET deleted_at = current_timestamp WHERE id = ?")
 class Image: BaseEntity() {
 
-    @Column()
+    @Column(columnDefinition = "text")
     var originUrl: String = ""
 
-    @Column()
+    @Column(columnDefinition = "text")
     var thumbnailUrl: String = ""
 
     @ManyToOne

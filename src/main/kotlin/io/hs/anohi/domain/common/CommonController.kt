@@ -14,8 +14,8 @@ class CommonController(private val commonService: CommonService) {
 
     @ApiOperation("AWS S3 Pre Signed Url 생성")
     @GetMapping("/pre-signed-urls")
-    fun getPreSignedUrls(@RequestParam(defaultValue = "1") size: Int): ResponseEntity<Map<String, Serializable>> {
-        val result = commonService.getPreSignedUrl(size)
+    fun getPreSignedUrls(@RequestParam extensions: String, @RequestParam folder: String): ResponseEntity<Map<String, Serializable>> {
+        val result = commonService.getPreSignedUrl(folder, extensions)
 
         return ResponseEntity.ok(result)
     }

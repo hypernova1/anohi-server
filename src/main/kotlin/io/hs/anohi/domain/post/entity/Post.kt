@@ -17,7 +17,7 @@ class Post: BaseEntity() {
     @Column(nullable = true)
     var title: String = ""
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     var content: String = ""
 
     @Column(nullable = false)

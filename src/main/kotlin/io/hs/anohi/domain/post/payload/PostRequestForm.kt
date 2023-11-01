@@ -13,7 +13,7 @@ class PostRequestForm {
     @NotBlank
     val content: String = ""
 
-    @ApiModelProperty("태그 목록",  dataType = "List", example = "[\"str1\", \"str2\", \"str3\"]", required = true)
+    @ApiModelProperty("태그 목록",  dataType = "List", example = "[\"str1\", \"str2\", \"str3\"]", required = false)
     val tags: List<String> = Collections.emptyList()
 
 

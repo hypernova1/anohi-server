@@ -19,7 +19,7 @@ class AmazonS3Config {
 
     private val clientRegion: String = "ap-northeast-2"
 
-    val bucketName: String = "anohi-prod"
+    val bucketName: String = "anohi-production"
 
     @Bean
     fun amazonS3(): AmazonS3 {
