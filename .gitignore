@@ -38,3 +38,5 @@ out/
 
 src/main/resources/application.yml
 src/main/resources/application-dev.yml
+src/main/resources/anohinonikki-firebase-adminsdk-yq9nu-df5178cd09.json
+src/main/resources/google-services.json
