@@ -11,6 +11,7 @@ enum class ErrorCode(val message: String, val code: String) {
     INVALID_TOKEN("유효하지 않은 토큰입니다.", "INVALID_TOKEN"),
 
     REQUIRE_ARGUMENT_NOT_FOUND("필수 파라미터가 누락되었습니다.", "REQUIRE_ARGUMENT_NOT_FOUND"),
+    BAD_ARGUMENT_VALUE("파라미터의 값이 올바르지 않습니다.", "BAD_ARGUMENT_VALUE"),
     CANNOT_FOUND_EMOTION("이모션이 존재하지 않습니다", "REQUIRE_ARGUMENT_NOT_FOUND"),
 
 

@@ -2,10 +2,10 @@ package io.hs.anohi.core
 
 import io.hs.anohi.core.exception.HttpException
 import org.springframework.http.ResponseEntity
-import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import javax.validation.ConstraintViolationException
 
 @RestControllerAdvice
 class ExceptionHandler {
@@ -24,6 +24,16 @@ class ExceptionHandler {
             "Required request body is missing"
         )
         return ResponseEntity.status(422).body(errorResponse)
+    }
+    @ExceptionHandler(value = [ConstraintViolationException::class])
+    protected fun constrainViolationException(e: ConstraintViolationException): ResponseEntity<Any> {
+        val errorResponse = ErrorResponse<Any>(
+            ErrorCode.BAD_ARGUMENT_VALUE.code,
+            ErrorCode.BAD_ARGUMENT_VALUE.message,
+            e.message.toString()
+        )
+
+        return ResponseEntity.badRequest().body(errorResponse)
     }
 
 }
