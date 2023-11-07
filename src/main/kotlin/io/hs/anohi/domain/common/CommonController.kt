@@ -1,6 +1,8 @@
 package io.hs.anohi.domain.common
 
 import io.hs.anohi.domain.common.constans.FolderType
+import io.hs.anohi.domain.common.payloads.PreSignedUrlRequest
+import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity
@@ -16,12 +18,9 @@ class CommonController(private val commonService: CommonService) {
     @ApiOperation("AWS S3 Pre Signed Url 생성")
     @GetMapping("/pre-signed-urls")
     fun getPreSignedUrls(
-        @RequestParam() folder: FolderType,
-        @RequestParam(required = false, defaultValue = "jpg") extension: String,
-        @RequestParam(required = false, defaultValue = "1") size: Int
+        @QueryStringArgumentResolver request: PreSignedUrlRequest
     ): ResponseEntity<List<URL>> {
-        val result = commonService.getPreSignedUrl(folder, extension, size)
-
+        val result = commonService.getPreSignedUrl(request.folder, request.extension, request.size)
         return ResponseEntity.ok(result)
     }
 }

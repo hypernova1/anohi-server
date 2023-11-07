@@ -1,15 +1,21 @@
 package io.hs.anohi.infra.config
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.filter.CommonsRequestLoggingFilter
+import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
+
 @Configuration
 @EnableWebMvc
 class WebMvcConfig: WebMvcConfigurer {
+
+    @Autowired
+    private lateinit var argumentResolver: QueryStringArgumentResolver
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -30,5 +36,11 @@ class WebMvcConfig: WebMvcConfigurer {
         filter.setIncludePayload(true)
 
         return filter
+    }
+
+    override fun addArgumentResolvers(
+        argumentResolvers: MutableList<HandlerMethodArgumentResolver?>
+    ) {
+        argumentResolvers.add(argumentResolver)
     }
 }
