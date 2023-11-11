@@ -8,7 +8,6 @@ import io.hs.anohi.domain.post.payload.PostUpdateForm
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -23,7 +22,7 @@ class PostController(
 
     @ApiOperation("글 생성")
     @PostMapping
-    fun create(@Valid @RequestBody postRequestForm: PostRequestForm, @AuthAccount account: Account): ResponseEntity<Any> {
+    fun create(@Valid @RequestBody postRequestForm: PostRequestForm, @AuthAccount account: Account): ResponseEntity<PostDetail> {
         val post = postService.create(postRequestForm, account)
 
         val location = ServletUriComponentsBuilder
@@ -32,7 +31,7 @@ class PostController(
             .buildAndExpand(post.id)
             .toUri()
 
-        return ResponseEntity.created(location).build()
+        return ResponseEntity.created(location).body(post)
     }
 
     @ApiOperation("글 수정")
@@ -56,9 +55,7 @@ class PostController(
     @GetMapping("/{id}")
     fun findOne(@PathVariable id: Long, @AuthAccount account: Account): ResponseEntity<PostDetail> {
         val post = postService.findById(id, account)
-        val postDetail = PostDetail(post)
-
-        return ResponseEntity.ok(postDetail)
+        return ResponseEntity.ok(post)
     }
 
     @ApiOperation("글 좋아요")
