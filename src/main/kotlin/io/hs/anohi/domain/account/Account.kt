@@ -50,7 +50,7 @@ class Account: BaseEntity() {
     val favoritePosts: MutableList<FavoritePost> = mutableListOf()
 
     fun update(updateForm: AccountUpdateForm) {
-        this.name = updateForm.nickname ?: this.name
+        this.name = updateForm.name ?: this.name
         this.profileImageUrl = updateForm.profileImageUrl ?: this.profileImageUrl
         this.description = updateForm.description ?: this.description
     }

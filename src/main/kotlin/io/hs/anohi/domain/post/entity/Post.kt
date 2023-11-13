@@ -7,6 +7,7 @@ import io.hs.anohi.domain.post.payload.PostUpdateForm
 import io.hs.anohi.domain.tag.Tag
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
+import java.util.Arrays
 import javax.persistence.*
 
 @Entity
@@ -32,8 +33,12 @@ class Post: BaseEntity() {
     @ManyToOne
     var emotion: Emotion? = null
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "post")
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "post", orphanRemoval = true)
     var images: MutableList<Image> = mutableListOf()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+        }
 
     @ManyToOne
     lateinit var account: Account
@@ -58,13 +63,12 @@ class Post: BaseEntity() {
             return
         }
 
-        this.images = mutableListOf(Image.from(imageUrls[0], this))
+        this.images = imageUrls.map { Image.from(it, this) }.toList().toMutableList();
     }
 
     companion object {
 
         fun of(postRequestForm: PostRequestForm, account: Account, tags: List<Tag>, emotion: Emotion?): Post {
-            println(emotion)
             val post = Post()
             post.title = postRequestForm.title
             post.content = postRequestForm.content
