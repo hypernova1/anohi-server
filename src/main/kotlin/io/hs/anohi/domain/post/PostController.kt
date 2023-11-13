@@ -53,21 +53,10 @@ class PostController(
     fun findAll(
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
-        @AuthAccount account: Account
+        @RequestParam(required = false) emotionId: Long?,
+        @AuthAccount account: Account,
     ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findAll(account, page, size)
-        return ResponseEntity.ok(result)
-    }
-
-    @ApiOperation("감정별 글 목록 조회")
-    @GetMapping("/emotions/{emotionsId}")
-    fun findEmotionAll(
-        @PathVariable emotionsId: Long,
-        @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int,
-        @AuthAccount account: Account
-    ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findByEmotion(emotionsId, page, size, account)
+        val result = postService.findAll(account, page, size, emotionId)
         return ResponseEntity.ok(result)
     }
 

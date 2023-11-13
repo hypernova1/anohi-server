@@ -16,6 +16,7 @@ import io.hs.anohi.domain.post.repository.FavoritePostRepository
 import io.hs.anohi.domain.post.repository.PostRepository
 import io.hs.anohi.domain.tag.Tag
 import io.hs.anohi.domain.tag.TagService
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -50,9 +51,15 @@ class PostService(
         postRepository.deleteById(id)
     }
 
-    fun findAll(account: Account, page: Int, size: Int): Pagination<PostDetail> {
-        val pagePosts =
+    fun findAll(account: Account, page: Int, size: Int, emotionId: Long?): Pagination<PostDetail> {
+        val pagePosts: Page<Post> = if (emotionId == null) {
             postRepository.findAllByAccount(account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
+        } else {
+            val emotion = this.emotionRepository.findById(emotionId)
+                .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
+            postRepository.findAllByEmotionAndAccount(emotion, account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
+        }
+
         val postDtos = pagePosts.content.map { PostDetail(it) }
         return Pagination.load(pagePosts, postDtos)
     }
@@ -111,16 +118,8 @@ class PostService(
     fun findByUserId(userId: Long, page: Int, size: Int): Pagination<PostDetail> {
         val account = this.accountRepository.findById(userId)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
-        return this.findAll(account, page, size)
+        return this.findAll(account, page, size, null)
     }
 
-    fun findByEmotion(emotionsId: Long, page: Int, size: Int, account: Account): Pagination<PostDetail>? {
-        val emotion = this.emotionRepository.findById(emotionsId)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
-        val pagePosts =
-            postRepository.findAllByEmotionAndAccount(emotion, account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
-        val postDtos = pagePosts.content.map { PostDetail(it) }
-        return Pagination.load(pagePosts, postDtos)
-    }
 
 }

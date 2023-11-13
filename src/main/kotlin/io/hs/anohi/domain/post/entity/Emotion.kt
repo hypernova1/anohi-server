@@ -2,9 +2,9 @@ package io.hs.anohi.domain.post.entity
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.post.constant.EmotionType
+import io.hs.anohi.domain.post.entity.Post
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-import java.util.*
 import javax.persistence.*
 
 @Entity

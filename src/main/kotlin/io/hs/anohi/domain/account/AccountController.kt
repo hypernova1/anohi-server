@@ -5,16 +5,16 @@ import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
 import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.hs.anohi.domain.post.EmotionService
 import io.hs.anohi.domain.post.PostService
+import io.hs.anohi.domain.post.payload.EmotionStatistics
 import io.hs.anohi.domain.post.payload.PostDetail
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.net.http.HttpResponse
 
 
 @Api(tags = ["계정"])
@@ -22,7 +22,8 @@ import java.net.http.HttpResponse
 @RequestMapping("/v1/users")
 class AccountController(
     private val accountService: AccountService,
-    private val postService: PostService
+    private val postService: PostService,
+    private val emotionService: EmotionService
 ) {
     @ApiOperation("계정 생성")
     @PostMapping
@@ -61,14 +62,11 @@ class AccountController(
         return ResponseEntity.ok(profile)
     }
 
-    @ApiOperation("본인이 작성한 게시글 목록 조회")
-    @GetMapping("/me/posts")
-    fun getMyPosts(
-        @AuthAccount account: Account, @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
-    ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findAll(account, page, size)
-        return ResponseEntity.ok(result)
+    @ApiOperation("유저의 감정 정보 조회")
+    @GetMapping("/me/emotions")
+    fun getEmotionStatistics(@AuthAccount account: Account): ResponseEntity<List<EmotionStatistics>> {
+        val profile = emotionService.getEmotionsStatistics(account)
+        return ResponseEntity.ok(profile)
     }
 
     @ApiOperation("본인이 작성한 게시글 목록 조회")
