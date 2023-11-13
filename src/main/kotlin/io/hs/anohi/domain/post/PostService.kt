@@ -32,7 +32,7 @@ class PostService(
 ) {
 
     @Transactional
-    fun create(postRequestForm: PostRequestForm, account: Account): Post {
+    fun create(postRequestForm: PostRequestForm, account: Account): PostDetail {
         var emotion: Emotion? = null
         if (postRequestForm.emotionId != null) {
             emotion = emotionRepository.findById(postRequestForm.emotionId)
@@ -42,7 +42,7 @@ class PostService(
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
 
         val post = Post.of(postRequestForm = postRequestForm, account = account, emotion = emotion, tags = tags)
-        return postRepository.save(post)
+        return PostDetail(post)
     }
 
     @Transactional
@@ -58,7 +58,7 @@ class PostService(
     }
 
     @Transactional
-    fun findById(id: Long, account: Account): Post {
+    fun findById(id: Long, account: Account): PostDetail {
         val post = postRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
@@ -67,7 +67,7 @@ class PostService(
             this.postRepository.save(post)
         }
 
-        return post
+        return PostDetail(post)
     }
 
     @Transactional
