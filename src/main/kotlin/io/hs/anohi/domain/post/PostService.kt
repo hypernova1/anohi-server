@@ -114,4 +114,13 @@ class PostService(
         return this.findAll(account, page, size)
     }
 
+    fun findByEmotion(emotionsId: Long, page: Int, size: Int, account: Account): Pagination<PostDetail>? {
+        val emotion = this.emotionRepository.findById(emotionsId)
+            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
+        val pagePosts =
+            postRepository.findAllByEmotionAndAccount(emotion, account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
+        val postDtos = pagePosts.content.map { PostDetail(it) }
+        return Pagination.load(pagePosts, postDtos)
+    }
+
 }

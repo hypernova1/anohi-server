@@ -22,7 +22,10 @@ class PostController(
 
     @ApiOperation("글 생성")
     @PostMapping
-    fun create(@Valid @RequestBody postRequestForm: PostRequestForm, @AuthAccount account: Account): ResponseEntity<PostDetail> {
+    fun create(
+        @Valid @RequestBody postRequestForm: PostRequestForm,
+        @AuthAccount account: Account
+    ): ResponseEntity<PostDetail> {
         val post = postService.create(postRequestForm, account)
 
         val location = ServletUriComponentsBuilder
@@ -36,18 +39,35 @@ class PostController(
 
     @ApiOperation("글 수정")
     @PatchMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody postUpdateForm: PostUpdateForm, @AuthAccount account: Account): ResponseEntity<Any> {
+    fun update(
+        @PathVariable id: Long,
+        @RequestBody postUpdateForm: PostUpdateForm,
+        @AuthAccount account: Account
+    ): ResponseEntity<Any> {
         postService.update(id, postUpdateForm, account)
         return ResponseEntity.noContent().build()
     }
 
     @ApiOperation("글 목록 조회")
     @GetMapping
-    fun findAll(@RequestParam(defaultValue = "1") page: Int,
-                @RequestParam(defaultValue = "10") size: Int,
-                @AuthAccount account: Account
+    fun findAll(
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @AuthAccount account: Account
     ): ResponseEntity<Pagination<PostDetail>> {
         val result = postService.findAll(account, page, size)
+        return ResponseEntity.ok(result)
+    }
+
+    @ApiOperation("감정별 글 목록 조회")
+    @GetMapping("/emotions/{emotionsId}")
+    fun findEmotionAll(
+        @PathVariable emotionsId: Long,
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @AuthAccount account: Account
+    ): ResponseEntity<Pagination<PostDetail>> {
+        val result = postService.findByEmotion(emotionsId, page, size, account)
         return ResponseEntity.ok(result)
     }
 
