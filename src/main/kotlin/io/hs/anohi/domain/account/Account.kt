@@ -37,6 +37,13 @@ class Account : BaseEntity() {
             field.addAll(value)
         }
 
+    @ManyToMany
+    var backgroundImages: MutableList<Image> = mutableListOf()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+        }
+
     @Column(nullable = true)
     var description: String = ""
 
@@ -71,7 +78,7 @@ class Account : BaseEntity() {
             account.email = email
             account.isActive = true
             if (profileImageUrl != null) {
-                account.images = mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, 0, 0, "")))
+                account.images = mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, null, null, null)))
             } else {
                 account.images = mutableListOf()
             }

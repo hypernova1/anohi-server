@@ -15,7 +15,7 @@ class AccountDetail(
     var image: ImageDto?,
 
     @ApiModelProperty("배경 이미지", example = "https://www.naver.com")
-    var backgroundImageUrl: String,
+    var backgroundImages: ImageDto?,
 
     @ApiModelProperty("설명", example = "안녕하세요")
     var description: String,
@@ -33,7 +33,7 @@ class AccountDetail(
         account.id,
         account.name,
         null,
-        "",
+        null,
         account.description,
         numberOfPosts,
         account.numberOfVisitors,

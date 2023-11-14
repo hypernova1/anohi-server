@@ -21,13 +21,13 @@ class Image: BaseEntity() {
     var thumbnailUrl: String = ""
 
     @Column(columnDefinition = "integer")
-    var width: Int = 0
+    var width: Int? = null
 
     @Column(columnDefinition = "integer")
-    var height: Int = 0
+    var height: Int? = null
 
     @Column(columnDefinition = "varchar(255)")
-    var blurHash: String = ""
+    var blurHash: String? = null
 
     @ManyToMany(mappedBy = "images")
     var posts: MutableList<Post> = mutableListOf()
@@ -35,13 +35,16 @@ class Image: BaseEntity() {
     @ManyToMany(mappedBy = "images")
     var users: MutableList<Account> = mutableListOf()
 
+    @ManyToMany(mappedBy = "backgroundImages")
+    var users2: MutableList<Account> = mutableListOf()
+
     companion object {
         fun from(dto: ImageDto): Image {
             val image = Image()
             image.originUrl = dto.path
-            image.width = dto.width ?: 0
-            image.height = dto.height ?: 0
-            image.blurHash = dto.blurHash ?: ""
+            image.width = dto.width
+            image.height = dto.height
+            image.blurHash = dto.blurHash
             return image
         }
     }
