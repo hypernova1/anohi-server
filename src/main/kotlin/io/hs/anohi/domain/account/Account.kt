@@ -6,6 +6,8 @@ import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.contants.LoginType
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.post.entity.FavoritePost
+import io.hs.anohi.domain.post.entity.Image
+import io.hs.anohi.domain.post.payload.ImageDto
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*
@@ -13,7 +15,7 @@ import javax.persistence.*
 @Entity
 @Where(clause = "deleted_at is null")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
-class Account: BaseEntity() {
+class Account : BaseEntity() {
 
     @Column(unique = true, nullable = false)
     var uid: String = ""
@@ -28,8 +30,12 @@ class Account: BaseEntity() {
     @Enumerated(EnumType.STRING)
     var loginType: LoginType = LoginType.NONE;
 
-    @Column(nullable = true)
-    var profileImageUrl: String = ""
+    @ManyToMany(fetch = FetchType.EAGER)
+    var images: MutableList<Image> = mutableListOf()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+        }
 
     @Column(nullable = true)
     var description: String = ""
@@ -51,7 +57,9 @@ class Account: BaseEntity() {
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name
-        this.profileImageUrl = updateForm.profileImageUrl ?: this.profileImageUrl
+        if (updateForm.image != null) {
+            this.images = mutableListOf(Image.from(updateForm.image!!))
+        }
         this.description = updateForm.description ?: this.description
     }
 
@@ -62,7 +70,11 @@ class Account: BaseEntity() {
             account.name = name.orEmpty()
             account.email = email
             account.isActive = true
-            account.profileImageUrl = profileImageUrl.orEmpty()
+            if (profileImageUrl != null) {
+                account.images = mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, 0, 0, "")))
+            } else {
+                account.images = mutableListOf()
+            }
             account.loginType = loginType
             return account
         }

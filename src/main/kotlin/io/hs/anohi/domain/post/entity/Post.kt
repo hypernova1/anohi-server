@@ -32,7 +32,7 @@ class Post: BaseEntity() {
     @ManyToOne
     var emotion: Emotion? = null
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "post", orphanRemoval = true)
+    @ManyToMany(cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
         set(value) {
             field.clear()
@@ -55,14 +55,14 @@ class Post: BaseEntity() {
     }
 
     private fun setImages(postUpdateForm: PostUpdateForm) {
-        val imageUrls = postUpdateForm.imageUrls ?: return
+        val images = postUpdateForm.images ?: return
 
-        if (imageUrls.isEmpty()) {
-            this.images.forEach { it.post = null }
+        if (images.isEmpty()) {
+            this.images = mutableListOf()
             return
         }
 
-        this.images = imageUrls.map { Image.from(it, this) }.toList().toMutableList();
+        this.images = images.map { Image.from(it) }.toList().toMutableList();
     }
 
     companion object {
@@ -74,7 +74,7 @@ class Post: BaseEntity() {
             post.account = account
             post.tags.addAll(tags)
             post.emotion = emotion
-            val images = postRequestForm.imageUrls.map { Image.from(it, post) }
+            val images = postRequestForm.images.map { Image.from(it) }
             post.images.addAll(images)
             return post
         }

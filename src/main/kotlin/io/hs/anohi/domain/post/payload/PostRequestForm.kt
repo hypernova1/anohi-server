@@ -21,6 +21,6 @@ class PostRequestForm {
     val emotionId: Long? = null;
 
     @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[\"https://google.com\"]", required = false)
-    val imageUrls: List<String> = Collections.emptyList()
+    val images: List<ImageDto> = Collections.emptyList()
 
 }

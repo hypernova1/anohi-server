@@ -25,7 +25,7 @@ data class PostDetail(
     var emotionId: Long?,
 
     @ApiModelProperty("이미지 주소 목록")
-    var ImageUrls: List<String>,
+    var images: List<ImageDto>,
 
     @ApiModelProperty("작성자 요약")
     var author: Author?,
@@ -47,10 +47,17 @@ data class PostDetail(
         post.content,
         post.tags.map { it.name },
         post.emotion?.id,
-        post.images.map { it.originUrl },
-        Author(post.account.id, post.account.name, post.account.profileImageUrl),
+        post.images.map { ImageDto(it) },
+        null,
         post.createdAt.toString(),
         post.updatedAt.toString(),
         post.hit
-    )
+    ) {
+        val authorImage = if (post.account.images.isNotEmpty()) {
+            ImageDto(post.account.images[0])
+        } else {
+            null
+        }
+        this.author = Author(post.account.id, post.account.name, authorImage)
+    }
 }

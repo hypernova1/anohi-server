@@ -43,7 +43,7 @@ class PostService(
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
 
         val post = Post.of(postRequestForm = postRequestForm, account = account, emotion = emotion, tags = tags)
-        this.postRepository.save(post)
+        this.postRepository.save(post);
         return PostDetail(post)
     }
 

@@ -1,6 +1,7 @@
 package io.hs.anohi.domain.account.payload
 
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.post.payload.ImageDto
 import io.swagger.annotations.ApiModelProperty
 
 class AccountDetail(
@@ -11,7 +12,7 @@ class AccountDetail(
     var name: String,
 
     @ApiModelProperty("프로필 이미지", example = "https://www.naver.com")
-    var profileImageUrl: String,
+    var image: ImageDto?,
 
     @ApiModelProperty("배경 이미지", example = "https://www.naver.com")
     var backgroundImageUrl: String,
@@ -31,11 +32,15 @@ class AccountDetail(
     constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(
         account.id,
         account.name,
-        account.profileImageUrl,
+        null,
         "",
         account.description,
         numberOfPosts,
         account.numberOfVisitors,
         numberOfLikes
-    )
+    ) {
+        if (account.images.isNotEmpty()) {
+            this.image = ImageDto(account.images[0])
+        }
+    }
 }
