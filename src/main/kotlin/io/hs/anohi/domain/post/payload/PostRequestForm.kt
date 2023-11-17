@@ -17,7 +17,7 @@ class PostRequestForm {
     val tags: List<String> = Collections.emptyList()
 
 
-    @ApiModelProperty("감정 인덱스 목록", dataType = "List", example = "1", required = false)
+    @ApiModelProperty("감정 인덱스 목록", dataType = "List", example = "1", required = true)
     val emotionId: Long? = null;
 
     @ApiModelProperty("이미지 주소 목록", dataType = "List", example = "[\"https://google.com\"]", required = false)

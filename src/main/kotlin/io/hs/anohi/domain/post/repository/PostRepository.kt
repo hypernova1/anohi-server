@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface PostRepository : JpaRepository<Post, Long> {
 
-    fun findAllByAccount(account: Account, pageable: Pageable): Page<Post>
-    fun findAllByEmotionAndAccount(emotion: Emotion, account: Account, pageable: Pageable): Page<Post>
+    fun findAllByAccountAndIdGreaterThan(account: Account, lastItemId: Long, pageable: Pageable): Page<Post>
+    fun findAllByEmotionAndAccountAndIdGreaterThan(emotion: Emotion, account: Account, lastItemId: Long, pageable: Pageable): Page<Post>
     fun countByAccount(account: Account): Int
 }

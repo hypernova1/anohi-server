@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface EmotionRepository: JpaRepository<Emotion, Long> {
-    @Query("SELECT emotion_id AS id, count(*) as numberOfPosts FROM post WHERE account_id = :accountId GROUP BY emotion_id", nativeQuery = true)
+    @Query("SELECT emotion_id AS id, count(*) as numberOfPosts FROM post WHERE account_id = :accountId AND deleted_at IS NULL GROUP BY emotion_id", nativeQuery = true)
     fun findByAccountWithNumberOfPosts(accountId: Long): List<EmotionStatistics>
 }

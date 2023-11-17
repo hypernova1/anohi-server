@@ -9,6 +9,8 @@ import io.hs.anohi.domain.post.EmotionService
 import io.hs.anohi.domain.post.PostService
 import io.hs.anohi.domain.post.payload.EmotionStatistics
 import io.hs.anohi.domain.post.payload.PostDetail
+import io.hs.anohi.domain.post.payload.PostPagination
+import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -47,11 +49,8 @@ class AccountController(
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<List<AccountSummary>> {
-
         val accountList = accountService.findAll(page, size)
-
         val accountSummaries = accountList.map { AccountSummary(it.id, it.email, it.name) }
-
         return ResponseEntity.ok(accountSummaries)
     }
 
@@ -71,10 +70,10 @@ class AccountController(
 
     @ApiOperation("본인이 작성한 게시글 목록 조회")
     @GetMapping("/{id}/posts")
-    fun getUserPosts(@PathVariable id: Long, @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
+    fun getUserPosts(@PathVariable id: Long,
+                     @QueryStringArgumentResolver pagination: PostPagination
     ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findByUserId(id, page, size)
+        val result = postService.findByUserId(id, pagination)
         return ResponseEntity.ok(result)
     }
 

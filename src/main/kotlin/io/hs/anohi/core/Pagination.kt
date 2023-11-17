@@ -1,6 +1,7 @@
 package io.hs.anohi.core
 
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Slice
 
 
 data class Pagination<T> (
@@ -11,14 +12,13 @@ data class Pagination<T> (
 ) {
 
     companion object {
-        fun <T, U> load(page: Page<U>, items: List<T>): Pagination<T> {
+        fun <T, U> load(page: Slice<U>, items: List<T>): Pagination<T> {
             val pagination = Pagination<T>()
             pagination.pageSize = page.size
-            pagination.totalCount = page.totalElements
-            pagination.totalPage = page.totalPages;
             pagination.items = items;
             return pagination
         }
+
     }
 
 }
