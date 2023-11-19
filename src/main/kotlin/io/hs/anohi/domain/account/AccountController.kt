@@ -43,17 +43,6 @@ class AccountController(
         return ResponseEntity.created(location).build()
     }
 
-    @ApiOperation("계정 목록 조회")
-    @GetMapping
-    fun getUsers(
-        @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
-    ): ResponseEntity<List<AccountSummary>> {
-        val accountList = accountService.findAll(page, size)
-        val accountSummaries = accountList.map { AccountSummary(it.id, it.email, it.name) }
-        return ResponseEntity.ok(accountSummaries)
-    }
-
     @ApiOperation("유저 본인 정보 조회")
     @GetMapping("/me")
     fun getUserMe(@AuthAccount account: Account): ResponseEntity<AccountDetail> {

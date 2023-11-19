@@ -61,11 +61,6 @@ class AccountService(
         return this.accountRepository.save(account)
     }
 
-
-    fun findAll(page: Int, size: Int): List<Account> {
-        return accountRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id")).content
-    }
-
     @Transactional
     fun findById(id: Long, isVisit: Boolean = false): AccountDetail {
         val account = accountRepository.findById(id)

@@ -31,8 +31,9 @@ class PostQueryRepository(private val em: EntityManager, private val query: JPAQ
             whereClause.and(post.emotion.id.eq(pagination.emotionId))
         }
 
-        val ltPostId = ltPostId(lastItemId, pagination.order)
-        whereClause.and(ltPostId)
+        if (lastItemId != 0L) {
+            whereClause.and(ltPostId(lastItemId, pagination.order))
+        }
 
         val results = query.where(whereClause).orderBy(post.id.desc())
             .limit(pageable.pageSize.toLong() + 1)
