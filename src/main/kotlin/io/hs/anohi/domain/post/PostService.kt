@@ -63,6 +63,7 @@ class PostService(
                 }
         }
         val searchBySlice = this.postQueryRepository.searchBySlice(
+            account.id,
             pagination.lastItemId,
             pagination,
             PageRequest.ofSize(pagination.size)
