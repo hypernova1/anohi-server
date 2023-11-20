@@ -50,7 +50,7 @@ class PostController(
         return ResponseEntity.noContent().build()
     }
 
-    @ApiOperation("글 목록 조회")
+    @ApiOperation("글 목록 조회 (피드)")
     @GetMapping
     fun findAll(
         @QueryStringArgumentResolver pagination: PostPagination,

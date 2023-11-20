@@ -58,11 +58,12 @@ class AccountController(
     }
 
     @ApiOperation("본인이 작성한 게시글 목록 조회")
-    @GetMapping("/{id}/posts")
-    fun getUserPosts(@PathVariable id: Long,
-                     @QueryStringArgumentResolver pagination: PostPagination
+    @GetMapping("/me/posts")
+    fun getUserPosts(
+        @AuthAccount account: Account,
+        @QueryStringArgumentResolver pagination: PostPagination
     ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findByUserId(id, pagination)
+        val result = postService.findByUserId(account, pagination)
         return ResponseEntity.ok(result)
     }
 

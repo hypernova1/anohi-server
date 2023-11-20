@@ -3,7 +3,7 @@ package io.hs.anohi.core
 import org.springframework.data.domain.Slice
 
 
-data class Pagination<T> (
+data class Pagination<T>(
     var pageSize: Int = 0,
     var hasNext: Boolean = false,
     var items: List<T>? = null

@@ -18,9 +18,7 @@ import io.hs.anohi.domain.post.repository.PostQueryRepository
 import io.hs.anohi.domain.post.repository.PostRepository
 import io.hs.anohi.domain.tag.Tag
 import io.hs.anohi.domain.tag.TagService
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -62,9 +60,8 @@ class PostService(
                     throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
                 }
         }
-        val searchBySlice = this.postQueryRepository.searchBySlice(
+        val searchBySlice = this.postQueryRepository.findAll(
             account.id,
-            pagination.lastItemId,
             pagination,
             PageRequest.ofSize(pagination.size)
         )
@@ -124,10 +121,21 @@ class PostService(
         postRepository.save(post)
     }
 
-    fun findByUserId(userId: Long, pagination: PostPagination): Pagination<PostDetail> {
-        val account = this.accountRepository.findById(userId)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
-        return this.findAll(account, pagination)
+    fun findByUserId(account: Account, pagination: PostPagination): Pagination<PostDetail> {
+        if (pagination.emotionId !== null) {
+            val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
+            if (!existsEmotion) {
+                throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
+            }
+        }
+        val searchBySlice = this.postQueryRepository.findAllByAccount(
+            account.id,
+            pagination,
+            PageRequest.ofSize(pagination.size)
+        )
+
+        val postDtos = searchBySlice.content.map { PostDetail(it) }
+        return Pagination.load(searchBySlice, postDtos)
     }
 
 
