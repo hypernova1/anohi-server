@@ -82,6 +82,7 @@ class SecurityConfig(
             .antMatchers(HttpMethod.GET, "/health").permitAll()
             .antMatchers(HttpMethod.POST, "/v1/users").permitAll()
             .antMatchers(HttpMethod.PATCH, "/v1/auth/token").permitAll()
+            .antMatchers("/ws/**").permitAll()
             .and()
             .authorizeRequests()
             .anyRequest()
@@ -96,4 +97,5 @@ class SecurityConfig(
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
+
 }
