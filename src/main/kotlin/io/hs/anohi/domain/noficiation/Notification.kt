@@ -3,14 +3,18 @@ package io.hs.anohi.domain.noficiation
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.chat.payload.MessageDto
-import javax.persistence.Entity
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 class Notification: BaseEntity() {
 
+    @Column
     var message: String = ""
-    var type: String = ""
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    var type: NotificationType = NotificationType.NONE
+
     @ManyToOne
     lateinit var account: Account
     companion object {
