@@ -17,4 +17,10 @@ class WebSocketController {
         return ResponseEntity.ok(message)
     }
 
+    @MessageMapping("/{userId}/notifications")
+    @SendTo("/topic/notification/{userId}")
+    fun sendNotification(@DestinationVariable userId: Long) {
+
+    }
+
 }

@@ -5,6 +5,7 @@ import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.contants.LoginType
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.hs.anohi.domain.noficiation.Notification
 import io.hs.anohi.domain.post.entity.FavoritePost
 import io.hs.anohi.domain.post.entity.Image
 import io.hs.anohi.domain.post.payload.ImageDto
@@ -61,6 +62,9 @@ class Account : BaseEntity() {
 
     @OneToMany(mappedBy = "account")
     val favoritePosts: MutableList<FavoritePost> = mutableListOf()
+
+    @OneToMany(mappedBy = "account")
+    val notifications: MutableList<Notification> = mutableListOf();
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name
