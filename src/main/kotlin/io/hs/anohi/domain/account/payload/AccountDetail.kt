@@ -1,8 +1,10 @@
 package io.hs.anohi.domain.account.payload
 
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.account.contants.SocialType
 import io.hs.anohi.domain.post.payload.ImageDto
 import io.swagger.annotations.ApiModelProperty
+import java.time.LocalDateTime
 
 class AccountDetail(
     @ApiModelProperty("인덱스", example = "1")
@@ -28,6 +30,12 @@ class AccountDetail(
 
     @ApiModelProperty("좋아요 글 수", example = "1")
     var numberOfLikes: Int = 0,
+
+    @ApiModelProperty("가입일")
+    var createdAt: LocalDateTime,
+
+    @ApiModelProperty("로그인 타입")
+    var socialType: SocialType,
 ) {
     constructor(account: Account, numberOfPosts: Int, numberOfLikes: Int) : this(
         account.id,
@@ -37,7 +45,9 @@ class AccountDetail(
         account.description,
         numberOfPosts,
         account.numberOfVisitors,
-        numberOfLikes
+        numberOfLikes,
+        account.createdAt,
+        account.loginType,
     ) {
         if (account.images.isNotEmpty()) {
             this.image = ImageDto(account.images[0])

@@ -3,7 +3,7 @@ package io.hs.anohi.domain.account
 import io.hs.anohi.domain.auth.entity.Role
 import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.account.contants.LoginType
+import io.hs.anohi.domain.account.contants.SocialType
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.noficiation.Notification
 import io.hs.anohi.domain.post.entity.FavoritePost
@@ -29,7 +29,7 @@ class Account : BaseEntity() {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var loginType: LoginType = LoginType.NONE;
+    var loginType: SocialType = SocialType.NONE;
 
     @ManyToMany(fetch = FetchType.EAGER)
     var images: MutableList<Image> = mutableListOf()
@@ -75,7 +75,7 @@ class Account : BaseEntity() {
     }
 
     companion object {
-        fun from(uid: String, email: String, loginType: LoginType, name: String?, profileImageUrl: String?): Account {
+        fun from(uid: String, email: String, loginType: SocialType, name: String?, profileImageUrl: String?): Account {
             val account = Account()
             account.uid = uid
             account.name = name.orEmpty()

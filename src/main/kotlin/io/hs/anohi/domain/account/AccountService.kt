@@ -4,15 +4,13 @@ import com.google.firebase.auth.FirebaseAuth
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
-import io.hs.anohi.domain.account.contants.LoginType
+import io.hs.anohi.domain.account.contants.SocialType
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.auth.RoleRepository
 import io.hs.anohi.domain.auth.constant.RoleName
 import io.hs.anohi.domain.post.repository.FavoritePostRepository
 import io.hs.anohi.domain.post.repository.PostRepository
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -38,14 +36,14 @@ class AccountService(
         val firebase = decodedToken.claims["firebase"] as Map<*, *>
         val identities = firebase["identities"] as Map<*, *>
 
-        var loginType: LoginType = LoginType.NONE;
+        var loginType: SocialType = SocialType.NONE;
         val identitiesKeys = identities.keys
         if (identitiesKeys.isNotEmpty()) {
             val socialType = identitiesKeys.iterator().next()
             if (socialType === "google.com") {
-                loginType = LoginType.GOOGLE
+                loginType = SocialType.GOOGLE
             } else if (socialType === "apple.com") {
-                loginType = LoginType.APPLE
+                loginType = SocialType.APPLE
             }
 
         }
