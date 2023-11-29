@@ -13,6 +13,10 @@ import io.hs.anohi.domain.chat.repository.ChatRequestQueryRepository
 import io.hs.anohi.domain.chat.repository.ChatRequestRepository
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.chat.payload.ChatRequestUpdateDto
+import io.hs.anohi.domain.chat.payload.MessageDto
+import io.hs.anohi.domain.noficiation.NotificationEvent
+import io.hs.anohi.domain.noficiation.NotificationType
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,7 +26,8 @@ import org.springframework.transaction.annotation.Transactional
 class ChatService(
     private val chatRequestRepository: ChatRequestRepository,
     private val chatRequestQueryRepository: ChatRequestQueryRepository,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
 
     @Transactional
@@ -36,6 +41,13 @@ class ChatService(
 
         val chatRequest = ChatRequest.of(account, receiver)
         chatRequestRepository.save(chatRequest)
+        applicationEventPublisher.publishEvent(
+            NotificationEvent(
+                this,
+                receiver,
+                MessageDto(content = "채팅 요청", type = NotificationType.NOTIFICATION)
+            )
+        )
     }
 
     @Transactional
@@ -50,7 +62,8 @@ class ChatService(
 
     fun findAll(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
         val slice = chatRequestQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
-        val items = slice.content.map { ChatRequestResponseDto(it.id, it.sender.id, it.answer, it.createdAt.toString()) }
+        val items =
+            slice.content.map { ChatRequestResponseDto(it.id, it.sender.id, it.answer, it.createdAt.toString()) }
         return Page(pageSize = pagination.size, slice.hasNext(), items)
     }
 }

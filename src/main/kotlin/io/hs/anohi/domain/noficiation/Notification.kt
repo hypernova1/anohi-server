@@ -2,10 +2,13 @@ package io.hs.anohi.domain.noficiation
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.chat.payload.MessageDto
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.Where
 import javax.persistence.*
 
 @Entity
+@Where(clause = "deleted_at is null")
+@SQLDelete(sql = "UPDATE notification SET deleted_at = current_timestamp WHERE id = ?")
 class Notification: BaseEntity() {
 
     @Column
@@ -18,11 +21,11 @@ class Notification: BaseEntity() {
     @ManyToOne
     lateinit var account: Account
     companion object {
-        fun of(messageDto: MessageDto, account: Account): Notification {
+        fun from(notificationEvent: NotificationEvent): Notification {
             val notification = Notification();
-            notification.account = account;
-            notification.message = messageDto.message
-            notification.type = messageDto.type
+            notification.account = notificationEvent.receiver;
+            notification.message = notificationEvent.message.content
+            notification.type = notificationEvent.message.type
             return notification
         }
     }
