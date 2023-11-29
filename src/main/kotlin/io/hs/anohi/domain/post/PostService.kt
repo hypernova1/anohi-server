@@ -1,7 +1,7 @@
 package io.hs.anohi.domain.post
 
 import io.hs.anohi.core.ErrorCode
-import io.hs.anohi.core.Pagination
+import io.hs.anohi.core.Page
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.account.AccountRepository
@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class PostService(
     private val postRepository: PostRepository,
-    private val accountRepository: AccountRepository,
     private val tagService: TagService,
     private val emotionRepository: EmotionRepository,
     private val favoritePostRepository: FavoritePostRepository,
@@ -53,7 +52,7 @@ class PostService(
         postRepository.deleteById(id)
     }
 
-    fun findAll(account: Account, pagination: PostPagination): Pagination<PostDetail> {
+    fun findAll(account: Account, pagination: PostPagination): Page<PostDetail> {
         if (pagination.emotionId !== null) {
             val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
                 if (!existsEmotion) {
@@ -67,7 +66,7 @@ class PostService(
         )
 
         val postDtos = searchBySlice.content.map { PostDetail(it) }
-        return Pagination.load(searchBySlice, postDtos)
+        return Page.load(searchBySlice, postDtos)
     }
 
     @Transactional
@@ -121,7 +120,7 @@ class PostService(
         postRepository.save(post)
     }
 
-    fun findByUserId(account: Account, pagination: PostPagination): Pagination<PostDetail> {
+    fun findByUserId(account: Account, pagination: PostPagination): Page<PostDetail> {
         if (pagination.emotionId !== null) {
             val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
             if (!existsEmotion) {
@@ -135,7 +134,7 @@ class PostService(
         )
 
         val postDtos = searchBySlice.content.map { PostDetail(it) }
-        return Pagination.load(searchBySlice, postDtos)
+        return Page.load(searchBySlice, postDtos)
     }
 
 

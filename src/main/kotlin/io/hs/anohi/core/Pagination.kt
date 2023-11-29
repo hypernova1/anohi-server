@@ -1,22 +1,14 @@
 package io.hs.anohi.core
 
-import org.springframework.data.domain.Slice
+import io.swagger.annotations.ApiModelProperty
 
+open class Pagination {
+    @ApiModelProperty(required = false)
+    var size: Int = 10
 
-data class Pagination<T>(
-    var pageSize: Int = 0,
-    var hasNext: Boolean = false,
-    var items: List<T>? = null
-) {
+    @ApiModelProperty(required = false)
+    var lastItemId: Long = 0
 
-    companion object {
-        fun <T, U> load(slice: Slice<U>, items: List<T>): Pagination<T> {
-            val pagination = Pagination<T>()
-            pagination.pageSize = slice.size
-            pagination.hasNext = slice.hasNext()
-            pagination.items = items;
-            return pagination
-        }
-    }
-
+    @ApiModelProperty(required = false)
+    var order: String = "DESC"
 }

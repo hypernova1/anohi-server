@@ -1,9 +1,8 @@
 package io.hs.anohi.domain.account
 
-import io.hs.anohi.core.Pagination
+import io.hs.anohi.core.Page
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
-import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.post.EmotionService
 import io.hs.anohi.domain.post.PostService
@@ -62,7 +61,7 @@ class AccountController(
     fun getUserPosts(
         @AuthAccount account: Account,
         @QueryStringArgumentResolver pagination: PostPagination
-    ): ResponseEntity<Pagination<PostDetail>> {
+    ): ResponseEntity<Page<PostDetail>> {
         val result = postService.findByUserId(account, pagination)
         return ResponseEntity.ok(result)
     }

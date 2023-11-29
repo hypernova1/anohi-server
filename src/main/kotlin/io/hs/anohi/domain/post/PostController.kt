@@ -1,6 +1,6 @@
 package io.hs.anohi.domain.post
 
-import io.hs.anohi.core.Pagination
+import io.hs.anohi.core.Page
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.post.payload.PostDetail
 import io.hs.anohi.domain.post.payload.PostPagination
@@ -55,7 +55,7 @@ class PostController(
     fun findAll(
         @QueryStringArgumentResolver pagination: PostPagination,
         @AuthAccount account: Account,
-    ): ResponseEntity<Pagination<PostDetail>> {
+    ): ResponseEntity<Page<PostDetail>> {
         val result = postService.findAll(account, pagination)
         return ResponseEntity.ok(result)
     }

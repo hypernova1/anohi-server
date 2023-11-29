@@ -1,29 +1,45 @@
 package io.hs.anohi.domain.chat
 
+import io.hs.anohi.core.Page
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.chat.payload.ChatRequestDto
+import io.hs.anohi.core.Pagination
+import io.hs.anohi.domain.chat.payload.ChatRequestResponseDto
+import io.hs.anohi.domain.chat.payload.ChatRequestUpdateDto
+import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
+@Api(tags = ["채팅 관련"])
 @RestController
 @RequestMapping("/v1/chat")
 class ChatController(private val chatService: ChatService) {
 
-    @PostMapping("/request")
-    fun requestChatting(@AuthAccount account: Account, @RequestBody chatRequestDto: ChatRequestDto): ResponseEntity<Any> {
+    @ApiOperation("채팅 요청")
+    @PostMapping("/requests")
+    fun requestChatting(
+        @AuthAccount account: Account,
+        @RequestBody chatRequestDto: ChatRequestDto
+    ): ResponseEntity<Any> {
         this.chatService.requestChatting(account, chatRequestDto)
         return ResponseEntity.ok().build()
     }
 
-    @PatchMapping("/{id}/accept")
-    fun acceptChatting(@PathVariable id: Long, @AuthAccount account: Account): ResponseEntity<Any> {
-        this.chatService.acceptChatting(id, account);
+    @ApiOperation("요청 받은 채팅 응답")
+    @PatchMapping("/{id}")
+    fun acceptChatting(@PathVariable id: Long, @RequestBody chatRequestUpdateDto: ChatRequestUpdateDto, @AuthAccount account: Account): ResponseEntity<Any> {
+        this.chatService.updateChatRequest(id, chatRequestUpdateDto, account);
         return ResponseEntity.ok().build()
     }
+
+    @ApiOperation("요청 받은 채팅 목록")
+    @GetMapping("/requests")
+    fun getChatRequestList(@AuthAccount account: Account, @QueryStringArgumentResolver pagination: Pagination): ResponseEntity<Page<ChatRequestResponseDto>> {
+        val result = this.chatService.findAll(account, pagination)
+        return ResponseEntity.ok(result)
+    }
+
 }

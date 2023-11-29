@@ -32,7 +32,7 @@ class AccountDetail(
     var numberOfLikes: Int = 0,
 
     @ApiModelProperty("가입일")
-    var createdAt: LocalDateTime,
+    var createdAt: String,
 
     @ApiModelProperty("로그인 타입")
     var socialType: SocialType,
@@ -46,7 +46,7 @@ class AccountDetail(
         numberOfPosts,
         account.numberOfVisitors,
         numberOfLikes,
-        account.createdAt,
+        account.createdAt.toString(),
         account.loginType,
     ) {
         if (account.images.isNotEmpty()) {
