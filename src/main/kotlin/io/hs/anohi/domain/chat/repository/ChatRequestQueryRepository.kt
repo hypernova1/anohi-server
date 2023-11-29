@@ -7,7 +7,6 @@ import io.hs.anohi.domain.chat.entity.ChatRequest
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.account.QAccount.account
 import io.hs.anohi.domain.chat.entity.QChatRequest.chatRequest
-import io.hs.anohi.domain.post.entity.QPost
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl
 import org.springframework.stereotype.Repository
@@ -23,7 +22,7 @@ class ChatRequestQueryRepository: BaseQueryRepository<ChatRequest>() {
         whereClause.and(chatRequest.receiver.id.eq(user.id))
 
         if (pagination.lastItemId != 0L) {
-            whereClause.and(ltId(pagination.lastItemId, pagination.order))
+            whereClause.and(ltId(pagination.lastItemId, pagination.order, chatRequest.id))
         }
 
         val results = query.where(whereClause).orderBy(chatRequest.id.desc())

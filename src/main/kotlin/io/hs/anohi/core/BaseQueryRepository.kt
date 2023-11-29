@@ -1,14 +1,15 @@
 package io.hs.anohi.core
 
 import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.core.types.dsl.EntityPathBase
+import com.querydsl.core.types.dsl.NumberPath
 import com.querydsl.jpa.impl.JPAQueryFactory
-import io.hs.anohi.domain.post.entity.QPost
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl
 import javax.persistence.EntityManager
 
-open class BaseQueryRepository<T> {
+open class BaseQueryRepository<T : BaseEntity> {
     @Autowired
     protected lateinit var em: EntityManager
 
@@ -25,13 +26,13 @@ open class BaseQueryRepository<T> {
         return SliceImpl<T>(results, pageable, hasNext)
     }
 
-    fun ltId(id: Long?, order: String?): BooleanExpression? {
+    fun ltId(id: Long?, order: String?, entityId: NumberPath<Long>): BooleanExpression? {
         return if (id == 0L) {
             null
         } else if (order === null || order === "DESC") {
-            QBaseEntity.baseEntity.id.lt(id)
+            entityId.lt(id)
         } else {
-            QBaseEntity.baseEntity.id.gt(id)
+            entityId.gt(id)
 
         }
     }

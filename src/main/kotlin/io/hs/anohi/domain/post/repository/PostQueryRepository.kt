@@ -30,7 +30,7 @@ class PostQueryRepository: BaseQueryRepository<Post>() {
         }
 
         if (pagination.lastItemId != 0L) {
-            whereClause.and(ltId(pagination.lastItemId, pagination.order))
+            whereClause.and(ltId(pagination.lastItemId, pagination.order, post.id))
         }
 
         val results = query.where(whereClause).orderBy(post.id.desc())
@@ -49,7 +49,7 @@ class PostQueryRepository: BaseQueryRepository<Post>() {
 
         val subQuery = query.select(post.account.id, post.id.max().`as`("id"))
             .from(post)
-            .groupBy(post.account.id);
+            .groupBy(post.account.id)
 
         val query = query.selectFrom(post)
             .leftJoin(post.images, image)
@@ -61,7 +61,7 @@ class PostQueryRepository: BaseQueryRepository<Post>() {
         }
 
         if (pagination.lastItemId != 0L) {
-            whereClause.and(ltId(pagination.lastItemId, pagination.order))
+            whereClause.and(ltId(pagination.lastItemId, pagination.order, post.id))
         }
 
         val results = query.where(whereClause)
