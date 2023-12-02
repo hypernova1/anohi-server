@@ -7,13 +7,12 @@ import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.account.AccountRepository
 import io.hs.anohi.domain.chat.entity.ChatRequest
-import io.hs.anohi.domain.chat.payload.ChatRequestDto
-import io.hs.anohi.domain.chat.payload.ChatRequestResponseDto
 import io.hs.anohi.domain.chat.repository.ChatRequestQueryRepository
 import io.hs.anohi.domain.chat.repository.ChatRequestRepository
 import io.hs.anohi.core.Pagination
-import io.hs.anohi.domain.chat.payload.ChatRequestUpdateDto
-import io.hs.anohi.domain.chat.payload.MessageDto
+import io.hs.anohi.domain.chat.constant.ChatRequestAnswerType
+import io.hs.anohi.domain.chat.payload.*
+import io.hs.anohi.domain.chat.repository.ChatRoomQueryRepository
 import io.hs.anohi.domain.noficiation.NotificationEvent
 import io.hs.anohi.domain.noficiation.NotificationType
 import org.springframework.context.ApplicationEventPublisher
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(readOnly = true)
 class ChatService(
+    private val chatRoomQueryRepository: ChatRoomQueryRepository,
     private val chatRequestRepository: ChatRequestRepository,
     private val chatRequestQueryRepository: ChatRequestQueryRepository,
     private val accountRepository: AccountRepository,
@@ -58,12 +58,26 @@ class ChatService(
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
         }
         chatRequest.answer = chatRequestUpdateDto.answer
+
+        //TODO: 채팅 수락시 채팅방 인원에게 알림 전송
+        if (chatRequest.answer === ChatRequestAnswerType.ACCEPT) {
+
+        }
     }
 
-    fun findAll(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
+    fun findRequests(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
         val slice = chatRequestQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
         val items =
             slice.content.map { ChatRequestResponseDto(it.id, it.sender.id, it.answer, it.createdAt.toString()) }
         return Page(pageSize = pagination.size, slice.hasNext(), items)
+    }
+
+    fun findRooms(account: Account, pagination: Pagination): Page<ChatRoomDto> {
+        val slice =
+            this.chatRoomQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
+
+        val items = slice.content.map { ChatRoomDto(it, account.id) }
+
+        return Page(pagination.size, slice.hasNext(), items)
     }
 }

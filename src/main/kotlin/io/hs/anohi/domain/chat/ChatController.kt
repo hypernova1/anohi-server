@@ -6,6 +6,7 @@ import io.hs.anohi.domain.chat.payload.ChatRequestDto
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.domain.chat.payload.ChatRequestResponseDto
 import io.hs.anohi.domain.chat.payload.ChatRequestUpdateDto
+import io.hs.anohi.domain.chat.payload.ChatRoomDto
 import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
@@ -35,10 +36,17 @@ class ChatController(private val chatService: ChatService) {
         return ResponseEntity.ok().build()
     }
 
-    @ApiOperation("요청 받은 채팅 목록")
+    @ApiOperation("요청 받은 채팅 목록 (승인 거절 제외 대기중인 목록)")
     @GetMapping("/requests")
     fun getChatRequestList(@AuthAccount account: Account, @QueryStringArgumentResolver pagination: Pagination): ResponseEntity<Page<ChatRequestResponseDto>> {
-        val result = this.chatService.findAll(account, pagination)
+        val result = this.chatService.findRequests(account, pagination)
+        return ResponseEntity.ok(result)
+    }
+
+    @ApiOperation("채팅 방 목록")
+    @GetMapping
+    fun getChatRooms(@AuthAccount account: Account, pagination: Pagination): ResponseEntity<Page<ChatRoomDto>> {
+        val result = this.chatService.findRooms(account, pagination)
         return ResponseEntity.ok(result)
     }
 

@@ -1,7 +1,6 @@
 package io.hs.anohi.core
 
 import com.querydsl.core.types.dsl.BooleanExpression
-import com.querydsl.core.types.dsl.EntityPathBase
 import com.querydsl.core.types.dsl.NumberPath
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.beans.factory.annotation.Autowired
