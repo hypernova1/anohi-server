@@ -31,7 +31,7 @@ class Account : BaseEntity() {
     @Enumerated(EnumType.STRING)
     var loginType: SocialType = SocialType.NONE;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
         set(value) {
             field.clear()
@@ -70,6 +70,8 @@ class Account : BaseEntity() {
         this.name = updateForm.name ?: this.name
         if (updateForm.image != null) {
             this.images = mutableListOf(Image.from(updateForm.image!!))
+        } else {
+            this.images = mutableListOf()
         }
         this.description = updateForm.description ?: this.description
     }

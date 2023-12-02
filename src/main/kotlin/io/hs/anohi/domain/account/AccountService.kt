@@ -80,6 +80,7 @@ class AccountService(
     @Transactional
     fun update(account: Account, updateForm: AccountUpdateForm) {
         account.update(updateForm)
+        this.accountRepository.save(account)
     }
 
 }
