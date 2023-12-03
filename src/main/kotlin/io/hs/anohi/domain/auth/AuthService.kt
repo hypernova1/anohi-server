@@ -32,7 +32,7 @@ class AuthService(
             throw UnauthorizedException(ErrorCode.INVALID_TOKEN)
         }
 
-        val account = accountRepository.findByUid(request.email)
+        val account = accountRepository.findByUidAndDeletedAtIsNull(request.email)
             .orElseThrow { UnauthorizedException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
         val authorities = account.roles.mapTo(LinkedList<GrantedAuthority>()) {

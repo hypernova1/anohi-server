@@ -61,7 +61,7 @@ class AccountService(
 
     @Transactional
     fun findById(id: Long, isVisit: Boolean = false): AccountDetail {
-        val account = accountRepository.findById(id)
+        val account = accountRepository.findByIdAndDeletedAtIsNull(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
         account.numberOfVisitors++

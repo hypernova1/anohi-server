@@ -2,6 +2,7 @@ package io.hs.anohi.domain.chat.entity
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
+import org.hibernate.annotations.Filter
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.Entity

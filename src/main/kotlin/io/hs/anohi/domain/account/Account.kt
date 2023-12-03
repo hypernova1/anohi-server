@@ -9,12 +9,16 @@ import io.hs.anohi.domain.noficiation.Notification
 import io.hs.anohi.domain.post.entity.FavoritePost
 import io.hs.anohi.domain.post.entity.Image
 import io.hs.anohi.domain.post.payload.ImageDto
+import org.hibernate.annotations.Filter
+import org.hibernate.annotations.FilterDef
+import org.hibernate.annotations.ParamDef
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*
 
 @Entity
-@Where(clause = "deleted_at is null")
+@FilterDef(name = "deletedAccountFilter", parameters = [ParamDef(name = "deletedAt", type = "boolean")])
+@Filter(name = "deletedAccountFilter", condition = "deleted_at IS NULL OR :deletedAt = true")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
 class Account : BaseEntity() {
 
@@ -84,7 +88,8 @@ class Account : BaseEntity() {
             account.email = email
             account.isActive = true
             if (profileImageUrl != null) {
-                account.images = mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, null, null, null)))
+                account.images =
+                    mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, null, null, null)))
             } else {
                 account.images = mutableListOf()
             }

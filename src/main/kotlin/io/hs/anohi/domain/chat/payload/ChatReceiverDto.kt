@@ -11,8 +11,10 @@ data class ChatReceiverDto(
     val name: String,
     @ApiModelProperty("프로필 이미지")
     var image: ImageDto?,
+    @ApiModelProperty("탈퇴 여부")
+    var isSecession: Boolean,
 ) {
-    constructor(account: Account): this(account.id, account.name, null) {
+    constructor(account: Account): this(account.id, account.name, null, account.deletedAt != null) {
         if (account.images.isNotEmpty()) {
             this.image = ImageDto(account.images[0])
         }
