@@ -1,5 +1,6 @@
 package io.hs.anohi.domain.noficiation
 
+import io.hs.anohi.domain.noficiation.repository.NotificationRepository
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.scheduling.annotation.Async

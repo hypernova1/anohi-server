@@ -2,6 +2,7 @@ package io.hs.anohi.domain.noficiation
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.noficiation.constant.NotificationType
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*

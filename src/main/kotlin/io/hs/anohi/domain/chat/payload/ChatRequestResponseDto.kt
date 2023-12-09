@@ -1,10 +1,15 @@
 package io.hs.anohi.domain.chat.payload
 
-import io.hs.anohi.domain.chat.constant.ChatRequestAnswerType
+import io.hs.anohi.domain.chat.entity.ChatRequest
 
 data class ChatRequestResponseDto(
     val id: Long,
-    val senderId: Long,
-    val answer: ChatRequestAnswerType,
+    val sender: Sender,
     val createdAt: String
+) {
+    constructor(chatRequest: ChatRequest) : this(
+        chatRequest.id,
+        Sender(chatRequest.sender),
+        chatRequest.createdAt.toString()
     )
+}

@@ -1,6 +1,6 @@
 package io.hs.anohi.domain.chat.payload
 
-import io.hs.anohi.domain.noficiation.NotificationType
+import io.hs.anohi.domain.noficiation.constant.NotificationType
 
 data class MessageDto(
     var id: Long = 0,

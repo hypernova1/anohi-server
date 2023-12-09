@@ -1,6 +1,7 @@
 package io.hs.anohi.domain.noficiation
 
 import io.hs.anohi.domain.account.Account
+import io.hs.anohi.domain.noficiation.repository.NotificationRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 

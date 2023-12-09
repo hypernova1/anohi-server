@@ -2,19 +2,19 @@ package io.hs.anohi.domain.chat
 
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Page
+import io.hs.anohi.core.Pagination
 import io.hs.anohi.core.exception.BadRequestException
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.account.AccountRepository
+import io.hs.anohi.domain.chat.constant.ChatRequestAnswerType
 import io.hs.anohi.domain.chat.entity.ChatRequest
+import io.hs.anohi.domain.chat.payload.*
 import io.hs.anohi.domain.chat.repository.ChatRequestQueryRepository
 import io.hs.anohi.domain.chat.repository.ChatRequestRepository
-import io.hs.anohi.core.Pagination
-import io.hs.anohi.domain.chat.constant.ChatRequestAnswerType
-import io.hs.anohi.domain.chat.payload.*
 import io.hs.anohi.domain.chat.repository.ChatRoomQueryRepository
 import io.hs.anohi.domain.noficiation.NotificationEvent
-import io.hs.anohi.domain.noficiation.NotificationType
+import io.hs.anohi.domain.noficiation.constant.NotificationType
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -68,7 +68,7 @@ class ChatService(
     fun findRequests(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
         val slice = chatRequestQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
         val items =
-            slice.content.map { ChatRequestResponseDto(it.id, it.sender.id, it.answer, it.createdAt.toString()) }
+            slice.content.map { ChatRequestResponseDto(it) }
         return Page(pageSize = pagination.size, slice.hasNext(), items)
     }
 
