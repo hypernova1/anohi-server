@@ -6,7 +6,10 @@ interface EmitterRepository {
 
     fun save(emitterId: String, sseEmitter: SseEmitter): SseEmitter
     fun saveEventCache(eventCacheId: String, event: Any)
-
-    fun findAllByUserId(userId: Long)
+    fun findEmitterStartWithByUserId(userId: Long): Map<String, SseEmitter>
+    fun findEventCacheStartWithByUserId(userId: Long): Map<String, Any>
+    fun deleteEmitterById(id: String)
+    fun deleteEmitterStartWithByUserId(userId: Long)
+    fun deleteEventCacheStartWithByUserId(userId: Long)
 
 }
