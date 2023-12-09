@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 @Api(tags = ["알림"])
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/v1/notifications")
 class NotificationController(private val sseEmitterService: SseEmitterService) {
 
     @GetMapping(value = ["/subscribe"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])

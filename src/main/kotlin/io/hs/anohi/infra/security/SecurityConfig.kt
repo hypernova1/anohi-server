@@ -14,6 +14,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -61,9 +63,18 @@ class SecurityConfig(
         return configuration
     }
 
+    @Bean
+    fun corsFilter(): CorsFilter {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+        config.addAllowedOrigin("*")
+        config.addAllowedMethod("*")
+        config.addAllowedHeader("*")
+        source.registerCorsConfiguration("/v1/notifications/subscribe", config) // CORS를 적용할 패턴 설정
+        return CorsFilter(source)
+    }
+
     override fun configure(http: HttpSecurity) {
-
-
         http.authorizeRequests()
 
             .antMatchers(
