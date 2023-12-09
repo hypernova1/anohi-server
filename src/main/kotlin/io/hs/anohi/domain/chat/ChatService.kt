@@ -45,7 +45,7 @@ class ChatService(
             NotificationEvent(
                 this,
                 receiver,
-                MessageDto(content = "채팅 요청", type = NotificationType.NOTIFICATION)
+                MessageDto(content = "채팅 요청되었어요.", type = NotificationType.NOTIFICATION)
             )
         )
     }
@@ -59,9 +59,14 @@ class ChatService(
         }
         chatRequest.answer = chatRequestUpdateDto.answer
 
-        //TODO: 채팅 수락시 채팅방 인원에게 알림 전송
         if (chatRequest.answer === ChatRequestAnswerType.ACCEPT) {
-
+            this.applicationEventPublisher.publishEvent(
+                NotificationEvent(
+                    this,
+                    chatRequest.receiver,
+                    MessageDto("채팅이 수락되었습니다.", NotificationType.ACCEPT_CHAT)
+                )
+            )
         }
     }
 

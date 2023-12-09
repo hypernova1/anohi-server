@@ -5,13 +5,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
 
 @Repository
-class EventEmitterRepositoryImpl: EmitterRepository {
+class EventEmitterRepositoryImpl : EmitterRepository {
 
     val emitters = ConcurrentHashMap<String, SseEmitter>()
     val eventCache = ConcurrentHashMap<String, Any>()
 
-    override fun save(emitterId: String, sseEmitter: SseEmitter): SseEmitter {
-        emitters[emitterId] = sseEmitter
+    override fun save(userId: Long, sseEmitter: SseEmitter): SseEmitter {
+        emitters[userId.toString()] = sseEmitter
         return sseEmitter;
     }
 
@@ -19,36 +19,32 @@ class EventEmitterRepositoryImpl: EmitterRepository {
         eventCache[eventCacheId] = event
     }
 
-    override fun findEmitterStartWithByUserId(userId: Long): Map<String, SseEmitter> {
+    override fun findEmitterByUserId(userId: Long): Map<String, SseEmitter> {
         return emitters.entries
-            .filter { entry -> entry.key.startsWith(userId.toString()) }
+            .filter { entry -> entry.key == userId.toString() }
             .associate { it.key to it.value }
     }
 
-    override fun findEventCacheStartWithByUserId(userId: Long): Map<String, Any> {
+    override fun findEventCacheByUserId(userId: Long): Map<String, Any> {
         return eventCache.entries
-            .filter { entry -> entry.key.startsWith(userId.toString()) }
+            .filter { entry -> entry.key == userId.toString() }
             .associate { it.key to it.value }
     }
 
-    override fun deleteEmitterById(id: String) {
-        emitters.remove(id)
-    }
-
-    override fun deleteEmitterStartWithByUserId(userId: Long) {
+    override fun deleteEmitterByUserId(userId: Long) {
         emitters.forEach { (key, _) ->
             run {
-                if (key.startsWith(userId.toString())) {
+                if (key == userId.toString()) {
                     eventCache.remove(key)
                 }
             }
         }
     }
 
-    override fun deleteEventCacheStartWithByUserId(userId: Long) {
+    override fun deleteEventCacheByUserId(userId: Long) {
         eventCache.forEach { (key, _) ->
             run {
-                if (key.startsWith(userId.toString())) {
+                if (key == userId.toString()) {
                     eventCache.remove(key)
                 }
             }

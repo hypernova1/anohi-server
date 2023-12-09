@@ -10,17 +10,16 @@ import org.springframework.transaction.annotation.Transactional
 @Async
 @Component
 @Transactional(readOnly = true)
-class NotificationEventListener (
+class NotificationEventListener(
     private val messagingTemplate: SimpMessagingTemplate,
-    private val notificationRepository: NotificationRepository
+    private val notificationRepository: NotificationRepository,
+    private val sseEmitterService: SseEmitterService,
 ) {
 
     @Transactional
     @EventListener
     fun sendNotification(notificationEvent: NotificationEvent) {
-        messagingTemplate.convertAndSend("/topic/${notificationEvent.receiver.id}/message", notificationEvent.message)
-        val notification = Notification.from(notificationEvent)
-        this.notificationRepository.save(notification)
+        this.sseEmitterService.send(notificationEvent.receiver, notificationEvent.message)
     }
 
 }
