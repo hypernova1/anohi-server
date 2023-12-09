@@ -72,12 +72,10 @@ class ChatService(
         return Page(pageSize = pagination.size, slice.hasNext(), items)
     }
 
-    fun findRooms(account: Account, pagination: Pagination): Page<ChatRoomDto> {
-        val slice =
-            this.chatRoomQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
+    fun findRooms(account: Account): List<ChatRoomDto> {
+        val chatRooms =
+            this.chatRoomQueryRepository.findByAccount(account)
 
-        val items = slice.content.map { ChatRoomDto(it, account.id) }
-
-        return Page(pagination.size, slice.hasNext(), items)
+        return chatRooms.map { ChatRoomDto(it, account.id) }
     }
 }

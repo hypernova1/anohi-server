@@ -45,8 +45,8 @@ class ChatController(private val chatService: ChatService) {
 
     @ApiOperation("채팅 방 목록")
     @GetMapping
-    fun getChatRooms(@AuthAccount account: Account, pagination: Pagination): ResponseEntity<Page<ChatRoomDto>> {
-        val result = this.chatService.findRooms(account, pagination)
+    fun getChatRooms(@AuthAccount account: Account): ResponseEntity<List<ChatRoomDto>> {
+        val result = this.chatService.findRooms(account)
         return ResponseEntity.ok(result)
     }
 
