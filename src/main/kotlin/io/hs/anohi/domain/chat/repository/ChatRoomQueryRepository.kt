@@ -7,7 +7,6 @@ import io.hs.anohi.domain.account.QAccount.account
 import io.hs.anohi.domain.chat.entity.ChatRoom
 import io.hs.anohi.domain.chat.entity.QChatMessage.chatMessage
 import io.hs.anohi.domain.chat.entity.QChatRoom.chatRoom
-import org.springframework.data.domain.SliceImpl
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -25,6 +24,7 @@ class ChatRoomQueryRepository : BaseQueryRepository<ChatRoom>() {
             .orderBy(chatMessage.id.desc())
             .orderBy(chatRoom.id.desc())
             .fetchJoin()
+            .distinct()
             .fetch()
     }
 
