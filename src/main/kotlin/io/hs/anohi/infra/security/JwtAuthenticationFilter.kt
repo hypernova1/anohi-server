@@ -21,14 +21,10 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     private lateinit var userDetailsService: CustomUserDetailsService
 
     @Autowired
-    private lateinit var jwtTokenProvider: JwtTokenProvider;
-
-    @Autowired
     private lateinit var firebaseAuth: FirebaseAuth;
 
     private fun getJwtFromRequest(request: HttpServletRequest): String? {
         val bearerToken = request.getHeader("Authorization")
-        println(bearerToken)
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7, bearerToken.length)
