@@ -12,10 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.CorsFilter
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -28,11 +26,7 @@ class SecurityConfig(
     private val customUserDetailService: CustomUserDetailsService,
     @Autowired
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
-) : WebSecurityConfigurerAdapter() {
-
-    companion object {
-        const val MAX_AGE_SECS = 3600L
-    }
+) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
@@ -40,43 +34,10 @@ class SecurityConfig(
     @Bean
     fun jwtAuthenticationFilter() = JwtAuthenticationFilter()
 
-    @Bean
-    override fun authenticationManagerBean(): AuthenticationManager = super.authenticationManagerBean()
-
-
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        if (auth == null) return
-        auth
-            .userDetailsService(customUserDetailService)
-            .passwordEncoder(passwordEncoder())
-    }
 
     @Bean
-    fun corsConfiguration(): CorsConfiguration {
-        val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("*")
-        configuration.allowedMethods = listOf("HEAD", "OPTION", "GET", "POST", "PUT", "PATCH", "DELETE")
-        configuration.allowedHeaders = listOf("*")
-        configuration.maxAge = MAX_AGE_SECS
-        configuration.allowCredentials = true
-
-        return configuration
-    }
-
-    @Bean
-    fun corsFilter(): CorsFilter {
-        val source = UrlBasedCorsConfigurationSource()
-        val config = CorsConfiguration()
-        config.addAllowedOrigin("*")
-        config.addAllowedMethod("*")
-        config.addAllowedHeader("*")
-        source.registerCorsConfiguration("/v1/notifications/subscribe", config) // CORS를 적용할 패턴 설정
-        return CorsFilter(source)
-    }
-
-    override fun configure(http: HttpSecurity) {
+    fun filterChain(http: HttpSecurity): SecurityFilterChain  {
         http.authorizeRequests()
-
             .antMatchers(
                 "/",
                 "/favicon.ico",
@@ -99,7 +60,9 @@ class SecurityConfig(
             .anyRequest()
             .authenticated()
 
-        http.csrf()
+        return http.csrf()
+            .disable()
+            .cors()
             .disable()
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -107,6 +70,8 @@ class SecurityConfig(
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .build()
     }
 
 }
