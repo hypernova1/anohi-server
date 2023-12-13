@@ -4,6 +4,7 @@ import io.hs.anohi.domain.account.Account
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,8 +20,9 @@ class NotificationController(private val sseEmitterService: SseEmitterService) {
     fun subscribe(
         @AuthAccount account: Account,
         @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") lastEventId: String?
-    ): SseEmitter {
-        return sseEmitterService.subscribe(account, lastEventId)
+    ): ResponseEntity<SseEmitter> {
+        val subscribe = sseEmitterService.subscribe(account, lastEventId)
+        return ResponseEntity.ok(subscribe)
     }
 
 }

@@ -14,7 +14,8 @@ enum class ErrorCode(val message: String, val code: String) {
     BAD_ARGUMENT_VALUE("파라미터의 값이 올바르지 않습니다.", "BAD_ARGUMENT_VALUE"),
     CANNOT_FOUND_EMOTION("이모션이 존재하지 않습니다", "REQUIRE_ARGUMENT_NOT_FOUND"),
     CANNOT_FOUND_CHAT_REQUEST("채팅 요청 정보가 존재하지 않습니다.", "CANNOT_FOUND_CHAT_REQUEST"),
-    EQUAL_ACCOUNT("요청한 유저와 요청을 받은 유저가 같습니다", "EQUAL_ACCOUNT"), ;
+    EQUAL_ACCOUNT("요청한 유저와 요청을 받은 유저가 같습니다", "EQUAL_ACCOUNT"),
+    ALREADY_EXIST_CHAT_REQUEST("이미 채팅 요청을 하셨습니다.", "ALREADY_EXIST_CHAT_REQUEST");
 
 
 }

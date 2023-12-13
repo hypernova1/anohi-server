@@ -32,7 +32,14 @@ class SecurityConfig(
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain  {
-        http.authorizeRequests()
+        return http
+            .csrf()
+            .disable()
+            .cors()
+            .and()
+            .httpBasic()
+            .and()
+            .authorizeRequests()
             .antMatchers(
                 "/",
                 "/favicon.ico",
@@ -54,11 +61,7 @@ class SecurityConfig(
             .authorizeRequests()
             .anyRequest()
             .authenticated()
-
-        return http.csrf()
-            .disable()
-            .cors()
-            .disable()
+            .and()
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and()

@@ -5,6 +5,9 @@ import io.hs.anohi.core.Page
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.account.AccountRepository
+import io.hs.anohi.domain.chat.payload.MessageDto
+import io.hs.anohi.domain.noficiation.SseEmitterService
+import io.hs.anohi.domain.noficiation.constant.NotificationType
 import io.hs.anohi.domain.post.entity.Emotion
 import io.hs.anohi.domain.post.entity.FavoritePost
 import io.hs.anohi.domain.post.entity.Post
@@ -30,6 +33,7 @@ class PostService(
     private val emotionRepository: EmotionRepository,
     private val favoritePostRepository: FavoritePostRepository,
     private val postQueryRepository: PostQueryRepository,
+    private val sseEmitterService: SseEmitterService,
 ) {
 
     @Transactional
@@ -71,6 +75,8 @@ class PostService(
 
     @Transactional
     fun findById(id: Long, account: Account): PostDetail {
+        this.sseEmitterService.send(account, MessageDto("hello~~", NotificationType.NOTIFICATION))
+
         val post = postRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 

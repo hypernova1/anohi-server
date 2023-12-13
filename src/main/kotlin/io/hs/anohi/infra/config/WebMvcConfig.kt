@@ -42,29 +42,13 @@ class WebMvcConfig : WebMvcConfigurer {
 
         return filter
     }
-    @Bean
-    fun corsConfigurationSource(): FilterRegistrationBean<CorsFilter> {
-        val corsConfiguration = CorsConfiguration()
-        corsConfiguration.allowedOrigins = listOf("*")
-        corsConfiguration.allowedMethods = listOf("*")
-        corsConfiguration.allowedHeaders = listOf("*")
-        corsConfiguration.allowCredentials = false
-
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", corsConfiguration)
-
-        val filterBean = FilterRegistrationBean(CorsFilter(source))
-        filterBean.order = 0
-        return filterBean
-    }
-
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("*")
             .allowedHeaders("*")
-            .allowCredentials(false)
+            .allowCredentials(true)
             .maxAge(6000)
     }
 

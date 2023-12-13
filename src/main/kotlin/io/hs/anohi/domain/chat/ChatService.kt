@@ -4,6 +4,7 @@ import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Page
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.core.exception.BadRequestException
+import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.account.AccountRepository
@@ -32,8 +33,18 @@ class ChatService(
 
     @Transactional
     fun requestChatting(account: Account, chatRequestDto: ChatRequestDto) {
+
         val receiver = this.accountRepository.findById(chatRequestDto.receiverId)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
+
+        val existsChatRequest = this.chatRequestRepository.findByReceiverAndSenderAndAnswer(
+            receiver,
+            account,
+            ChatRequestAnswerType.WAITING
+        )
+        if (existsChatRequest != null && existsChatRequest.answer === ChatRequestAnswerType.WAITING) {
+            throw ConflictException(ErrorCode.ALREADY_EXIST_CHAT_REQUEST)
+        }
 
         if (account == receiver) {
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)

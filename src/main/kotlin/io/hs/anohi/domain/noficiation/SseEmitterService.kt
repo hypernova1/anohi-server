@@ -18,18 +18,23 @@ class SseEmitterService(
 
     @Transactional
     fun subscribe(account: Account, lastEventId: String?): SseEmitter {
-
         val sseEmitter = this.eventEmitterRepository.save(account.id, SseEmitter(DEFAULT_TIME_OUT))
 
         sseEmitter.onCompletion { eventEmitterRepository.deleteEmitterByUserId(account.id) }
         sseEmitter.onTimeout { eventEmitterRepository.deleteEmitterByUserId(account.id) }
 
         // 503 에러 방지용 이벤트
-        sseEmitter.send(
-            SseEmitter.event()
-                .name("connect")
-                .data("connected.")
-        )
+        try {
+            sseEmitter.send(
+                SseEmitter.event()
+                    .id(account.id.toString())
+                    .name("connect")
+                    .data("connected.")
+            )
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+        }
+
 
         if (lastEventId != null) {
             val events = eventEmitterRepository.findEventCacheByUserId(account.id)
@@ -53,10 +58,12 @@ class SseEmitterService(
 
     private fun sendToClient(sseEmitter: SseEmitter, id: String, data: Any) {
         try {
+            println(sseEmitter)
+            println(id)
             sseEmitter.send(
                 SseEmitter.event()
                     .id(id)
-                    .name("sse")
+                    .name("notification")
                     .data(data)
             )
         } catch (_: IOException) {
