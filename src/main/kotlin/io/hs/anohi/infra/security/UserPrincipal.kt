@@ -1,6 +1,6 @@
 package io.hs.anohi.infra.security
 
-import io.hs.anohi.domain.account.Account
+import io.hs.anohi.account.domain.Account
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -12,8 +12,6 @@ data class UserPrincipal(
     val uid: String,
     private val username: String,
     private val authorities: Set<GrantedAuthority>
-
-
 ) : UserDetails {
 
     override fun getAuthorities() = authorities

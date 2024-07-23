@@ -1,9 +1,9 @@
 package io.hs.anohi.infra.websocket
 
 import com.google.firebase.auth.FirebaseAuth
+import io.hs.anohi.chat.ui.payload.MessageDto
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.UnauthorizedException
-import io.hs.anohi.domain.chat.payload.MessageDto
 import org.springframework.context.event.EventListener
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.DestinationVariable

@@ -6,7 +6,7 @@ interface FavoritePostRepository {
 
     fun existsByPostAndAccount(post: Post, account: Account): Boolean
     fun deleteByPostAndAccount(post: Post, account: Account)
-    fun countByAccount(account: Account): Int
+    fun countByAccountId(accountId: Long): Int
     fun save(favoritePost: FavoritePost): FavoritePost
 
 }

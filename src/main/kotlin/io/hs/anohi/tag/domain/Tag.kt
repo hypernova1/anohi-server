@@ -1,4 +1,4 @@
-package io.hs.anohi.tag
+package io.hs.anohi.tag.domain
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.post.domain.Post

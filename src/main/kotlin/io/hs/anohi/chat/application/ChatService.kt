@@ -1,7 +1,7 @@
 package io.hs.anohi.chat.application
 
+import io.hs.anohi.account.application.AccountService
 import io.hs.anohi.account.domain.Account
-import io.hs.anohi.account.domain.AccountRepository
 import io.hs.anohi.chat.domain.*
 import io.hs.anohi.chat.ui.payload.*
 import io.hs.anohi.core.ErrorCode
@@ -23,14 +23,14 @@ class ChatService(
     private val chatRoomQueryRepository: ChatRoomQueryRepository,
     private val chatRequestRepository: ChatRequestRepository,
     private val chatRequestQueryRepository: ChatRequestQueryRepository,
-    private val accountRepository: AccountRepository,
+    private val accountService: AccountService,
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
 
     @Transactional
     fun requestChatting(account: Account, chatRequestDto: ChatRequestDto) {
 
-        val receiver = this.accountRepository.findById(chatRequestDto.receiverId)
+        val receiver = this.accountService.findOne(chatRequestDto.receiverId)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
         val existsChatRequest = this.chatRequestRepository.findByReceiverAndSenderAndAnswer(

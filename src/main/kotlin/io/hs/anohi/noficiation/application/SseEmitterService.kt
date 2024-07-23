@@ -16,11 +16,11 @@ import java.io.IOException
 class SseEmitterService(
     private val eventEmitterRepository: EmitterRepository
 ) {
-    private final val DEFAULT_TIME_OUT = 60L * 1000 * 60
+    private final val TIME_OUT = 60L * 1000 * 60
 
     @Transactional
     fun subscribe(account: Account, lastEventId: String?): SseEmitter {
-        val sseEmitter = this.eventEmitterRepository.save(account.id, SseEmitter(DEFAULT_TIME_OUT))
+        val sseEmitter = this.eventEmitterRepository.save(account.id, SseEmitter(TIME_OUT))
 
         sseEmitter.onCompletion { eventEmitterRepository.deleteEmitterByUserId(account.id) }
         sseEmitter.onTimeout { eventEmitterRepository.deleteEmitterByUserId(account.id) }

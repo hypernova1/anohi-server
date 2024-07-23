@@ -4,7 +4,7 @@ import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.post.ui.payload.PostRequestForm
 import io.hs.anohi.post.ui.payload.PostUpdateForm
-import io.hs.anohi.tag.Tag
+import io.hs.anohi.tag.domain.Tag
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*

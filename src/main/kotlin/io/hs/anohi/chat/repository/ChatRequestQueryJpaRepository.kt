@@ -2,12 +2,12 @@ package io.hs.anohi.chat.repository
 
 import com.querydsl.core.BooleanBuilder
 import io.hs.anohi.account.domain.Account
+import io.hs.anohi.account.domain.QAccount.account
 import io.hs.anohi.chat.domain.ChatRequest
 import io.hs.anohi.chat.domain.ChatRequestAnswerType
 import io.hs.anohi.chat.domain.ChatRequestQueryRepository
 import io.hs.anohi.core.BaseQueryRepository
 import io.hs.anohi.core.Pagination
-import io.hs.anohi.domain.account.QAccount.account
 import io.hs.anohi.chat.domain.QChatRequest.chatRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl

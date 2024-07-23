@@ -1,7 +1,7 @@
 package io.hs.anohi.chat.domain
 
+import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.account.Account
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.Entity

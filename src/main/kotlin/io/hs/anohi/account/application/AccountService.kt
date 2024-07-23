@@ -7,18 +7,17 @@ import io.hs.anohi.account.ui.payload.AccountUpdateForm
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
-import io.hs.anohi.post.infra.FavoritePostJpaRepository
-import io.hs.anohi.post.infra.PostJpaRepository
+import io.hs.anohi.post.application.PostService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Transactional(readOnly = true)
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
     private val roleRepository: RoleRepository,
-    private val postRepository: PostJpaRepository,
-    private val favoritePostRepository: FavoritePostJpaRepository,
+    private val postService: PostService,
     private val firebaseAuth: FirebaseAuth,
 ) {
 
@@ -64,8 +63,8 @@ class AccountService(
 
         account.numberOfVisitors++
 
-        val numberOfPosts = this.postRepository.countByAccount(account)
-        val numberOfLikes = this.favoritePostRepository.countByAccount(account)
+        val numberOfPosts = this.postService.count(account.id)
+        val numberOfLikes = this.postService.countLikePost(account.id)
         return AccountDetail(account, numberOfPosts, numberOfLikes)
     }
 
@@ -79,6 +78,10 @@ class AccountService(
     fun update(account: Account, updateForm: AccountUpdateForm) {
         account.update(updateForm)
         this.accountRepository.save(account)
+    }
+
+    fun findOne(id: Long): Optional<Account> {
+        return this.accountRepository.findById(id)
     }
 
 }

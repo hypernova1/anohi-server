@@ -1,20 +1,17 @@
 package io.hs.anohi.post.application
 
 import io.hs.anohi.account.domain.Account
-import io.hs.anohi.chat.ui.payload.MessageDto
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Page
 import io.hs.anohi.core.exception.NotFoundException
-import io.hs.anohi.noficiation.application.SseEmitterService
-import io.hs.anohi.noficiation.domain.NotificationType
 import io.hs.anohi.post.domain.*
 import io.hs.anohi.post.infra.PostQueryRepository
 import io.hs.anohi.post.ui.payload.PostDetail
 import io.hs.anohi.post.ui.payload.PostPagination
 import io.hs.anohi.post.ui.payload.PostRequestForm
 import io.hs.anohi.post.ui.payload.PostUpdateForm
-import io.hs.anohi.tag.Tag
-import io.hs.anohi.tag.TagService
+import io.hs.anohi.tag.domain.Tag
+import io.hs.anohi.tag.application.TagService
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,17 +21,16 @@ import org.springframework.transaction.annotation.Transactional
 class PostService(
     private val postRepository: PostRepository,
     private val tagService: TagService,
-    private val emotionRepository: EmotionRepository,
+    private val emotionService: EmotionService,
     private val favoritePostRepository: FavoritePostRepository,
     private val postQueryRepository: PostQueryRepository,
-    private val sseEmitterService: SseEmitterService,
 ) {
 
     @Transactional
     fun create(postRequestForm: PostRequestForm, account: Account): PostDetail {
         var emotion: Emotion? = null
         if (postRequestForm.emotionId != null) {
-            emotion = emotionRepository.findById(postRequestForm.emotionId)
+            emotion = emotionService.findOne(postRequestForm.emotionId)
                 .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
         }
 
@@ -52,7 +48,7 @@ class PostService(
 
     fun findAll(account: Account, pagination: PostPagination): Page<PostDetail> {
         if (pagination.emotionId !== null) {
-            val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
+            val existsEmotion = this.emotionService.exists(pagination.emotionId!!)
                 if (!existsEmotion) {
                     throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
                 }
@@ -69,8 +65,6 @@ class PostService(
 
     @Transactional
     fun findById(id: Long, account: Account): PostDetail {
-        this.sseEmitterService.send(account, MessageDto("hello~~", NotificationType.NOTIFICATION))
-
         val post = postRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
@@ -86,7 +80,7 @@ class PostService(
     fun update(id: Long, postUpdateForm: PostUpdateForm, account: Account): Post {
         var emotion: Emotion? = null
         if (postUpdateForm.emotionId != null) {
-            emotion = emotionRepository.findById(postUpdateForm.emotionId!!)
+            emotion = emotionService.findOne(postUpdateForm.emotionId!!)
                 .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
         }
         var tags: List<Tag>? = null
@@ -122,7 +116,7 @@ class PostService(
 
     fun findByUserId(account: Account, pagination: PostPagination): Page<PostDetail> {
         if (pagination.emotionId !== null) {
-            val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
+            val existsEmotion = this.emotionService.exists(pagination.emotionId!!)
             if (!existsEmotion) {
                 throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
             }
@@ -137,5 +131,12 @@ class PostService(
         return Page.load(searchBySlice, postDtos)
     }
 
+    fun count(accountId: Long): Int {
+        return this.postRepository.countByAccountId(accountId)
+    }
+
+    fun countLikePost(accountId: Long): Int {
+        return this.favoritePostRepository.countByAccountId(accountId)
+    }
 
 }

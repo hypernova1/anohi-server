@@ -1,6 +1,6 @@
 package io.hs.anohi.post.ui.payload
 
-import io.hs.anohi.domain.post.entity.Post
+import io.hs.anohi.post.domain.Post
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.format.annotation.DateTimeFormat
 

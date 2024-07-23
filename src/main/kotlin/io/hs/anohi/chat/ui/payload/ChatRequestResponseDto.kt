@@ -1,6 +1,7 @@
 package io.hs.anohi.chat.ui.payload
 
-import io.hs.anohi.domain.chat.entity.ChatRequest
+import io.hs.anohi.chat.domain.ChatRequest
+
 
 data class ChatRequestResponseDto(
     val id: Long,

@@ -1,8 +1,8 @@
 package io.hs.anohi.post.domain
 
+import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.post.payload.ImageDto
+import io.hs.anohi.post.ui.payload.ImageDto
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.Column

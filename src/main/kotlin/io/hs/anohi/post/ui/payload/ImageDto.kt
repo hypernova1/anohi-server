@@ -1,6 +1,7 @@
 package io.hs.anohi.post.ui.payload
 
-import io.hs.anohi.domain.post.entity.Image
+import io.hs.anohi.post.domain.Image
+
 
 data class ImageDto(
     val id: Long?,

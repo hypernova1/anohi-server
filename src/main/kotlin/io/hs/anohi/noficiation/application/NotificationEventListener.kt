@@ -11,11 +11,10 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 @Transactional(readOnly = true)
 class NotificationEventListener(
-    private val messagingTemplate: SimpMessagingTemplate,
-    private val notificationRepository: NotificationRepository,
     private val sseEmitterService: SseEmitterService,
 ) {
 
+    @Async
     @Transactional
     @EventListener
     fun sendNotification(notificationEvent: NotificationEvent) {

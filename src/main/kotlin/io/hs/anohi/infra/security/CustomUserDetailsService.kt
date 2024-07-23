@@ -1,6 +1,6 @@
 package io.hs.anohi.infra.security
 
-import io.hs.anohi.domain.account.AccountRepository
+import io.hs.anohi.account.domain.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

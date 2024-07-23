@@ -1,6 +1,6 @@
 package io.hs.anohi.infra.security
 
-import io.hs.anohi.domain.account.Account
+import io.hs.anohi.account.domain.Account
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 

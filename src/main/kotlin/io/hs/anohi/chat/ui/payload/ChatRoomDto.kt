@@ -1,6 +1,6 @@
 package io.hs.anohi.chat.ui.payload
 
-import io.hs.anohi.domain.chat.entity.ChatRoom
+import io.hs.anohi.chat.domain.ChatRoom
 import io.swagger.annotations.ApiModelProperty
 
 data class ChatRoomDto(

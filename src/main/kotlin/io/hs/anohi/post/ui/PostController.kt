@@ -1,14 +1,14 @@
 package io.hs.anohi.post.ui
 
+import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.Page
-import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.post.payload.PostDetail
-import io.hs.anohi.domain.post.payload.PostPagination
-import io.hs.anohi.domain.post.payload.PostRequestForm
-import io.hs.anohi.domain.post.payload.PostUpdateForm
 import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.hs.anohi.post.application.PostService
+import io.hs.anohi.post.ui.payload.PostDetail
+import io.hs.anohi.post.ui.payload.PostPagination
+import io.hs.anohi.post.ui.payload.PostRequestForm
+import io.hs.anohi.post.ui.payload.PostUpdateForm
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity

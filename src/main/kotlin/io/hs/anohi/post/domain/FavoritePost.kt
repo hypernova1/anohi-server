@@ -1,7 +1,7 @@
 package io.hs.anohi.post.domain
 
+import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.account.Account
 import javax.persistence.Entity
 import javax.persistence.ManyToOne
 

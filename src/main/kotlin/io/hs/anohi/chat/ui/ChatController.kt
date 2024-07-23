@@ -1,12 +1,12 @@
 package io.hs.anohi.chat.ui
 
+import io.hs.anohi.account.domain.Account
 import io.hs.anohi.chat.application.ChatService
+import io.hs.anohi.chat.ui.payload.ChatRequestDto
+import io.hs.anohi.chat.ui.payload.ChatRequestResponseDto
+import io.hs.anohi.chat.ui.payload.ChatRequestUpdateDto
 import io.hs.anohi.core.Page
-import io.hs.anohi.domain.account.Account
-import io.hs.anohi.domain.chat.payload.ChatRequestDto
 import io.hs.anohi.core.Pagination
-import io.hs.anohi.domain.chat.payload.ChatRequestResponseDto
-import io.hs.anohi.domain.chat.payload.ChatRequestUpdateDto
 import io.hs.anohi.chat.ui.payload.ChatRoomDto
 import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
@@ -33,7 +33,7 @@ class ChatController(private val chatService: ChatService) {
     @ApiOperation("요청 받은 채팅 응답")
     @PatchMapping("/{id}")
     fun acceptChatting(@PathVariable id: Long, @RequestBody chatRequestUpdateDto: ChatRequestUpdateDto, @AuthAccount account: Account): ResponseEntity<Any> {
-        this.chatService.updateChatRequest(id, chatRequestUpdateDto, account);
+        this.chatService.updateChatRequest(id, chatRequestUpdateDto, account)
         return ResponseEntity.ok().build()
     }
 
