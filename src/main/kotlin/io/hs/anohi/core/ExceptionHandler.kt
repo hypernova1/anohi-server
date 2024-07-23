@@ -1,11 +1,14 @@
 package io.hs.anohi.core
 
+import com.google.firebase.auth.FirebaseAuthException
 import io.hs.anohi.core.exception.HttpException
+import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import javax.validation.ConstraintViolationException
+
 
 @RestControllerAdvice
 class ExceptionHandler {
@@ -34,6 +37,17 @@ class ExceptionHandler {
         )
 
         return ResponseEntity.badRequest().body(errorResponse)
+    }
+
+    @ExceptionHandler(value = [FirebaseAuthException::class])
+    protected fun handleFirebaseException(e: FirebaseAuthException): ResponseEntity<Any> {
+        val errorResponse = ErrorResponse<Any>(
+            ErrorCode.BAD_ARGUMENT_VALUE.code,
+            ErrorCode.BAD_ARGUMENT_VALUE.message,
+            e.message.toString()
+        )
+
+        return ResponseEntity.status(401).body(errorResponse)
     }
 
 }

@@ -1,7 +1,10 @@
 package io.hs.anohi.infra.security
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import io.hs.anohi.core.ErrorCode
+import io.hs.anohi.core.ErrorResponse
 import io.hs.anohi.core.exception.UnauthorizedException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -19,9 +22,6 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     @Autowired
     private lateinit var userDetailsService: CustomUserDetailsService
-
-    @Autowired
-    private lateinit var jwtTokenProvider: JwtTokenProvider;
 
     @Autowired
     private lateinit var firebaseAuth: FirebaseAuth;
@@ -55,7 +55,6 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-//            logger.error("Could not set user authentication in security context, $e")
             throw UnauthorizedException(ErrorCode.INVALID_TOKEN)
         }
         filterChain.doFilter(request, response)
