@@ -1,10 +1,12 @@
 package io.hs.anohi.domain.post
 
-import io.hs.anohi.core.Pagination
+import io.hs.anohi.core.Page
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.post.payload.PostDetail
+import io.hs.anohi.domain.post.payload.PostPagination
 import io.hs.anohi.domain.post.payload.PostRequestForm
 import io.hs.anohi.domain.post.payload.PostUpdateForm
+import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -48,15 +50,13 @@ class PostController(
         return ResponseEntity.noContent().build()
     }
 
-    @ApiOperation("글 목록 조회")
+    @ApiOperation("글 목록 조회 (피드)")
     @GetMapping
     fun findAll(
-        @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int,
-        @RequestParam(required = false) emotionId: Long?,
+        @QueryStringArgumentResolver pagination: PostPagination,
         @AuthAccount account: Account,
-    ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findAll(account, page, size, emotionId)
+    ): ResponseEntity<Page<PostDetail>> {
+        val result = postService.findAll(account, pagination)
         return ResponseEntity.ok(result)
     }
 

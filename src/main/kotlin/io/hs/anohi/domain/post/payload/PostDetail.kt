@@ -58,6 +58,6 @@ data class PostDetail(
         } else {
             null
         }
-        this.author = Author(post.account.id, post.account.name, authorImage)
+        this.author = Author(post.account.id, authorImage)
     }
 }

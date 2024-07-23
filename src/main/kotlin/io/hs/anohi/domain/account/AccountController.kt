@@ -1,14 +1,15 @@
 package io.hs.anohi.domain.account
 
-import io.hs.anohi.core.Pagination
+import io.hs.anohi.core.Page
 import io.hs.anohi.domain.account.payload.AccountDetail
 import io.hs.anohi.domain.account.payload.AccountJoinForm
-import io.hs.anohi.domain.account.payload.AccountSummary
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
 import io.hs.anohi.domain.post.EmotionService
 import io.hs.anohi.domain.post.PostService
 import io.hs.anohi.domain.post.payload.EmotionStatistics
 import io.hs.anohi.domain.post.payload.PostDetail
+import io.hs.anohi.domain.post.payload.PostPagination
+import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -41,20 +42,6 @@ class AccountController(
         return ResponseEntity.created(location).build()
     }
 
-    @ApiOperation("계정 목록 조회")
-    @GetMapping
-    fun getUsers(
-        @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
-    ): ResponseEntity<List<AccountSummary>> {
-
-        val accountList = accountService.findAll(page, size)
-
-        val accountSummaries = accountList.map { AccountSummary(it.id, it.email, it.name) }
-
-        return ResponseEntity.ok(accountSummaries)
-    }
-
     @ApiOperation("유저 본인 정보 조회")
     @GetMapping("/me")
     fun getUserMe(@AuthAccount account: Account): ResponseEntity<AccountDetail> {
@@ -70,11 +57,12 @@ class AccountController(
     }
 
     @ApiOperation("본인이 작성한 게시글 목록 조회")
-    @GetMapping("/{id}/posts")
-    fun getUserPosts(@PathVariable id: Long, @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
-    ): ResponseEntity<Pagination<PostDetail>> {
-        val result = postService.findByUserId(id, page, size)
+    @GetMapping("/me/posts")
+    fun getUserPosts(
+        @AuthAccount account: Account,
+        @QueryStringArgumentResolver pagination: PostPagination
+    ): ResponseEntity<Page<PostDetail>> {
+        val result = postService.findByUserId(account, pagination)
         return ResponseEntity.ok(result)
     }
 

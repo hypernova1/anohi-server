@@ -1,24 +1,27 @@
 package io.hs.anohi.domain.post
 
 import io.hs.anohi.core.ErrorCode
-import io.hs.anohi.core.Pagination
+import io.hs.anohi.core.Page
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.domain.account.Account
 import io.hs.anohi.domain.account.AccountRepository
+import io.hs.anohi.domain.chat.payload.MessageDto
+import io.hs.anohi.domain.noficiation.SseEmitterService
+import io.hs.anohi.domain.noficiation.constant.NotificationType
 import io.hs.anohi.domain.post.entity.Emotion
 import io.hs.anohi.domain.post.entity.FavoritePost
 import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.domain.post.payload.PostDetail
+import io.hs.anohi.domain.post.payload.PostPagination
 import io.hs.anohi.domain.post.payload.PostRequestForm
 import io.hs.anohi.domain.post.payload.PostUpdateForm
 import io.hs.anohi.domain.post.repository.EmotionRepository
 import io.hs.anohi.domain.post.repository.FavoritePostRepository
+import io.hs.anohi.domain.post.repository.PostQueryRepository
 import io.hs.anohi.domain.post.repository.PostRepository
 import io.hs.anohi.domain.tag.Tag
 import io.hs.anohi.domain.tag.TagService
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -26,10 +29,11 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class PostService(
     private val postRepository: PostRepository,
-    private val accountRepository: AccountRepository,
     private val tagService: TagService,
     private val emotionRepository: EmotionRepository,
     private val favoritePostRepository: FavoritePostRepository,
+    private val postQueryRepository: PostQueryRepository,
+    private val sseEmitterService: SseEmitterService,
 ) {
 
     @Transactional
@@ -43,7 +47,7 @@ class PostService(
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
 
         val post = Post.of(postRequestForm = postRequestForm, account = account, emotion = emotion, tags = tags)
-        this.postRepository.save(post);
+        this.postRepository.save(post)
         return PostDetail(post)
     }
 
@@ -52,21 +56,27 @@ class PostService(
         postRepository.deleteById(id)
     }
 
-    fun findAll(account: Account, page: Int, size: Int, emotionId: Long?): Pagination<PostDetail> {
-        val pagePosts: Page<Post> = if (emotionId == null) {
-            postRepository.findAllByAccount(account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
-        } else {
-            val emotion = this.emotionRepository.findById(emotionId)
-                .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
-            postRepository.findAllByEmotionAndAccount(emotion, account, PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
+    fun findAll(account: Account, pagination: PostPagination): Page<PostDetail> {
+        if (pagination.emotionId !== null) {
+            val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
+                if (!existsEmotion) {
+                    throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
+                }
         }
+        val searchBySlice = this.postQueryRepository.findAll(
+            account.id,
+            pagination,
+            PageRequest.ofSize(pagination.size)
+        )
 
-        val postDtos = pagePosts.content.map { PostDetail(it) }
-        return Pagination.load(pagePosts, postDtos)
+        val postDtos = searchBySlice.content.map { PostDetail(it) }
+        return Page.load(searchBySlice, postDtos)
     }
 
     @Transactional
     fun findById(id: Long, account: Account): PostDetail {
+        this.sseEmitterService.send(account, MessageDto("hello~~", NotificationType.NOTIFICATION))
+
         val post = postRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
@@ -116,10 +126,21 @@ class PostService(
         postRepository.save(post)
     }
 
-    fun findByUserId(userId: Long, page: Int, size: Int): Pagination<PostDetail> {
-        val account = this.accountRepository.findById(userId)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
-        return this.findAll(account, page, size, null)
+    fun findByUserId(account: Account, pagination: PostPagination): Page<PostDetail> {
+        if (pagination.emotionId !== null) {
+            val existsEmotion = this.emotionRepository.existsById(pagination.emotionId!!)
+            if (!existsEmotion) {
+                throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
+            }
+        }
+        val searchBySlice = this.postQueryRepository.findAllByAccount(
+            account.id,
+            pagination,
+            PageRequest.ofSize(pagination.size)
+        )
+
+        val postDtos = searchBySlice.content.map { PostDetail(it) }
+        return Page.load(searchBySlice, postDtos)
     }
 
 

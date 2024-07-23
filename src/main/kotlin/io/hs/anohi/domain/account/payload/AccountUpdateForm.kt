@@ -4,10 +4,10 @@ import io.hs.anohi.domain.post.payload.ImageDto
 import io.swagger.annotations.ApiModelProperty
 
 class AccountUpdateForm(
-    @ApiModelProperty("닉네임", example = "멜코르", required = false)
+    @ApiModelProperty("닉네임", example = "멜코르")
     val name: String?,
-    @ApiModelProperty("프로필 이미지 주소", example = "", required = false)
+    @ApiModelProperty("프로필 이미지 주소", example = "")
     var image: ImageDto?,
-    @ApiModelProperty("본인 설명", example = "", required = false)
+    @ApiModelProperty("본인 설명", example = "")
     var description: String?,
 )

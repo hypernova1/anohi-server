@@ -14,7 +14,7 @@ class CustomUserDetailsService(
     @Autowired val accountRepository: AccountRepository) : UserDetailsService {
 
     override fun loadUserByUsername(uid: String): UserDetails {
-        val account = accountRepository.findByUid(uid)
+        val account = accountRepository.findByUidAndDeletedAtIsNull(uid)
             .orElseThrow { AccountNotFoundException(uid) }
 
         return UserAccount(account)

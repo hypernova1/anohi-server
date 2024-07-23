@@ -3,17 +3,22 @@ package io.hs.anohi.domain.account
 import io.hs.anohi.domain.auth.entity.Role
 import io.hs.anohi.domain.post.entity.Post
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.domain.account.contants.LoginType
+import io.hs.anohi.domain.account.contants.SocialType
 import io.hs.anohi.domain.account.payload.AccountUpdateForm
+import io.hs.anohi.domain.noficiation.Notification
 import io.hs.anohi.domain.post.entity.FavoritePost
 import io.hs.anohi.domain.post.entity.Image
 import io.hs.anohi.domain.post.payload.ImageDto
+import org.hibernate.annotations.Filter
+import org.hibernate.annotations.FilterDef
+import org.hibernate.annotations.ParamDef
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*
 
 @Entity
-@Where(clause = "deleted_at is null")
+@FilterDef(name = "deletedAccountFilter", parameters = [ParamDef(name = "deletedAt", type = "boolean")])
+@Filter(name = "deletedAccountFilter", condition = "deleted_at IS NULL OR :deletedAt = true")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
 class Account : BaseEntity() {
 
@@ -28,9 +33,9 @@ class Account : BaseEntity() {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var loginType: LoginType = LoginType.NONE;
+    var loginType: SocialType = SocialType.NONE;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
         set(value) {
             field.clear()
@@ -62,23 +67,29 @@ class Account : BaseEntity() {
     @OneToMany(mappedBy = "account")
     val favoritePosts: MutableList<FavoritePost> = mutableListOf()
 
+    @OneToMany(mappedBy = "account")
+    val notifications: MutableList<Notification> = mutableListOf();
+
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name
         if (updateForm.image != null) {
             this.images = mutableListOf(Image.from(updateForm.image!!))
+        } else {
+            this.images = mutableListOf()
         }
         this.description = updateForm.description ?: this.description
     }
 
     companion object {
-        fun from(uid: String, email: String, loginType: LoginType, name: String?, profileImageUrl: String?): Account {
+        fun from(uid: String, email: String, loginType: SocialType, name: String?, profileImageUrl: String?): Account {
             val account = Account()
             account.uid = uid
             account.name = name.orEmpty()
             account.email = email
             account.isActive = true
             if (profileImageUrl != null) {
-                account.images = mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, null, null, null)))
+                account.images =
+                    mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, null, null, null)))
             } else {
                 account.images = mutableListOf()
             }
