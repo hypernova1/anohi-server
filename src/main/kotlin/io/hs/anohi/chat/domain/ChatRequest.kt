@@ -21,6 +21,14 @@ class ChatRequest: BaseEntity() {
     @Enumerated(EnumType.STRING)
     var answer: ChatRequestAnswerType = ChatRequestAnswerType.WAITING
 
+    fun isSender(account: Account): Boolean {
+        return this.sender == account
+    }
+
+    fun answer(answerType: ChatRequestAnswerType) {
+        this.answer = answerType;
+    }
+
     companion object {
         fun of(sender: Account, receiver: Account): ChatRequest {
             val chatRequest = ChatRequest()

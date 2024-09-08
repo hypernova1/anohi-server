@@ -33,7 +33,7 @@ class ChatController(private val chatService: ChatService) {
     @ApiOperation("요청 받은 채팅 응답")
     @PatchMapping("/{id}")
     fun acceptChatting(@PathVariable id: Long, @RequestBody chatRequestUpdateDto: ChatRequestUpdateDto, @AuthAccount account: Account): ResponseEntity<Any> {
-        this.chatService.updateChatRequest(id, chatRequestUpdateDto, account)
+        this.chatService.answer(id, chatRequestUpdateDto, account)
         return ResponseEntity.ok().build()
     }
 

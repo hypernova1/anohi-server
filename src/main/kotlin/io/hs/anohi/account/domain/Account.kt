@@ -98,4 +98,8 @@ class Account : BaseEntity() {
     fun addRole(role: Role) {
         this.roles.add(role)
     }
+
+    fun increaseVisitor() {
+        this.numberOfVisitors++
+    }
 }
