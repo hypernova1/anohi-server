@@ -1,7 +1,7 @@
 package io.hs.anohi.chat.domain
 
 import io.hs.anohi.account.domain.Account
-import io.hs.anohi.chat.ui.payload.ChatRequestDto
+import io.hs.anohi.chat.application.payload.ChatRequestDto
 import java.util.Optional
 
 interface ChatRequestRepository {

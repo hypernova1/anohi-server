@@ -2,8 +2,8 @@ package io.hs.anohi.account.application
 
 import com.google.firebase.auth.FirebaseAuth
 import io.hs.anohi.account.domain.*
-import io.hs.anohi.account.ui.payload.AccountDetail
-import io.hs.anohi.account.ui.payload.AccountUpdateForm
+import io.hs.anohi.account.application.payload.AccountDetail
+import io.hs.anohi.account.application.payload.AccountUpdateForm
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException

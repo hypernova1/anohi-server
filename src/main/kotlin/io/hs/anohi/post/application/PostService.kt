@@ -6,10 +6,10 @@ import io.hs.anohi.core.Page
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.post.domain.*
 import io.hs.anohi.post.infra.PostQueryRepository
-import io.hs.anohi.post.ui.payload.PostDetail
-import io.hs.anohi.post.ui.payload.PostPagination
-import io.hs.anohi.post.ui.payload.PostRequestForm
-import io.hs.anohi.post.ui.payload.PostUpdateForm
+import io.hs.anohi.post.application.payload.PostDetail
+import io.hs.anohi.post.application.payload.PostPagination
+import io.hs.anohi.post.application.payload.PostRequestForm
+import io.hs.anohi.post.application.payload.PostUpdateForm
 import io.hs.anohi.tag.domain.Tag
 import io.hs.anohi.tag.application.TagService
 import org.springframework.data.domain.PageRequest
@@ -26,6 +26,13 @@ class PostService(
     private val postQueryRepository: PostQueryRepository,
 ) {
 
+    /**
+     * 글을 등록한다
+     *
+     * @param postRequestForm 글 정보
+     * @param account 유저
+     * @return 등록된 글 정보
+     * */
     @Transactional
     fun create(postRequestForm: PostRequestForm, account: Account): PostDetail {
         var emotion: Emotion? = null

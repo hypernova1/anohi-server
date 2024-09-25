@@ -2,15 +2,15 @@ package io.hs.anohi.post.domain
 
 import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.post.ui.payload.PostRequestForm
-import io.hs.anohi.post.ui.payload.PostUpdateForm
+import io.hs.anohi.post.application.payload.PostRequestForm
+import io.hs.anohi.post.application.payload.PostUpdateForm
 import io.hs.anohi.tag.domain.Tag
+import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
-import org.hibernate.annotations.Where
-import javax.persistence.*
+import org.hibernate.annotations.SQLRestriction
 
 @Entity
-@Where(clause = "deleted_at is null")
+@SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
 class Post: BaseEntity() {
 
@@ -62,7 +62,7 @@ class Post: BaseEntity() {
             return
         }
 
-        this.images = images.map { Image.from(it) }.toList().toMutableList();
+        this.images = images.map { Image.from(it) }.toList().toMutableList()
     }
 
     companion object {

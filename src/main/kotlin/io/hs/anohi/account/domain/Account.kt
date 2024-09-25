@@ -1,22 +1,21 @@
 package io.hs.anohi.account.domain
 
-import io.hs.anohi.account.ui.payload.AccountUpdateForm
+import io.hs.anohi.account.application.payload.AccountUpdateForm
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.noficiation.domain.Notification
 import io.hs.anohi.post.domain.FavoritePost
 import io.hs.anohi.post.domain.Image
 import io.hs.anohi.post.domain.Post
-import io.hs.anohi.post.ui.payload.ImageDto
-import org.hibernate.annotations.Filter
-import org.hibernate.annotations.FilterDef
-import org.hibernate.annotations.ParamDef
-import org.hibernate.annotations.SQLDelete
-import javax.persistence.*
+import io.hs.anohi.post.application.payload.ImageDto
+import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import org.hibernate.annotations.*
 
 @Entity
-@FilterDef(name = "deletedAccountFilter", parameters = [ParamDef(name = "deletedAt", type = "boolean")])
+@FilterDef(name = "deletedAccountFilter", parameters = [ParamDef(name = "deletedAt", type = Boolean::class)])
 @Filter(name = "deletedAccountFilter", condition = "deleted_at IS NULL OR :deletedAt = true")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
+@SQLRestriction("deleted_at is null")
 class Account : BaseEntity() {
 
     @Column(unique = true, nullable = false)

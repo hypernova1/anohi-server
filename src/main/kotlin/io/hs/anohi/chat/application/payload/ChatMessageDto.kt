@@ -1,4 +1,4 @@
-package io.hs.anohi.chat.ui.payload
+package io.hs.anohi.chat.application.payload
 
 class ChatMessageDto(
     val id: Long,

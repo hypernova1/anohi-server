@@ -2,17 +2,17 @@ package io.hs.anohi.account.ui
 
 import io.hs.anohi.account.application.AccountService
 import io.hs.anohi.account.domain.Account
-import io.hs.anohi.account.ui.payload.AccountDetail
-import io.hs.anohi.account.ui.payload.AccountJoinForm
-import io.hs.anohi.account.ui.payload.AccountUpdateForm
+import io.hs.anohi.account.application.payload.AccountDetail
+import io.hs.anohi.account.application.payload.AccountJoinForm
+import io.hs.anohi.account.application.payload.AccountUpdateForm
 import io.hs.anohi.core.Page
 import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.hs.anohi.post.application.EmotionService
 import io.hs.anohi.post.application.PostService
-import io.hs.anohi.post.ui.payload.EmotionStatistics
-import io.hs.anohi.post.ui.payload.PostDetail
-import io.hs.anohi.post.ui.payload.PostPagination
+import io.hs.anohi.post.application.payload.EmotionStatistics
+import io.hs.anohi.post.application.payload.PostDetail
+import io.hs.anohi.post.application.payload.PostPagination
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity

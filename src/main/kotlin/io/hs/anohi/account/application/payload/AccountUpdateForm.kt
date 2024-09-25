@@ -1,6 +1,6 @@
-package io.hs.anohi.account.ui.payload
+package io.hs.anohi.account.application.payload
 
-import io.hs.anohi.post.ui.payload.ImageDto
+import io.hs.anohi.post.application.payload.ImageDto
 import io.swagger.annotations.ApiModelProperty
 
 class AccountUpdateForm(

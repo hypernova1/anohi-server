@@ -1,4 +1,4 @@
-package io.hs.anohi.chat.ui.payload
+package io.hs.anohi.chat.application.payload
 
 import io.hs.anohi.chat.domain.ChatRequestAnswerType
 import io.swagger.annotations.ApiModelProperty

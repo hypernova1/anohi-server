@@ -1,7 +1,7 @@
-package io.hs.anohi.account.ui.payload
+package io.hs.anohi.account.application.payload
 
 import io.swagger.annotations.ApiModelProperty
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 class AccountJoinForm(
 

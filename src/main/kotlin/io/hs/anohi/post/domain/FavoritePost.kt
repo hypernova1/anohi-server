@@ -2,8 +2,8 @@ package io.hs.anohi.post.domain
 
 import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
-import javax.persistence.Entity
-import javax.persistence.ManyToOne
+import jakarta.persistence.Entity
+import jakarta.persistence.ManyToOne
 
 @Entity
 class FavoritePost: BaseEntity() {

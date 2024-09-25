@@ -1,7 +1,7 @@
 package io.hs.anohi.noficiation.application
 
 import io.hs.anohi.account.domain.Account
-import io.hs.anohi.chat.ui.payload.MessageDto
+import io.hs.anohi.chat.application.payload.MessageDto
 import io.hs.anohi.noficiation.domain.EmitterRepository
 import io.hs.anohi.noficiation.domain.Notification
 import org.springframework.stereotype.Service

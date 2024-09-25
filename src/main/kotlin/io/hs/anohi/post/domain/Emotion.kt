@@ -1,12 +1,12 @@
 package io.hs.anohi.post.domain
 
 import io.hs.anohi.core.BaseEntity
+import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
-import org.hibernate.annotations.Where
-import javax.persistence.*
+import org.hibernate.annotations.SQLRestriction
 
 @Entity
-@Where(clause = "deleted_at is null")
+@SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE emotion SET deleted_at = current_timestamp WHERE id = ?")
 class Emotion: BaseEntity() {
     @Column

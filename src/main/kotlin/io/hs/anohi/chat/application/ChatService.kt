@@ -2,8 +2,8 @@ package io.hs.anohi.chat.application
 
 import io.hs.anohi.account.application.AccountService
 import io.hs.anohi.account.domain.Account
+import io.hs.anohi.chat.application.payload.*
 import io.hs.anohi.chat.domain.*
-import io.hs.anohi.chat.ui.payload.*
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Page
 import io.hs.anohi.core.Pagination

@@ -1,4 +1,4 @@
-package io.hs.anohi.post.ui.payload
+package io.hs.anohi.post.application.payload
 
 import io.hs.anohi.core.Pagination
 import io.swagger.annotations.ApiModelProperty

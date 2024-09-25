@@ -1,5 +1,6 @@
-package io.hs.anohi.post.ui.payload
+package io.hs.anohi.post.application.payload
 
+import io.hs.anohi.post.application.payload.ImageDto
 import io.swagger.annotations.ApiModelProperty
 
 class PostUpdateForm {

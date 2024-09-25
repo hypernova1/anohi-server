@@ -6,7 +6,7 @@ import io.hs.anohi.core.BaseQueryRepository
 import io.hs.anohi.post.domain.Post
 import io.hs.anohi.post.domain.QImage.image
 import io.hs.anohi.post.domain.QPost.post
-import io.hs.anohi.post.ui.payload.PostPagination
+import io.hs.anohi.post.application.payload.PostPagination
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl
 import org.springframework.stereotype.Repository

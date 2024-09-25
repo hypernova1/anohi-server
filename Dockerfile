@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11 as builder
+FROM adoptopenjdk/openjdk17 as builder
 
 EXPOSE 8080
 

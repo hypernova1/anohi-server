@@ -1,8 +1,8 @@
-package io.hs.anohi.post.ui.payload
+package io.hs.anohi.post.application.payload
 
 import io.swagger.annotations.ApiModelProperty
-import java.util.Collections
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
+import java.util.*
 
 class PostRequestForm {
 

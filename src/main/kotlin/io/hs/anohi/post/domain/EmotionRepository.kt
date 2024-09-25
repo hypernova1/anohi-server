@@ -1,6 +1,6 @@
 package io.hs.anohi.post.domain
 
-import io.hs.anohi.post.ui.payload.EmotionStatistics
+import io.hs.anohi.post.application.payload.EmotionStatistics
 import java.util.*
 
 interface EmotionRepository {

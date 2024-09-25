@@ -1,4 +1,4 @@
-package io.hs.anohi.account.ui.payload
+package io.hs.anohi.account.application.payload
 
 import io.swagger.annotations.ApiModelProperty
 

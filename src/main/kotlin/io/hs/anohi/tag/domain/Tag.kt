@@ -2,15 +2,15 @@ package io.hs.anohi.tag.domain
 
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.post.domain.Post
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.ManyToMany
 import org.hibernate.annotations.SQLDelete
-import org.hibernate.annotations.Where
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.ManyToMany
+import org.hibernate.annotations.SQLRestriction
 
-@Entity
-@Where(clause = "deleted_at is null")
+@SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE tag SET deleted_at = current_timestamp WHERE id = ?")
+@Entity
 class Tag: BaseEntity() {
     @Column
     var name: String = "";

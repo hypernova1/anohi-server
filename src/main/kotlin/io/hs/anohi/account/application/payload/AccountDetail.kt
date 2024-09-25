@@ -1,8 +1,8 @@
-package io.hs.anohi.account.ui.payload
+package io.hs.anohi.account.application.payload
 
 import io.hs.anohi.account.domain.Account
 import io.hs.anohi.account.domain.SocialType
-import io.hs.anohi.post.ui.payload.ImageDto
+import io.hs.anohi.post.application.payload.ImageDto
 import io.swagger.annotations.ApiModelProperty
 
 class AccountDetail(

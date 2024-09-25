@@ -2,7 +2,7 @@ package io.hs.anohi.post.infra
 
 import io.hs.anohi.post.domain.Emotion
 import io.hs.anohi.post.domain.EmotionRepository
-import io.hs.anohi.post.ui.payload.EmotionStatistics
+import io.hs.anohi.post.application.payload.EmotionStatistics
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

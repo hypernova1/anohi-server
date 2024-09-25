@@ -2,12 +2,12 @@ package io.hs.anohi.chat.ui
 
 import io.hs.anohi.account.domain.Account
 import io.hs.anohi.chat.application.ChatService
-import io.hs.anohi.chat.ui.payload.ChatRequestDto
-import io.hs.anohi.chat.ui.payload.ChatRequestResponseDto
-import io.hs.anohi.chat.ui.payload.ChatRequestUpdateDto
+import io.hs.anohi.chat.application.payload.ChatRequestDto
+import io.hs.anohi.chat.application.payload.ChatRequestResponseDto
+import io.hs.anohi.chat.application.payload.ChatRequestUpdateDto
 import io.hs.anohi.core.Page
 import io.hs.anohi.core.Pagination
-import io.hs.anohi.chat.ui.payload.ChatRoomDto
+import io.hs.anohi.chat.application.payload.ChatRoomDto
 import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthAccount
 import io.swagger.annotations.Api

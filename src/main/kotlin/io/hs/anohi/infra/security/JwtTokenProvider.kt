@@ -47,49 +47,4 @@ class JwtTokenProvider(
             .compact()
     }
 
-    fun getAuthentication(token: String): Authentication? {
-        val tokenBody = Jwts.parserBuilder()
-            .setSigningKey(jwtSecret).build()
-            .parseClaimsJws(token)
-            .body
-
-
-        val username: String = tokenBody.subject
-
-        @Suppress("UNCHECKED_CAST")
-        val roles = tokenBody["roles"] as ArrayList<LinkedHashMap<String, String>>
-
-        val res = roles.mapTo(ArrayList<GrantedAuthority>()) { SimpleGrantedAuthority(it["authority"]) }
-
-        logger.info("$username logged in with authorities $res")
-        return UsernamePasswordAuthenticationToken(username, null, res)
-    }
-
-    fun getEmailFromJwt(token: String): String {
-        val claims = Jwts.parserBuilder()
-            .setSigningKey(jwtSecret).build()
-            .parse(token)
-            .body as Claims
-
-        return claims.subject
-    }
-
-    fun validationToken(token: String): Boolean {
-        try {
-            Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token)
-            return true
-        } catch (e: SignatureException) {
-            logger.error("Invalid JWT signature")
-        } catch (e: MalformedJwtException) {
-            logger.error("Invalid JWT token")
-        } catch (e: ExpiredJwtException) {
-            logger.error("Expired JWT token")
-        } catch (e: UnsupportedJwtException) {
-            logger.error("Unsupported JWT token")
-        } catch (e: IllegalArgumentException) {
-            logger.error("JWT claims string is empty")
-        }
-        return false
-    }
-
 }

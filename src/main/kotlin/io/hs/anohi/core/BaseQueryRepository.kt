@@ -3,10 +3,10 @@ package io.hs.anohi.core
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.NumberPath
 import com.querydsl.jpa.impl.JPAQueryFactory
+import jakarta.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl
-import javax.persistence.EntityManager
 
 open class BaseQueryRepository<T : BaseEntity> {
     @Autowired

@@ -3,12 +3,12 @@ package io.hs.anohi.infra.security
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.ErrorResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 /**
  * 인증 예외 발생시 호출

@@ -1,12 +1,11 @@
 package io.hs.anohi.infra.filter
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.filter.OncePerRequestFilter
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Configuration
 class LoggingFilter : OncePerRequestFilter() {

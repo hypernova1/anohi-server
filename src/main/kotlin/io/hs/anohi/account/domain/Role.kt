@@ -1,10 +1,10 @@
 package io.hs.anohi.account.domain
 
 import io.hs.anohi.core.BaseEntity
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.ManyToMany
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.ManyToMany
 
 @Entity
 class Role: BaseEntity() {

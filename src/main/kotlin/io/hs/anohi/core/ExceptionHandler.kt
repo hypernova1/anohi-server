@@ -2,12 +2,11 @@ package io.hs.anohi.core
 
 import com.google.firebase.auth.FirebaseAuthException
 import io.hs.anohi.core.exception.HttpException
-import io.jsonwebtoken.ExpiredJwtException
+import jakarta.validation.ConstraintViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import javax.validation.ConstraintViolationException
 
 
 @RestControllerAdvice

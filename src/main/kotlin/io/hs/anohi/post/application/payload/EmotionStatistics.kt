@@ -1,4 +1,4 @@
-package io.hs.anohi.post.ui.payload
+package io.hs.anohi.post.application.payload
 
 interface EmotionStatistics {
     val id: Long?

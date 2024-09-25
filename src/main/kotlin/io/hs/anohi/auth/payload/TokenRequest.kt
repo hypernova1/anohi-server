@@ -1,7 +1,7 @@
-package io.hs.anohi.auth.ui.payload
+package io.hs.anohi.auth.payload
 
 import io.swagger.annotations.ApiModelProperty
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 class TokenRequest(
 
