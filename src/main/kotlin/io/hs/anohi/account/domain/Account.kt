@@ -77,6 +77,10 @@ class Account : BaseEntity() {
         this.description = updateForm.description ?: this.description
     }
 
+    fun increaseVisitor() {
+        this.numberOfVisitors++
+    }
+
     companion object {
         fun from(firebaseUser: FirebaseUser, role: Role): Account {
             val account = Account()
