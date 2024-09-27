@@ -35,9 +35,9 @@ class ChatService(
         val existsChatRequest = this.chatRequestRepository.findByReceiverAndSenderAndAnswer(
             receiver,
             account,
-            ChatRequestAnswerType.WAITING
+            ChatRequestAnswerStatus.WAITING
         )
-        if (existsChatRequest != null && existsChatRequest.answer === ChatRequestAnswerType.WAITING) {
+        if (existsChatRequest != null && existsChatRequest.isWaiting()) {
             throw ConflictException(ErrorCode.ALREADY_EXIST_CHAT_REQUEST)
         }
 
@@ -67,7 +67,7 @@ class ChatService(
         }
         chatRequest.answer(chatRequestUpdateDto.answerType)
 
-        if (chatRequest.answer === ChatRequestAnswerType.ACCEPT) {
+        if (chatRequest.answerStatus === ChatRequestAnswerStatus.ACCEPT) {
             this.applicationEventPublisher.publishEvent(
                 NotificationEvent(
                     this,
@@ -80,8 +80,7 @@ class ChatService(
 
     fun findRequests(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
         val slice = chatRequestQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
-        val items =
-            slice.content.map { ChatRequestResponseDto(it) }
+        val items = slice.content.map { ChatRequestResponseDto(it) }
         return Page(pageSize = pagination.size, slice.hasNext(), items)
     }
 

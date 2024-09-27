@@ -4,7 +4,6 @@ import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm
-import io.hs.anohi.tag.domain.Tag
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
@@ -12,25 +11,29 @@ import org.hibernate.annotations.SQLRestriction
 @Entity
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
-class Post: BaseEntity() {
-
+class Post(
     @Column(nullable = true)
-    var title: String = ""
+    var title: String = "",
 
     @Column(nullable = false, columnDefinition = "text")
-    var content: String = ""
+    var content: String = "",
 
     @Column(nullable = false)
-    var hit: Long = 0
+    var hit: Long = 0,
 
     @Column(nullable = false)
-    var numberOfLikes: Long = 0
+    var numberOfLikes: Long = 0,
 
     @ManyToMany
-    var tags: MutableList<Tag> = mutableListOf()
+    val tags: MutableList<Tag> = mutableListOf(),
 
     @ManyToOne
-    var emotion: Emotion? = null
+    var emotion: Emotion? = null,
+
+    @Column
+    val accountId: Long,
+
+) : BaseEntity() {
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
@@ -39,16 +42,10 @@ class Post: BaseEntity() {
             field.addAll(value)
         }
 
-    @ManyToOne
-    lateinit var account: Account
-
-    @OneToMany(mappedBy = "post")
-    val favoritePosts: MutableList<FavoritePost> = mutableListOf()
-
     fun update(postUpdateForm: PostUpdateForm, tags: List<Tag>?, emotion: Emotion?) {
         this.title = postUpdateForm.title ?: this.title
         this.content = postUpdateForm.content ?: this.content
-        this.tags = (tags ?: mutableListOf()).toMutableList()
+        this.tags.addAll(tags ?: mutableListOf())
         this.emotion = emotion ?: this.emotion
 
         setImages(postUpdateForm)
@@ -79,11 +76,8 @@ class Post: BaseEntity() {
 
     companion object {
 
-        fun of(postRequestForm: PostRequestForm, account: Account, tags: List<Tag>, emotion: Emotion?): Post {
-            val post = Post()
-            post.title = postRequestForm.title
-            post.content = postRequestForm.content
-            post.account = account
+        fun of(postRequestForm: PostRequestForm, accountId: Long, tags: List<Tag>, emotion: Emotion?): Post {
+            val post = Post(title = postRequestForm.title, content = postRequestForm.content, accountId = accountId)
             post.tags.addAll(tags)
             post.emotion = emotion
             val images = postRequestForm.images.map { Image.from(it) }

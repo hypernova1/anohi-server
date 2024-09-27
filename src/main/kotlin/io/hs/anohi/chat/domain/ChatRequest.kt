@@ -19,14 +19,18 @@ class ChatRequest: BaseEntity() {
 
     @Column
     @Enumerated(EnumType.STRING)
-    var answer: ChatRequestAnswerType = ChatRequestAnswerType.WAITING
+    var answerStatus: ChatRequestAnswerStatus = ChatRequestAnswerStatus.WAITING
 
     fun isSender(account: Account): Boolean {
         return this.sender == account
     }
 
-    fun answer(answerType: ChatRequestAnswerType) {
-        this.answer = answerType;
+    fun answer(answerStatus: ChatRequestAnswerStatus) {
+        this.answerStatus = answerStatus
+    }
+
+    fun isWaiting(): Boolean {
+        return this.answerStatus == ChatRequestAnswerStatus.WAITING
     }
 
     companion object {

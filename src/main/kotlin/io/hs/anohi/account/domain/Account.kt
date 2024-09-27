@@ -1,13 +1,10 @@
 package io.hs.anohi.account.domain
 
 import io.hs.anohi.account.application.payload.AccountUpdateForm
-import io.hs.anohi.infra.firebase.FirebaseUser
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.noficiation.domain.Notification
+import io.hs.anohi.infra.firebase.FirebaseUser
 import io.hs.anohi.post.application.payload.ImageDto
-import io.hs.anohi.post.domain.FavoritePost
 import io.hs.anohi.post.domain.Image
-import io.hs.anohi.post.domain.Post
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
 import org.hibernate.annotations.*
@@ -52,20 +49,11 @@ class Account : BaseEntity() {
     @Column(nullable = false)
     var numberOfVisitors: Int = 0
 
-    @OneToMany(mappedBy = "account")
-    var posts: MutableList<Post> = mutableListOf()
-
     @Column(nullable = false)
     var isActive: Boolean = false
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()
-
-    @OneToMany(mappedBy = "account")
-    val favoritePosts: MutableList<FavoritePost> = mutableListOf()
-
-    @OneToMany(mappedBy = "account")
-    val notifications: MutableList<Notification> = mutableListOf();
 
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name
@@ -82,7 +70,7 @@ class Account : BaseEntity() {
     }
 
     companion object {
-        fun from(firebaseUser: FirebaseUser, role: Role): Account {
+        fun of(firebaseUser: FirebaseUser, role: Role): Account {
             val account = Account()
             account.uid = firebaseUser.uid
             account.name = firebaseUser.name.orEmpty()

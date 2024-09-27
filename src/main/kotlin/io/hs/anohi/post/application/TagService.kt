@@ -1,7 +1,7 @@
-package io.hs.anohi.tag.application
+package io.hs.anohi.post.application
 
-import io.hs.anohi.tag.domain.Tag
-import io.hs.anohi.tag.domain.TagRepository
+import io.hs.anohi.post.domain.Tag
+import io.hs.anohi.post.domain.TagRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

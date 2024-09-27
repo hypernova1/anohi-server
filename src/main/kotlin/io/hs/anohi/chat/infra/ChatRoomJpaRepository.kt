@@ -1,4 +1,4 @@
-package io.hs.anohi.chat.repository
+package io.hs.anohi.chat.infra
 
 import io.hs.anohi.chat.domain.ChatRoom
 import io.hs.anohi.chat.domain.ChatRoomRepository

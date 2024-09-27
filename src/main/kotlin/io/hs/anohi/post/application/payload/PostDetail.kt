@@ -53,11 +53,11 @@ data class PostDetail(
         post.updatedAt.toString(),
         post.hit
     ) {
-        val authorImage = if (post.account.images.isNotEmpty()) {
-            ImageDto(post.account.images[0])
-        } else {
-            null
-        }
-        this.author = Author(post.account.id, authorImage)
+//        val authorImage = if (post.account.images.isNotEmpty()) {
+//            ImageDto(post.account.images[0])
+//        } else {
+//            null
+//        }
+//        this.author = Author(post.account.id, authorImage)
     }
 }

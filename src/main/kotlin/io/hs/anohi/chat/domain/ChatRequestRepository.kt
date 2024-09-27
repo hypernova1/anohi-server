@@ -8,5 +8,5 @@ interface ChatRequestRepository {
 
     fun save(chatRequest: ChatRequest): ChatRequestDto
     fun findById(id: Long): Optional<ChatRequest>
-    fun findByReceiverAndSenderAndAnswer(receiver: Account, sender: Account, answer: ChatRequestAnswerType): ChatRequest?
+    fun findByReceiverAndSenderAndAnswer(receiver: Account, sender: Account, answer: ChatRequestAnswerStatus): ChatRequest?
 }

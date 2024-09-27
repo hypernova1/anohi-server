@@ -29,7 +29,7 @@ class PostController(
         @Valid @RequestBody postRequestForm: PostRequestForm,
         @AuthAccount account: Account
     ): ResponseEntity<PostDetail> {
-        val post = postService.create(postRequestForm, account)
+        val post = postService.create(postRequestForm, account.id)
 
         val location = ServletUriComponentsBuilder
             .fromCurrentRequest()

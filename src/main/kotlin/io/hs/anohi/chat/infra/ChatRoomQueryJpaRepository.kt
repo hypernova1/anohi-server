@@ -1,4 +1,4 @@
-package io.hs.anohi.chat.repository
+package io.hs.anohi.chat.infra
 
 import com.querydsl.core.BooleanBuilder
 import io.hs.anohi.account.domain.Account

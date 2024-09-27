@@ -1,4 +1,4 @@
-package io.hs.anohi.tag.domain
+package io.hs.anohi.post.domain
 
 interface TagRepository {
     fun findAllByNameIn(name: List<String>): MutableList<Tag>

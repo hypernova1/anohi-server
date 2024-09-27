@@ -1,10 +1,10 @@
-package io.hs.anohi.chat.repository
+package io.hs.anohi.chat.infra
 
 import com.querydsl.core.BooleanBuilder
 import io.hs.anohi.account.domain.Account
 import io.hs.anohi.account.domain.QAccount.account
 import io.hs.anohi.chat.domain.ChatRequest
-import io.hs.anohi.chat.domain.ChatRequestAnswerType
+import io.hs.anohi.chat.domain.ChatRequestAnswerStatus
 import io.hs.anohi.chat.domain.ChatRequestQueryRepository
 import io.hs.anohi.core.BaseQueryRepository
 import io.hs.anohi.core.Pagination
@@ -21,7 +21,7 @@ class ChatRequestQueryJpaRepository: ChatRequestQueryRepository, BaseQueryReposi
             .leftJoin(chatRequest.receiver, account)
 
         val whereClause = BooleanBuilder()
-        whereClause.and(chatRequest.answer.eq(ChatRequestAnswerType.WAITING))
+        whereClause.and(chatRequest.answerStatus.eq(ChatRequestAnswerStatus.WAITING))
         whereClause.and(chatRequest.receiver.id.eq(user.id))
 
         if (pagination.lastItemId != 0L) {

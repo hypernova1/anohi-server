@@ -10,8 +10,7 @@ import io.hs.anohi.post.application.payload.PostDetail
 import io.hs.anohi.post.application.payload.PostPagination
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm
-import io.hs.anohi.tag.domain.Tag
-import io.hs.anohi.tag.application.TagService
+import io.hs.anohi.post.domain.Tag
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -30,11 +29,11 @@ class PostService(
      * 글을 등록한다
      *
      * @param postRequestForm 글 정보
-     * @param account 유저
+     * @param accountId 유저 아이디
      * @return 등록된 글 정보
      * */
     @Transactional
-    fun create(postRequestForm: PostRequestForm, account: Account): PostDetail {
+    fun create(postRequestForm: PostRequestForm, accountId: Long): PostDetail {
         var emotion: Emotion? = null
         if (postRequestForm.emotionId != null) {
             emotion = emotionService.findOne(postRequestForm.emotionId)
@@ -42,8 +41,7 @@ class PostService(
         }
 
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
-
-        val post = Post.of(postRequestForm = postRequestForm, account = account, emotion = emotion, tags = tags)
+        val post = Post.of(postRequestForm = postRequestForm, accountId = accountId, emotion = emotion, tags = tags)
         this.postRepository.save(post)
         return PostDetail(post)
     }
@@ -56,9 +54,9 @@ class PostService(
     fun findAll(account: Account, pagination: PostPagination): Page<PostDetail> {
         if (pagination.emotionId !== null) {
             val existsEmotion = this.emotionService.exists(pagination.emotionId!!)
-                if (!existsEmotion) {
-                    throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
-                }
+            if (!existsEmotion) {
+                throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
+            }
         }
         val searchBySlice = this.postQueryRepository.findAll(
             account.id,
@@ -75,7 +73,7 @@ class PostService(
         val post = postRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
-        if (account.id != post.account.id) {
+        if (account.id != post.accountId) {
             post.increaseHit()
         }
 
@@ -111,7 +109,7 @@ class PostService(
         if (exist) {
             favoritePostRepository.deleteByPostAndAccount(post, account)
             post.decreaseLike()
-            return;
+            return
         }
         val favoritePost = FavoritePost.of(post, account)
         favoritePostRepository.save(favoritePost)

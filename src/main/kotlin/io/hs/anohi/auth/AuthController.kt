@@ -1,4 +1,4 @@
-package io.hs.anohi.auth.ui
+package io.hs.anohi.auth
 
 import com.google.api.client.auth.oauth2.TokenResponse
 import io.swagger.annotations.Api

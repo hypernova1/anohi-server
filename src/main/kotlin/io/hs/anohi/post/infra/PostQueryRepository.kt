@@ -24,7 +24,7 @@ class PostQueryRepository: BaseQueryRepository<Post>() {
             .leftJoin(post.images, image)
 
         val whereClause = BooleanBuilder()
-        whereClause.and(post.account.id.eq(accountId))
+        whereClause.and(post.accountId.eq(accountId))
         if (pagination.emotionId != null) {
             whereClause.and(post.emotion.id.eq(pagination.emotionId))
         }
@@ -47,15 +47,15 @@ class PostQueryRepository: BaseQueryRepository<Post>() {
         pageable: Pageable
     ): SliceImpl<Post> {
 
-        val subQuery = query.select(post.account.id, post.id.max().`as`("id"))
+        val subQuery = query.select(post.accountId, post.id.max().`as`("id"))
             .from(post)
-            .groupBy(post.account.id)
+            .groupBy(post.accountId)
 
         val query = query.selectFrom(post)
             .leftJoin(post.images, image)
 
         val whereClause = BooleanBuilder()
-        whereClause.and(Expressions.list(post.account.id, post.id).`in`(subQuery))
+        whereClause.and(Expressions.list(post.accountId, post.id).`in`(subQuery))
         if (pagination.emotionId != null) {
             whereClause.and(post.emotion.id.eq(pagination.emotionId))
         }

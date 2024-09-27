@@ -1,7 +1,6 @@
-package io.hs.anohi.tag.domain
+package io.hs.anohi.post.domain
 
 import io.hs.anohi.core.BaseEntity
-import io.hs.anohi.post.domain.Post
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.ManyToMany

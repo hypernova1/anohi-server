@@ -1,4 +1,4 @@
-package io.hs.anohi.infra.config
+package io.hs.anohi.infra.firebase
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp

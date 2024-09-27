@@ -1,5 +1,5 @@
 package io.hs.anohi.chat.domain
 
-enum class ChatRequestAnswerType {
+enum class ChatRequestAnswerStatus {
     ACCEPT, DENIED, WAITING
 }
