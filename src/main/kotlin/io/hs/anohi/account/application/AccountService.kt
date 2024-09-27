@@ -47,7 +47,7 @@ class AccountService(
         val account = accountRepository.findByIdAndDeletedAtIsNull(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
-        account.numberOfVisitors++
+        account.increaseVisitor()
 
         val numberOfPosts = this.postService.count(account.id)
         val numberOfLikes = this.postService.countLikePost(account.id)

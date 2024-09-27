@@ -5,5 +5,5 @@ import io.swagger.annotations.ApiModelProperty
 
 data class ChatRequestUpdateDto(
     @ApiModelProperty(allowableValues = "ACCEPT, DENIED")
-    val answer: ChatRequestAnswerType
+    val answerType: ChatRequestAnswerType
 )

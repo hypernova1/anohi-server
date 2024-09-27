@@ -29,7 +29,6 @@ class ChatService(
 
     @Transactional
     fun requestChatting(account: Account, chatRequestDto: ChatRequestDto) {
-
         val receiver = this.accountService.findOne(chatRequestDto.receiverId)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
@@ -48,6 +47,7 @@ class ChatService(
 
         val chatRequest = ChatRequest.of(account, receiver)
         chatRequestRepository.save(chatRequest)
+
         applicationEventPublisher.publishEvent(
             NotificationEvent(
                 this,
@@ -58,13 +58,14 @@ class ChatService(
     }
 
     @Transactional
-    fun updateChatRequest(id: Long, chatRequestUpdateDto: ChatRequestUpdateDto, account: Account) {
+    fun answer(id: Long, chatRequestUpdateDto: ChatRequestUpdateDto, account: Account) {
         val chatRequest = chatRequestRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_CHAT_REQUEST) }
-        if (chatRequest.sender == account) {
+
+        if (chatRequest.isSender(account)) {
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
         }
-        chatRequest.answer = chatRequestUpdateDto.answer
+        chatRequest.answer(chatRequestUpdateDto.answerType)
 
         if (chatRequest.answer === ChatRequestAnswerType.ACCEPT) {
             this.applicationEventPublisher.publishEvent(

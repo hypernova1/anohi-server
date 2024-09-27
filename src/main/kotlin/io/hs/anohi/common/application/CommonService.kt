@@ -13,7 +13,6 @@ import java.util.UUID
 class CommonService(private val amazonS3Config: AmazonS3Config) {
 
     fun getPreSignedUrl(folder: FolderType, extension: String, size: Int): List<URL> {
-
         val urls = mutableListOf<URL>()
         for (i: Int in 1..size) {
             val fileName = folder.value + "/" + UUID.randomUUID().toString() + "." + extension

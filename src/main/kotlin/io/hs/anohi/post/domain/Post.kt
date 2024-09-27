@@ -65,6 +65,18 @@ class Post: BaseEntity() {
         this.images = images.map { Image.from(it) }.toList().toMutableList()
     }
 
+    fun increaseHit() {
+        this.hit++
+    }
+
+    fun increaseLike() {
+        this.numberOfLikes++
+    }
+
+    fun decreaseLike() {
+        this.numberOfLikes--
+    }
+
     companion object {
 
         fun of(postRequestForm: PostRequestForm, account: Account, tags: List<Tag>, emotion: Emotion?): Post {

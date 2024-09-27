@@ -76,15 +76,14 @@ class PostService(
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
         if (account.id != post.account.id) {
-            post.hit++
-            this.postRepository.save(post)
+            post.increaseHit()
         }
 
         return PostDetail(post)
     }
 
     @Transactional
-    fun update(id: Long, postUpdateForm: PostUpdateForm, account: Account): Post {
+    fun update(id: Long, postUpdateForm: PostUpdateForm, account: Account): PostDetail {
         var emotion: Emotion? = null
         if (postUpdateForm.emotionId != null) {
             emotion = emotionService.findOne(postUpdateForm.emotionId!!)
@@ -100,7 +99,7 @@ class PostService(
         post.update(postUpdateForm, tags = tags, emotion = emotion)
         postRepository.save(post)
 
-        return post
+        return PostDetail(post)
     }
 
     @Transactional
@@ -111,14 +110,12 @@ class PostService(
         val exist = favoritePostRepository.existsByPostAndAccount(post, account)
         if (exist) {
             favoritePostRepository.deleteByPostAndAccount(post, account)
-            post.numberOfLikes--
-        } else {
-            val favoritePost = FavoritePost.of(post, account)
-            favoritePostRepository.save(favoritePost)
-            post.numberOfLikes++
+            post.decreaseLike()
+            return;
         }
-
-        postRepository.save(post)
+        val favoritePost = FavoritePost.of(post, account)
+        favoritePostRepository.save(favoritePost)
+        post.increaseLike()
     }
 
     fun findByUserId(account: Account, pagination: PostPagination): Page<PostDetail> {
