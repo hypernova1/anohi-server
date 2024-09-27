@@ -1,6 +1,5 @@
 package io.hs.anohi.post.domain
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm

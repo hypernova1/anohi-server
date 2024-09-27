@@ -34,10 +34,8 @@ class PostService(
      * */
     @Transactional
     fun create(postRequestForm: PostRequestForm, accountId: Long): PostDetail {
-        var emotion: Emotion? = null
-        if (postRequestForm.emotionId != null) {
-            emotion = emotionService.findOne(postRequestForm.emotionId)
-                .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
+        val emotion = postRequestForm.emotionId?.let {
+            emotionService.findOne(it).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
         }
 
         val tags = tagService.findAllOrCreate(postRequestForm.tags)
@@ -52,12 +50,12 @@ class PostService(
     }
 
     fun findAll(account: Account, pagination: PostPagination): Page<PostDetail> {
-        if (pagination.emotionId !== null) {
-            val existsEmotion = this.emotionService.exists(pagination.emotionId!!)
-            if (!existsEmotion) {
+        pagination.emotionId?.let {
+            if (!emotionService.exists(it)) {
                 throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
             }
         }
+
         val searchBySlice = this.postQueryRepository.findAll(
             account.id,
             pagination,
@@ -82,11 +80,10 @@ class PostService(
 
     @Transactional
     fun update(id: Long, postUpdateForm: PostUpdateForm, account: Account): PostDetail {
-        var emotion: Emotion? = null
-        if (postUpdateForm.emotionId != null) {
-            emotion = emotionService.findOne(postUpdateForm.emotionId!!)
-                .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
+        val emotion = postUpdateForm.emotionId?.let {
+            emotionService.findOne(it).orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION) }
         }
+
         var tags: List<Tag>? = null
         if (postUpdateForm.tags != null) {
             tags = tagService.findAllOrCreate(postUpdateForm.tags!!)
@@ -117,12 +114,12 @@ class PostService(
     }
 
     fun findByUserId(account: Account, pagination: PostPagination): Page<PostDetail> {
-        if (pagination.emotionId !== null) {
-            val existsEmotion = this.emotionService.exists(pagination.emotionId!!)
-            if (!existsEmotion) {
+        pagination.emotionId?.let {
+            if (!emotionService.exists(it)) {
                 throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
             }
         }
+
         val searchBySlice = this.postQueryRepository.findAllByAccount(
             account.id,
             pagination,

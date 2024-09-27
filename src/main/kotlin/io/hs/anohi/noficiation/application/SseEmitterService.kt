@@ -16,62 +16,71 @@ import java.io.IOException
 class SseEmitterService(
     private val eventEmitterRepository: EmitterRepository
 ) {
-    private final val TIME_OUT = 60L * 1000 * 60
+    private val TIME_OUT = 60L * 1000 * 60
 
     @Transactional
     fun subscribe(account: Account, lastEventId: String?): SseEmitter {
-        val sseEmitter = this.eventEmitterRepository.save(account.id, SseEmitter(TIME_OUT))
+        val sseEmitter = createAndSaveEmitter(account)
 
-        sseEmitter.onCompletion { eventEmitterRepository.deleteEmitterByUserId(account.id) }
-        sseEmitter.onTimeout { eventEmitterRepository.deleteEmitterByUserId(account.id) }
-
-        // 503 에러 방지용 이벤트
-        try {
-            sseEmitter.send(
-                SseEmitter.event()
-                    .id(account.id.toString())
-                    .name("connect")
-                    .data("connected.")
-            )
-        } catch (e: RuntimeException) {
-            e.printStackTrace()
-        }
-
-
-        if (lastEventId != null) {
-            val events = eventEmitterRepository.findEventCacheByUserId(account.id)
-            events.entries
-                .filter { entry -> lastEventId < entry.key }
-                .forEach { entry -> sendToClient(sseEmitter, entry.key, entry.value) }
-        }
-
+        handleReconnectEvents(sseEmitter, account.id, lastEventId)
         return sseEmitter
     }
 
     fun send(receiver: Account, messageDto: MessageDto) {
         val sessionEmitters = eventEmitterRepository.findEmitterByUserId(receiver.id)
         sessionEmitters.forEach { (key, emitter) ->
-            run {
-                this.eventEmitterRepository.saveEventCache(key, Notification())
-                sendToClient(emitter, key, messageDto)
-            }
+            eventEmitterRepository.saveEventCache(key, Notification())
+            sendToClient(emitter, key, messageDto)
+        }
+    }
+
+    private fun createAndSaveEmitter(account: Account): SseEmitter {
+        val sseEmitter = eventEmitterRepository.save(account.id, SseEmitter(TIME_OUT))
+
+        sseEmitter.onCompletion { eventEmitterRepository.deleteEmitterByUserId(account.id) }
+        sseEmitter.onTimeout { eventEmitterRepository.deleteEmitterByUserId(account.id) }
+
+        sendInitialConnectEvent(sseEmitter, account.id)
+        return sseEmitter
+    }
+
+    /**
+     * 503 에러 방지용 기본 이벤트 전송
+    */
+    private fun sendInitialConnectEvent(sseEmitter: SseEmitter, userId: Long) {
+        try {
+            sseEmitter.send(
+                SseEmitter.event()
+                    .id(userId.toString())
+                    .name("connect")
+                    .data("connected.")
+            )
+        } catch (e: IOException) {
+            eventEmitterRepository.deleteEmitterByUserId(userId)
+            throw RuntimeException(e)
+        }
+    }
+
+    private fun handleReconnectEvents(sseEmitter: SseEmitter, userId: Long, lastEventId: String?) {
+        if (lastEventId != null) {
+            val events = eventEmitterRepository.findEventCacheByUserId(userId)
+            events.entries
+                .filter { entry -> lastEventId < entry.key }
+                .forEach { entry -> sendToClient(sseEmitter, entry.key, entry.value) }
         }
     }
 
     private fun sendToClient(sseEmitter: SseEmitter, id: String, data: Any) {
         try {
-            println(sseEmitter)
-            println(id)
             sseEmitter.send(
                 SseEmitter.event()
                     .id(id)
                     .name("notification")
                     .data(data)
             )
-        } catch (_: IOException) {
+        } catch (e: IOException) {
             eventEmitterRepository.deleteEmitterByUserId(id.toLong())
-            throw RuntimeException()
+            throw RuntimeException(e)
         }
     }
-
 }
