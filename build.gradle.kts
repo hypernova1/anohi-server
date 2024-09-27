@@ -57,6 +57,8 @@ dependencies {
 
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.772")
 
+    implementation("org.springframework.retry:spring-retry:2.0.9")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }

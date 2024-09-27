@@ -1,1 +1,1 @@
-rootProject.name = "anohi"
+rootProject.name = "anohi-server"
