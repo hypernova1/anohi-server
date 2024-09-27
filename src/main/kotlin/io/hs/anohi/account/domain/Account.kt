@@ -1,12 +1,13 @@
 package io.hs.anohi.account.domain
 
 import io.hs.anohi.account.application.payload.AccountUpdateForm
+import io.hs.anohi.infra.firebase.FirebaseUser
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.noficiation.domain.Notification
+import io.hs.anohi.post.application.payload.ImageDto
 import io.hs.anohi.post.domain.FavoritePost
 import io.hs.anohi.post.domain.Image
 import io.hs.anohi.post.domain.Post
-import io.hs.anohi.post.application.payload.ImageDto
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
 import org.hibernate.annotations.*
@@ -29,7 +30,7 @@ class Account : BaseEntity() {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var loginType: SocialType = SocialType.NONE;
+    var socialType: SocialType = SocialType.NONE;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
@@ -77,24 +78,32 @@ class Account : BaseEntity() {
     }
 
     companion object {
-        fun from(uid: String, email: String, loginType: SocialType, name: String?, profileImageUrl: String?): Account {
+        fun from(firebaseUser: FirebaseUser, role: Role): Account {
             val account = Account()
-            account.uid = uid
-            account.name = name.orEmpty()
-            account.email = email
+            account.uid = firebaseUser.uid
+            account.name = firebaseUser.name.orEmpty()
+            account.email = firebaseUser.email
             account.isActive = true
-            if (profileImageUrl != null) {
+            if (firebaseUser.profileImagePath != null) {
                 account.images =
-                    mutableListOf(Image.from(ImageDto(id = null, path = profileImageUrl, null, null, null)))
+                    mutableListOf(
+                        Image.from(
+                            ImageDto(
+                                id = null,
+                                path = firebaseUser.profileImagePath,
+                                null,
+                                null,
+                                null
+                            )
+                        )
+                    )
             } else {
                 account.images = mutableListOf()
             }
-            account.loginType = loginType
+            account.socialType = firebaseUser.socialType
+            account.roles.add(role)
             return account
         }
     }
 
-    fun addRole(role: Role) {
-        this.roles.add(role)
-    }
 }

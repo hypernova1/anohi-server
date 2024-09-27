@@ -1,9 +1,13 @@
 package io.hs.anohi.account.application
 
 import com.google.firebase.auth.FirebaseAuth
-import io.hs.anohi.account.domain.*
 import io.hs.anohi.account.application.payload.AccountDetail
 import io.hs.anohi.account.application.payload.AccountUpdateForm
+import io.hs.anohi.account.domain.Account
+import io.hs.anohi.account.domain.AccountRepository
+import io.hs.anohi.account.domain.RoleName
+import io.hs.anohi.account.domain.RoleRepository
+import io.hs.anohi.infra.firebase.FirebaseDecoder
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
@@ -19,39 +23,21 @@ class AccountService(
     private val roleRepository: RoleRepository,
     private val postService: PostService,
     private val firebaseAuth: FirebaseAuth,
+    private val firebaseDecoder: FirebaseDecoder
 ) {
 
     @Transactional
     fun create(token: String): Account {
-        val decodedToken = this.firebaseAuth.verifyIdToken(token)
-
-        val existsUid = accountRepository.existsByUid(decodedToken.uid)
+        val firebaseUser = firebaseDecoder.parseToken(token)
+        val existsUid = accountRepository.existsByUid(firebaseUser.uid)
         if (existsUid) {
             throw ConflictException(ErrorCode.CONFLICT_UID)
         }
 
-        val firebase = decodedToken.claims["firebase"] as Map<*, *>
-        val identities = firebase["identities"] as Map<*, *>
-
-        var loginType: SocialType = SocialType.NONE
-        val identitiesKeys = identities.keys
-        if (identitiesKeys.isNotEmpty()) {
-            val socialType = identitiesKeys.iterator().next()
-            if (socialType === "google.com") {
-                loginType = SocialType.GOOGLE
-            } else if (socialType === "apple.com") {
-                loginType = SocialType.APPLE
-            }
-
-        }
-
-        val account =
-            Account.from(uid = decodedToken.uid ,email = decodedToken.email, loginType, name = decodedToken.name, profileImageUrl = decodedToken.picture)
-
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
 
-        account.addRole(role)
+        val account = Account.from(firebaseUser, role)
 
         return this.accountRepository.save(account)
     }

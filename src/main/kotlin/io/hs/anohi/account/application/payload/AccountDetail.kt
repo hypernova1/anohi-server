@@ -46,7 +46,7 @@ class AccountDetail(
         account.numberOfVisitors,
         numberOfLikes,
         account.createdAt.toString(),
-        account.loginType,
+        account.socialType,
     ) {
         if (account.images.isNotEmpty()) {
             this.image = ImageDto(account.images[0])
