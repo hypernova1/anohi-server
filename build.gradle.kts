@@ -47,7 +47,7 @@ dependencies {
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
 
-    implementation("com.google.api-client:google-api-client:2.2.0")
+    implementation("com.google.api-client:google-api-client:2.7.0")
     implementation ("com.google.firebase:firebase-admin:9.2.0")
 
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
@@ -55,7 +55,8 @@ dependencies {
 
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.772")
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+
 
     implementation("org.springframework.retry:spring-retry:2.0.9")
 
