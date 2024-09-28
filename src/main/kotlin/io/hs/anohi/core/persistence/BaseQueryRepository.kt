@@ -11,9 +11,9 @@ import org.springframework.data.domain.SliceImpl
 open class BaseQueryRepository<T : AuditEntity> {
     @Autowired
     protected lateinit var em: EntityManager
-
     @Autowired
     protected lateinit var query: JPAQueryFactory
+
     fun checkLastPage(pageable: Pageable, results: MutableList<T>): SliceImpl<T> {
         var hasNext = false
 

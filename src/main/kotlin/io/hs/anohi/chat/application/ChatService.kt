@@ -6,7 +6,6 @@ import io.hs.anohi.chat.domain.*
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.Page
 import io.hs.anohi.core.Pagination
-import io.hs.anohi.core.exception.BadRequestException
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
 import io.hs.anohi.noficiation.application.NotificationEvent
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional(readOnly = true)
 class ChatService(
     private val chatRoomQueryRepository: ChatRoomQueryRepository,
     private val chatRequestRepository: ChatRequestRepository,
@@ -26,21 +24,16 @@ class ChatService(
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
 
-    @Transactional
     fun requestChatting(accountId: Long, chatRequestDto: ChatRequestDto) {
         val receiver = this.accountService.findOne(chatRequestDto.receiverId)
             ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT)
-
-        if (accountId == receiver.id) {
-            throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
-        }
 
         val existsChatRequest = this.chatRequestRepository.findByReceiverIdAndSenderIdAndAnswerStatus(
             receiverId = receiver.id,
             senderId = accountId,
             ChatRequestAnswerStatus.WAITING
         )
-        if (existsChatRequest?.isWaiting() == true) {
+        if (existsChatRequest != null) {
             throw ConflictException(ErrorCode.ALREADY_EXIST_CHAT_REQUEST)
         }
 
@@ -61,12 +54,9 @@ class ChatService(
         val chatRequest =
             chatRequestRepository.findById(id) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_CHAT_REQUEST)
 
-        if (chatRequest.isSender(accountId)) {
-            throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
-        }
         chatRequest.answer(chatRequestUpdateDto.answerType)
 
-        if (chatRequest.answerStatus === ChatRequestAnswerStatus.ACCEPT) {
+        if (chatRequest.isAccepted) {
             this.applicationEventPublisher.publishEvent(
                 NotificationEvent(
                     this,
@@ -85,9 +75,7 @@ class ChatService(
     }
 
     fun findRooms(accountId: Long): List<ChatRoomDto> {
-        val chatRooms =
-            this.chatRoomQueryRepository.findByAccountId(accountId)
-
+        val chatRooms = this.chatRoomQueryRepository.findByAccountId(accountId)
         return chatRooms.map { ChatRoomDto(it, accountId) }
     }
 }

@@ -16,5 +16,4 @@ class ChatRoom(
 
     @OneToMany
     val accounts: List<ChatRoomAccount> = mutableListOf(),
-
-    ) : AuditEntity()
+) : AuditEntity()

@@ -1,6 +1,6 @@
 package io.hs.anohi.noficiation.application
 
-import io.hs.anohi.util.SlackMessageUtil
+import io.hs.anohi.core.util.SlackMessageUtil
 import org.springframework.context.event.EventListener
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Recover

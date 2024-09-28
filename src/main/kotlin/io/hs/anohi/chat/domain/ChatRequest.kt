@@ -25,16 +25,18 @@ class ChatRequest(
     var answerStatus: ChatRequestAnswerStatus = ChatRequestAnswerStatus.WAITING
 ) : AuditEntity() {
 
+    val isWaiting: Boolean
+        get() = this.answerStatus == ChatRequestAnswerStatus.WAITING
+
+    val isAccepted: Boolean
+        get() = this.answerStatus == ChatRequestAnswerStatus.ACCEPT
+
     fun isSender(accountId: Long): Boolean {
         return this.senderId == accountId
     }
 
     fun answer(answerStatus: ChatRequestAnswerStatus) {
         this.answerStatus = answerStatus
-    }
-
-    fun isWaiting(): Boolean {
-        return this.answerStatus == ChatRequestAnswerStatus.WAITING
     }
 
     companion object {

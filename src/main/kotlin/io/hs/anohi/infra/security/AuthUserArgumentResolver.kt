@@ -1,8 +1,7 @@
-package io.hs.anohi.infra.config
+package io.hs.anohi.infra.security
 
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.UnauthorizedException
-import io.hs.anohi.infra.security.AuthUser
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder

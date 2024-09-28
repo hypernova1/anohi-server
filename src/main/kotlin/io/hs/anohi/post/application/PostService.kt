@@ -81,10 +81,12 @@ class PostService(
             emotionService.findOne(it) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_EMOTION)
         }
 
-        var tags: List<Tag>? = null
-        if (postUpdateForm.tags != null) {
-            tags = tagService.findAllOrCreate(postUpdateForm.tags!!)
+        val tags: List<Tag> = if (postUpdateForm.tags != null) {
+            tagService.findAllOrCreate(postUpdateForm.tags)
+        } else {
+            mutableListOf()
         }
+
 
         val post =
             postRepository.findByIdAndAccountId(id, accountId) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_POST)

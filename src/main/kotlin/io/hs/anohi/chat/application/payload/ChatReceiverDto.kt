@@ -10,9 +10,9 @@ data class ChatReceiverDto(
 //    @ApiModelProperty("유저명")
 //    val name: String,
 //    @ApiModelProperty("프로필 이미지")
-//    var image: ImageDto?,
+//    val image: ImageDto?,
 //    @ApiModelProperty("탈퇴 여부")
-//    var isSecession: Boolean,
+//    val isSecession: Boolean,
 ) {
 //    constructor(account: Account): this(account.id, account.name, null, account.deletedAt != null) {
 //        if (account.images.isNotEmpty()) {

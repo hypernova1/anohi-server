@@ -14,7 +14,7 @@ class Image(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column(columnDefinition = "text")
     var originUrl: String,

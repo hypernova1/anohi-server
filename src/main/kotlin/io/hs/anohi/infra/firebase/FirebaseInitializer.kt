@@ -13,7 +13,7 @@ import org.springframework.core.io.ResourceLoader
 class FirebaseInitializer {
 
     @Autowired
-    lateinit var resourceLoader: ResourceLoader
+    private lateinit var resourceLoader: ResourceLoader
 
     @Bean
     fun firebaseApp(): FirebaseApp? {

@@ -5,13 +5,13 @@ import io.hs.anohi.post.application.payload.ImageDto
 
 data class Sender(
     val id: Long,
-    var image: ImageDto?
+    val image: ImageDto?
 ) {
-    constructor(account: Account): this(account.id, null) {
-        this.image = if (account.images.isNotEmpty()) {
+    constructor(account: Account) : this(
+        id = account.id, image = if (account.images.isNotEmpty()) {
             ImageDto(account.images[0])
         } else {
             null
         }
-    }
+    )
 }

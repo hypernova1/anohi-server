@@ -1,4 +1,4 @@
-package io.hs.anohi.infra.config
+package io.hs.anohi.infra.persistence
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager

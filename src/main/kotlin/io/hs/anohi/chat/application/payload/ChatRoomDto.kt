@@ -7,19 +7,18 @@ data class ChatRoomDto(
     @ApiModelProperty("아이디")
     val id: Long,
     @ApiModelProperty("받는이 정보")
-    var receiver: ChatReceiverDto?,
+    val receiver: ChatReceiverDto?,
     @ApiModelProperty("최근 메시지 목록")
-    var messages: List<MessageDto>,
+    val messages: List<MessageDto>,
     @ApiModelProperty("생성일")
     val createdAt: String
 ) {
     constructor(chatRoom: ChatRoom, accountId: Long) : this(
-        chatRoom.id,
-        null,
-        mutableListOf(),
-        chatRoom.createdAt.toString()
+        id = chatRoom.id,
+        receiver = ChatReceiverDto(accountId),
+        messages = mutableListOf(),
+        createdAt = chatRoom.createdAt.toString()
     ) {
 //        val receiver = chatRoom.accounts.first { it.id != accountId }
-        this.receiver = ChatReceiverDto(accountId)
     }
 }

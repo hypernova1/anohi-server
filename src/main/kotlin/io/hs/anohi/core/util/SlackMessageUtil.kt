@@ -1,4 +1,4 @@
-package io.hs.anohi.util
+package io.hs.anohi.core.util
 
 object SlackMessageUtil {
 

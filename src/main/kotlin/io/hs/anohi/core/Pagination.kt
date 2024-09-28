@@ -7,7 +7,7 @@ open class Pagination {
     var size: Int = 10
 
     @ApiModelProperty(required = false)
-    var lastItemId: Long = 0
+    val lastItemId: Long = 0
 
     @ApiModelProperty(required = false)
     var order: String = "DESC"
