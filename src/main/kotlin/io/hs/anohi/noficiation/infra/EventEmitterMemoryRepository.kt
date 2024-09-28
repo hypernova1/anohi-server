@@ -1,14 +1,15 @@
-package io.hs.anohi.noficiation.domain
+package io.hs.anohi.noficiation.infra
 
+import io.hs.anohi.noficiation.domain.EmitterRepository
 import org.springframework.stereotype.Repository
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
 
 @Repository
-class EventEmitterRepositoryImpl : EmitterRepository {
+class EventEmitterMemoryRepository : EmitterRepository {
 
-    val emitters = ConcurrentHashMap<String, SseEmitter>()
-    val eventCache = ConcurrentHashMap<String, Any>()
+    private val emitters = ConcurrentHashMap<String, SseEmitter>()
+    private val eventCache = ConcurrentHashMap<String, Any>()
 
     override fun save(userId: Long, sseEmitter: SseEmitter): SseEmitter {
         emitters[userId.toString()] = sseEmitter

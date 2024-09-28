@@ -5,12 +5,12 @@ import io.hs.anohi.chat.domain.ChatRequest
 
 data class ChatRequestResponseDto(
     val id: Long,
-    val sender: Sender,
+    val senderId: Long,
     val createdAt: String
 ) {
     constructor(chatRequest: ChatRequest) : this(
         chatRequest.id,
-        Sender(chatRequest.sender),
+        chatRequest.senderId,
         chatRequest.createdAt.toString()
     )
 }

@@ -1,7 +1,6 @@
 package io.hs.anohi.chat.infra
 
 import com.querydsl.core.BooleanBuilder
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.account.domain.QAccount.account
 import io.hs.anohi.chat.domain.ChatRequest
 import io.hs.anohi.chat.domain.ChatRequestAnswerStatus
@@ -16,13 +15,13 @@ import org.springframework.stereotype.Repository
 @Repository
 class ChatRequestQueryJpaRepository: ChatRequestQueryRepository, BaseQueryRepository<ChatRequest>() {
 
-    override fun findByAccount(user: Account, pagination: Pagination, pageable: Pageable): SliceImpl<ChatRequest> {
+    override fun findByAccountId(accountId: Long, pagination: Pagination, pageable: Pageable): SliceImpl<ChatRequest> {
         val query = query.selectFrom(chatRequest)
-            .leftJoin(chatRequest.receiver, account)
+            .leftJoin(account).on(chatRequest.receiverId.eq(accountId))
 
         val whereClause = BooleanBuilder()
         whereClause.and(chatRequest.answerStatus.eq(ChatRequestAnswerStatus.WAITING))
-        whereClause.and(chatRequest.receiver.id.eq(user.id))
+        whereClause.and(chatRequest.receiverId.eq(accountId))
 
         if (pagination.lastItemId != 0L) {
             whereClause.and(ltId(pagination.lastItemId, pagination.order, chatRequest.id))

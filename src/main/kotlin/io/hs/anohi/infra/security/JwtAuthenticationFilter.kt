@@ -1,10 +1,7 @@
 package io.hs.anohi.infra.security
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import io.hs.anohi.core.ErrorCode
-import io.hs.anohi.core.ErrorResponse
 import io.hs.anohi.core.exception.UnauthorizedException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

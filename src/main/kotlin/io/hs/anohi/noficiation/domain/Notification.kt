@@ -1,33 +1,35 @@
 package io.hs.anohi.noficiation.domain
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
 import io.hs.anohi.noficiation.application.NotificationEvent
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
 @Entity
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE notification SET deleted_at = current_timestamp WHERE id = ?")
-class Notification: BaseEntity() {
-
+class Notification(
     @Column
-    var message: String = ""
+    var message: String = "",
 
     @Enumerated(EnumType.STRING)
     @Column
-    var type: NotificationType = NotificationType.NONE
+    var type: NotificationType = NotificationType.NONE,
 
-    @ManyToOne
-    lateinit var account: Account
+    @Column
+    val accountId: Long
+) : BaseEntity() {
     companion object {
         fun from(notificationEvent: NotificationEvent): Notification {
-            val notification = Notification()
-            notification.account = notificationEvent.receiver
-            notification.message = notificationEvent.message.content
-            notification.type = notificationEvent.message.type
-            return notification
+            return Notification(
+                accountId = notificationEvent.receiverId,
+                message = notificationEvent.message.content,
+                type = notificationEvent.message.type
+            )
         }
     }
 }

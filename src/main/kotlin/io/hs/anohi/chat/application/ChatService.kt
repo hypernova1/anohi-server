@@ -32,26 +32,26 @@ class ChatService(
         val receiver = this.accountService.findOne(chatRequestDto.receiverId)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
 
-        val existsChatRequest = this.chatRequestRepository.findByReceiverAndSenderAndAnswer(
-            receiver,
-            account,
-            ChatRequestAnswerStatus.WAITING
-        )
-        if (existsChatRequest != null && existsChatRequest.isWaiting()) {
-            throw ConflictException(ErrorCode.ALREADY_EXIST_CHAT_REQUEST)
-        }
-
         if (account == receiver) {
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
         }
 
-        val chatRequest = ChatRequest.of(account, receiver)
+        val existsChatRequest = this.chatRequestRepository.findByReceiverIdAndSenderIdAndAnswerStatus(
+            receiverId = receiver.id,
+            senderId = account.id,
+            ChatRequestAnswerStatus.WAITING
+        )
+        if (existsChatRequest?.isWaiting() == true) {
+            throw ConflictException(ErrorCode.ALREADY_EXIST_CHAT_REQUEST)
+        }
+
+        val chatRequest = ChatRequest.of(account.id, receiver.id)
         chatRequestRepository.save(chatRequest)
 
         applicationEventPublisher.publishEvent(
             NotificationEvent(
                 this,
-                receiver,
+                receiver.id,
                 MessageDto(content = "채팅 요청되었어요.", type = NotificationType.NOTIFICATION)
             )
         )
@@ -62,7 +62,7 @@ class ChatService(
         val chatRequest = chatRequestRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_CHAT_REQUEST) }
 
-        if (chatRequest.isSender(account)) {
+        if (chatRequest.isSender(account.id)) {
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
         }
         chatRequest.answer(chatRequestUpdateDto.answerType)
@@ -71,7 +71,7 @@ class ChatService(
             this.applicationEventPublisher.publishEvent(
                 NotificationEvent(
                     this,
-                    chatRequest.receiver,
+                    chatRequest.receiverId,
                     MessageDto("채팅이 수락되었습니다.", NotificationType.ACCEPT_CHAT)
                 )
             )
@@ -79,7 +79,7 @@ class ChatService(
     }
 
     fun findRequests(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
-        val slice = chatRequestQueryRepository.findByAccount(account, pagination, PageRequest.ofSize(pagination.size))
+        val slice = chatRequestQueryRepository.findByAccountId(account.id, pagination, PageRequest.ofSize(pagination.size))
         val items = slice.content.map { ChatRequestResponseDto(it) }
         return Page(pageSize = pagination.size, slice.hasNext(), items)
     }

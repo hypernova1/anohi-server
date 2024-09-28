@@ -17,13 +17,10 @@ class QueryStringArgumentResolver: HandlerMethodArgumentResolver {
     @Autowired
     private val mapper: ObjectMapper? = null
 
-
     override fun supportsParameter(methodParameter: MethodParameter): Boolean {
         return methodParameter.getParameterAnnotation(QueryStringArgumentResolver::class.java) != null
     }
 
-
-    @Throws(Exception::class)
     override fun resolveArgument(
         methodParameter: MethodParameter,
         modelAndViewContainer: ModelAndViewContainer?,

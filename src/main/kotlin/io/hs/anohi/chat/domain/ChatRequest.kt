@@ -1,28 +1,31 @@
 package io.hs.anohi.chat.domain
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.BaseEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
 @Entity
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE chat_request SET deleted_at = current_timestamp WHERE id = ?")
-class ChatRequest: BaseEntity() {
+class ChatRequest(
+    @Column
+    val senderId: Long,
 
-    @OneToOne
-    lateinit var sender: Account
-
-    @OneToOne
-    lateinit var receiver: Account
+    @Column
+    val receiverId: Long,
 
     @Column
     @Enumerated(EnumType.STRING)
     var answerStatus: ChatRequestAnswerStatus = ChatRequestAnswerStatus.WAITING
+) : BaseEntity() {
 
-    fun isSender(account: Account): Boolean {
-        return this.sender == account
+
+    fun isSender(accountId: Long): Boolean {
+        return this.senderId == accountId
     }
 
     fun answer(answerStatus: ChatRequestAnswerStatus) {
@@ -34,11 +37,8 @@ class ChatRequest: BaseEntity() {
     }
 
     companion object {
-        fun of(sender: Account, receiver: Account): ChatRequest {
-            val chatRequest = ChatRequest()
-            chatRequest.sender = sender
-            chatRequest.receiver = receiver
-            return chatRequest
+        fun of(senderId: Long, receiverId: Long): ChatRequest {
+            return ChatRequest(senderId = senderId, receiverId = receiverId)
         }
     }
 

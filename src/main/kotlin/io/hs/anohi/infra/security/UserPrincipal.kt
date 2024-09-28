@@ -28,7 +28,13 @@ data class UserPrincipal(
                 .map { SimpleGrantedAuthority(it.name.name) }
                 .collect(Collectors.toSet())
 
-            return UserPrincipal(user.id, user.email, user.uid, user.name,  authorities)
+            return UserPrincipal(
+                id = user.id,
+                email = user.email,
+                uid = user.uid,
+                username = user.name,
+                authorities = authorities
+            )
         }
     }
 }

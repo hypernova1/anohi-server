@@ -1,8 +1,6 @@
 package io.hs.anohi.noficiation.application
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.chat.application.payload.MessageDto
-import org.springframework.context.ApplicationEvent
 
-class NotificationEvent(source: Any?, val receiver: Account, val message: MessageDto) : ApplicationEvent(source!!)
+class NotificationEvent(source: Any?, val receiverId: Long, val message: MessageDto)
 

@@ -21,19 +21,27 @@ class SseEmitterService(
     @Transactional
     fun subscribe(account: Account, lastEventId: String?): SseEmitter {
         val sseEmitter = createAndSaveEmitter(account)
-
         handleReconnectEvents(sseEmitter, account.id, lastEventId)
         return sseEmitter
     }
 
-    fun send(receiver: Account, messageDto: MessageDto) {
-        val sessionEmitters = eventEmitterRepository.findEmitterByUserId(receiver.id)
+    /**
+     * 알림 발송
+     * */
+    fun send(receiverId: Long, messageDto: MessageDto) {
+        val sessionEmitters = eventEmitterRepository.findEmitterByUserId(receiverId)
         sessionEmitters.forEach { (key, emitter) ->
-            eventEmitterRepository.saveEventCache(key, Notification())
+            eventEmitterRepository.saveEventCache(
+                key,
+                Notification(accountId = receiverId, message = messageDto.content, type = messageDto.type)
+            )
             sendToClient(emitter, key, messageDto)
         }
     }
 
+    /**
+     * 이벤트 생성 후 저장
+     * */
     private fun createAndSaveEmitter(account: Account): SseEmitter {
         val sseEmitter = eventEmitterRepository.save(account.id, SseEmitter(TIME_OUT))
 
@@ -46,7 +54,7 @@ class SseEmitterService(
 
     /**
      * 503 에러 방지용 기본 이벤트 전송
-    */
+     */
     private fun sendInitialConnectEvent(sseEmitter: SseEmitter, userId: Long) {
         try {
             sseEmitter.send(
@@ -61,6 +69,10 @@ class SseEmitterService(
         }
     }
 
+    /**
+     * SSE 재연결
+     * - 클라이언트 재연결시 받지 못한 이전의 이벤트 목록을 발송한다.
+     * */
     private fun handleReconnectEvents(sseEmitter: SseEmitter, userId: Long, lastEventId: String?) {
         if (lastEventId != null) {
             val events = eventEmitterRepository.findEventCacheByUserId(userId)
@@ -70,6 +82,9 @@ class SseEmitterService(
         }
     }
 
+    /**
+     * 클라이언트에 알림을 발송한다.
+     * */
     private fun sendToClient(sseEmitter: SseEmitter, id: String, data: Any) {
         try {
             sseEmitter.send(

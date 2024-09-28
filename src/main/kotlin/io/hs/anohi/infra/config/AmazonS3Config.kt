@@ -17,7 +17,7 @@ class AmazonS3Config {
     @Value("\${key.s3SecretKey}")
     private lateinit var secretKey: String
 
-    private val clientRegion: String = "ap-northeast-2"
+    private val region: String = "ap-northeast-2"
 
     val bucketName: String = "anohi-production"
 
@@ -26,7 +26,7 @@ class AmazonS3Config {
         val awsCredential = BasicAWSCredentials(accessKey, secretKey)
         return AmazonS3ClientBuilder.standard()
             .withCredentials(AWSStaticCredentialsProvider(awsCredential))
-            .withRegion(clientRegion)
+            .withRegion(region)
             .build()
     }
 }

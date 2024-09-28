@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl
 
 interface ChatRequestQueryRepository {
-    fun findByAccount(user: Account, pagination: Pagination, pageable: Pageable): SliceImpl<ChatRequest>
+    fun findByAccountId(accountId: Long, pagination: Pagination, pageable: Pageable): SliceImpl<ChatRequest>
 }
