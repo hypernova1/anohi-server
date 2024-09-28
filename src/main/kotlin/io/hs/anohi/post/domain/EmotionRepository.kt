@@ -6,5 +6,5 @@ import java.util.*
 interface EmotionRepository {
     fun findByAccountWithNumberOfPosts(accountId: Long): List<EmotionStatistics>
     fun existsById(id: Long): Boolean
-    fun findById(id: Long): Optional<Emotion>
+    fun findById(id: Long): Emotion?
 }

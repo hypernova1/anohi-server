@@ -1,6 +1,5 @@
 package io.hs.anohi.chat.domain
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.AuditEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
@@ -15,9 +14,7 @@ class ChatRoom(
     @Column(nullable = false)
     val id: Long = 0,
 
-    @ManyToMany
-    val accounts: List<Account> = mutableListOf(),
-
     @OneToMany
-    val messages: List<ChatMessage> = mutableListOf()
-) : AuditEntity()
+    val accounts: List<ChatRoomAccount> = mutableListOf(),
+
+    ) : AuditEntity()

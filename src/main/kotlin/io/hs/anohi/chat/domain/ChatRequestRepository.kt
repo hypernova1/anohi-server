@@ -6,7 +6,7 @@ import java.util.*
 interface ChatRequestRepository {
 
     fun save(chatRequest: ChatRequest): ChatRequestDto
-    fun findById(id: Long): Optional<ChatRequest>
+    fun findById(id: Long): ChatRequest?
     fun findByReceiverIdAndSenderIdAndAnswerStatus(
         receiverId: Long,
         senderId: Long,

@@ -11,11 +11,11 @@ import javax.security.auth.login.AccountNotFoundException
 @Service
 @Transactional
 class CustomUserDetailsService(
-    @Autowired val accountRepository: AccountRepository) : UserDetailsService {
+    @Autowired val accountRepository: AccountRepository
+) : UserDetailsService {
 
     override fun loadUserByUsername(uid: String): UserDetails {
-        val account = accountRepository.findByUidAndDeletedAtIsNull(uid)
-            .orElseThrow { AccountNotFoundException(uid) }
+        val account = accountRepository.findByUidAndDeletedAtIsNull(uid) ?: throw AccountNotFoundException(uid)
 
         return UserAccount(account)
     }

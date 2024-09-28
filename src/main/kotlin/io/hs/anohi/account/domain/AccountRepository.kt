@@ -1,13 +1,11 @@
 package io.hs.anohi.account.domain
 
-import java.util.*
-
 interface AccountRepository {
 
-    fun findById(id: Long): Optional<Account>
+    fun findById(id: Long): Account?
     fun existsByUid(uid: String): Boolean
-    fun findByUidAndDeletedAtIsNull(uid: String): Optional<Account>
-    fun findByIdAndDeletedAtIsNull(id: Long): Optional<Account>
+    fun findByUidAndDeletedAtIsNull(uid: String): Account?
+    fun findByIdAndDeletedAtIsNull(id: Long): Account?
     fun save(account: Account): Account
     fun delete(account: Account)
 

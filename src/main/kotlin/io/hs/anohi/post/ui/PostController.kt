@@ -1,9 +1,8 @@
 package io.hs.anohi.post.ui
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.core.Page
 import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
-import io.hs.anohi.infra.security.AuthAccount
+import io.hs.anohi.infra.security.AuthUser
 import io.hs.anohi.post.application.PostService
 import io.hs.anohi.post.application.payload.PostDetail
 import io.hs.anohi.post.application.payload.PostPagination
@@ -27,9 +26,9 @@ class PostController(
     @PostMapping
     fun create(
         @Valid @RequestBody postRequestForm: PostRequestForm,
-        @AuthAccount account: Account
+        authUser: AuthUser
     ): ResponseEntity<PostDetail> {
-        val post = postService.create(postRequestForm, account.id)
+        val post = postService.create(postRequestForm, authUser.id)
 
         val location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -45,9 +44,9 @@ class PostController(
     fun update(
         @PathVariable id: Long,
         @RequestBody postUpdateForm: PostUpdateForm,
-        @AuthAccount account: Account
+        authUser: AuthUser
     ): ResponseEntity<Any> {
-        postService.update(id, postUpdateForm, account)
+        postService.update(id, postUpdateForm, authUser.id)
         return ResponseEntity.noContent().build()
     }
 
@@ -55,23 +54,23 @@ class PostController(
     @GetMapping
     fun findAll(
         @QueryStringArgumentResolver pagination: PostPagination,
-        @AuthAccount account: Account,
+        authUser: AuthUser,
     ): ResponseEntity<Page<PostDetail>> {
-        val result = postService.findAll(account, pagination)
+        val result = postService.findAll(authUser.id, pagination)
         return ResponseEntity.ok(result)
     }
 
     @ApiOperation("글 상세 조회")
     @GetMapping("/{id}")
-    fun findOne(@PathVariable id: Long, @AuthAccount account: Account): ResponseEntity<PostDetail> {
-        val post = postService.findById(id, account)
+    fun findOne(@PathVariable id: Long, authUser: AuthUser): ResponseEntity<PostDetail> {
+        val post = postService.findById(id, authUser.id)
         return ResponseEntity.ok(post)
     }
 
     @ApiOperation("글 좋아요")
     @PatchMapping("/{id}/like")
-    fun registerFavorite(@PathVariable id: Long, @AuthAccount account: Account) {
-        postService.registerFavorite(id, account)
+    fun registerFavorite(@PathVariable id: Long, authUser: AuthUser) {
+        postService.registerFavorite(id, authUser.id)
     }
 
     @ApiOperation("글 삭제")

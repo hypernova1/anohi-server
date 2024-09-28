@@ -7,19 +7,19 @@ import io.hs.anohi.chat.domain.ChatRoom
 import io.hs.anohi.chat.domain.ChatRoomQueryRepository
 import io.hs.anohi.chat.domain.QChatMessage.chatMessage
 import io.hs.anohi.chat.domain.QChatRoom.chatRoom
+import io.hs.anohi.chat.domain.QChatRoomAccount.chatRoomAccount
 import io.hs.anohi.core.BaseQueryRepository
 import org.springframework.stereotype.Repository
 
 @Repository
 class ChatRoomQueryJpaRepository : ChatRoomQueryRepository, BaseQueryRepository<ChatRoom>() {
 
-    override fun findByAccount(user: Account): List<ChatRoom> {
+    override fun findByAccountId(accountId: Long): List<ChatRoom> {
         val query = query.selectFrom(chatRoom)
-            .leftJoin(chatRoom.accounts, account)
-            .leftJoin(chatRoom.messages, chatMessage)
+            .leftJoin(chatRoom.accounts, chatRoomAccount)
 
         val whereClause = BooleanBuilder()
-        whereClause.and(chatRoom.accounts.contains(user))
+        whereClause.and(chatRoomAccount.accountId.eq(accountId))
 
         return query.where(whereClause)
             .orderBy(chatMessage.id.desc())

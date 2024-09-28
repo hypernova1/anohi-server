@@ -1,7 +1,6 @@
 package io.hs.anohi.noficiation.ui
 
-import io.hs.anohi.account.domain.Account
-import io.hs.anohi.infra.security.AuthAccount
+import io.hs.anohi.infra.security.AuthUser
 import io.hs.anohi.noficiation.application.SseEmitterService
 import io.swagger.annotations.Api
 import org.springframework.http.MediaType
@@ -19,10 +18,10 @@ class NotificationController(private val sseEmitterService: SseEmitterService) {
 
     @GetMapping(value = ["/subscribe"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun subscribe(
-        @AuthAccount account: Account,
+        authUser: AuthUser,
         @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") lastEventId: String?
     ): ResponseEntity<SseEmitter> {
-        val subscribe = sseEmitterService.subscribe(account, lastEventId)
+        val subscribe = sseEmitterService.subscribe(authUser.id, lastEventId)
         return ResponseEntity.ok(subscribe)
     }
 

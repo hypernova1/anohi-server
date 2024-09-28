@@ -7,14 +7,13 @@ import io.hs.anohi.account.domain.Account
 import io.hs.anohi.account.domain.AccountRepository
 import io.hs.anohi.account.domain.RoleName
 import io.hs.anohi.account.domain.RoleRepository
-import io.hs.anohi.infra.firebase.FirebaseDecoder
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.ConflictException
 import io.hs.anohi.core.exception.NotFoundException
+import io.hs.anohi.infra.firebase.FirebaseDecoder
 import io.hs.anohi.post.application.PostService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Transactional(readOnly = true)
 @Service
@@ -44,8 +43,8 @@ class AccountService(
 
     @Transactional
     fun findById(id: Long, isVisit: Boolean = false): AccountDetail {
-        val account = accountRepository.findByIdAndDeletedAtIsNull(id)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
+        val account =
+            accountRepository.findByIdAndDeletedAtIsNull(id) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT)
 
         account.increaseVisitor()
 
@@ -55,18 +54,21 @@ class AccountService(
     }
 
     @Transactional
-    fun delete(account: Account) {
+    fun delete(accountId: Long) {
+        val account = this.accountRepository.findById(accountId) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT)
         accountRepository.delete(account)
         firebaseAuth.deleteUser(account.uid)
     }
 
     @Transactional
-    fun update(account: Account, updateForm: AccountUpdateForm) {
+    fun update(accountId: Long, updateForm: AccountUpdateForm) {
+        val account =
+            this.accountRepository.findById(accountId) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT)
         account.update(updateForm)
         this.accountRepository.save(account)
     }
 
-    fun findOne(id: Long): Optional<Account> {
+    fun findOne(id: Long): Account? {
         return this.accountRepository.findById(id)
     }
 

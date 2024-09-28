@@ -1,6 +1,5 @@
 package io.hs.anohi.noficiation.application
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.chat.application.payload.MessageDto
 import io.hs.anohi.noficiation.domain.EmitterRepository
 import io.hs.anohi.noficiation.domain.Notification
@@ -19,9 +18,9 @@ class SseEmitterService(
     private val TIME_OUT = 60L * 1000 * 60
 
     @Transactional
-    fun subscribe(account: Account, lastEventId: String?): SseEmitter {
-        val sseEmitter = createAndSaveEmitter(account)
-        handleReconnectEvents(sseEmitter, account.id, lastEventId)
+    fun subscribe(accountId: Long, lastEventId: String?): SseEmitter {
+        val sseEmitter = createAndSaveEmitter(accountId)
+        handleReconnectEvents(sseEmitter, accountId, lastEventId)
         return sseEmitter
     }
 
@@ -42,13 +41,13 @@ class SseEmitterService(
     /**
      * 이벤트 생성 후 저장
      * */
-    private fun createAndSaveEmitter(account: Account): SseEmitter {
-        val sseEmitter = eventEmitterRepository.save(account.id, SseEmitter(TIME_OUT))
+    private fun createAndSaveEmitter(accountId: Long): SseEmitter {
+        val sseEmitter = eventEmitterRepository.save(accountId, SseEmitter(TIME_OUT))
 
-        sseEmitter.onCompletion { eventEmitterRepository.deleteEmitterByUserId(account.id) }
-        sseEmitter.onTimeout { eventEmitterRepository.deleteEmitterByUserId(account.id) }
+        sseEmitter.onCompletion { eventEmitterRepository.deleteEmitterByUserId(accountId) }
+        sseEmitter.onTimeout { eventEmitterRepository.deleteEmitterByUserId(accountId) }
 
-        sendInitialConnectEvent(sseEmitter, account.id)
+        sendInitialConnectEvent(sseEmitter, accountId)
         return sseEmitter
     }
 

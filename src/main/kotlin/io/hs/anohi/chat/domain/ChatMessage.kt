@@ -14,8 +14,8 @@ class ChatMessage(
     @Column(nullable = false)
     val id: Long = 0,
 
-    @ManyToOne
-    val chatRoom: ChatRoom,
+    @Column
+    val chatRoomId: Long,
 
     @Column
     val senderId: Long,

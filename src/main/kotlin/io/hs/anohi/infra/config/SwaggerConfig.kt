@@ -1,6 +1,6 @@
 package io.hs.anohi.infra.config
 
-import io.hs.anohi.infra.security.AuthAccount
+import io.hs.anohi.infra.security.AuthUser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.ApiInfoBuilder
@@ -20,7 +20,7 @@ class SwaggerConfig {
     @Bean
     fun api(): Docket {
         return Docket(DocumentationType.OAS_30)
-            .ignoredParameterTypes(AuthAccount::class.java)
+            .ignoredParameterTypes(AuthUser::class.java)
             .useDefaultResponseMessages(false)
             .securityContexts(listOf(securityContext()))
             .securitySchemes(listOf(apiKey()))

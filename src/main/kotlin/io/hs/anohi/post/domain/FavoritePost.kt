@@ -17,7 +17,6 @@ class FavoritePost(
     val accountId: Long
 ) : AuditEntity() {
 
-
     companion object {
         fun of(post: Post, accountId: Long): FavoritePost {
             return FavoritePost(post = post, accountId = accountId)

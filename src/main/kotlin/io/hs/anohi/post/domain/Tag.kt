@@ -12,7 +12,7 @@ class Tag(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column
     val name: String,
@@ -21,11 +21,9 @@ class Tag(
     val posts: MutableList<Post> = mutableListOf()
 ) : AuditEntity() {
 
-
     companion object {
         fun create(name: String): Tag {
-            val tag = Tag(name = name)
-            return tag;
+            return Tag(name = name)
         }
     }
 }

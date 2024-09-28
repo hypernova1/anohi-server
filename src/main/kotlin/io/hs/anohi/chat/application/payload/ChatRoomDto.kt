@@ -19,7 +19,7 @@ data class ChatRoomDto(
         mutableListOf(),
         chatRoom.createdAt.toString()
     ) {
-        val receiver = chatRoom.accounts.first { it.id != accountId }
-        this.receiver = ChatReceiverDto(receiver)
+//        val receiver = chatRoom.accounts.first { it.id != accountId }
+        this.receiver = ChatReceiverDto(accountId)
     }
 }

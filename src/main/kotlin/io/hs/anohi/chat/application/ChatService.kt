@@ -1,7 +1,6 @@
 package io.hs.anohi.chat.application
 
 import io.hs.anohi.account.application.AccountService
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.chat.application.payload.*
 import io.hs.anohi.chat.domain.*
 import io.hs.anohi.core.ErrorCode
@@ -28,24 +27,24 @@ class ChatService(
 ) {
 
     @Transactional
-    fun requestChatting(account: Account, chatRequestDto: ChatRequestDto) {
+    fun requestChatting(accountId: Long, chatRequestDto: ChatRequestDto) {
         val receiver = this.accountService.findOne(chatRequestDto.receiverId)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT) }
+            ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_ACCOUNT)
 
-        if (account == receiver) {
+        if (accountId == receiver.id) {
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
         }
 
         val existsChatRequest = this.chatRequestRepository.findByReceiverIdAndSenderIdAndAnswerStatus(
             receiverId = receiver.id,
-            senderId = account.id,
+            senderId = accountId,
             ChatRequestAnswerStatus.WAITING
         )
         if (existsChatRequest?.isWaiting() == true) {
             throw ConflictException(ErrorCode.ALREADY_EXIST_CHAT_REQUEST)
         }
 
-        val chatRequest = ChatRequest.of(account.id, receiver.id)
+        val chatRequest = ChatRequest.of(accountId, receiver.id)
         chatRequestRepository.save(chatRequest)
 
         applicationEventPublisher.publishEvent(
@@ -58,11 +57,11 @@ class ChatService(
     }
 
     @Transactional
-    fun answer(id: Long, chatRequestUpdateDto: ChatRequestUpdateDto, account: Account) {
-        val chatRequest = chatRequestRepository.findById(id)
-            .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_CHAT_REQUEST) }
+    fun answer(id: Long, chatRequestUpdateDto: ChatRequestUpdateDto, accountId: Long) {
+        val chatRequest =
+            chatRequestRepository.findById(id) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_CHAT_REQUEST)
 
-        if (chatRequest.isSender(account.id)) {
+        if (chatRequest.isSender(accountId)) {
             throw BadRequestException(ErrorCode.EQUAL_ACCOUNT)
         }
         chatRequest.answer(chatRequestUpdateDto.answerType)
@@ -78,16 +77,17 @@ class ChatService(
         }
     }
 
-    fun findRequests(account: Account, pagination: Pagination): Page<ChatRequestResponseDto> {
-        val slice = chatRequestQueryRepository.findByAccountId(account.id, pagination, PageRequest.ofSize(pagination.size))
+    fun findRequests(accountId: Long, pagination: Pagination): Page<ChatRequestResponseDto> {
+        val slice =
+            chatRequestQueryRepository.findByAccountId(accountId, pagination, PageRequest.ofSize(pagination.size))
         val items = slice.content.map { ChatRequestResponseDto(it) }
         return Page(pageSize = pagination.size, slice.hasNext(), items)
     }
 
-    fun findRooms(account: Account): List<ChatRoomDto> {
+    fun findRooms(accountId: Long): List<ChatRoomDto> {
         val chatRooms =
-            this.chatRoomQueryRepository.findByAccount(account)
+            this.chatRoomQueryRepository.findByAccountId(accountId)
 
-        return chatRooms.map { ChatRoomDto(it, account.id) }
+        return chatRooms.map { ChatRoomDto(it, accountId) }
     }
 }
