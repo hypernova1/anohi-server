@@ -1,6 +1,6 @@
 package io.hs.anohi.post.domain
 
-import io.hs.anohi.core.BaseEntity
+import io.hs.anohi.core.AuditEntity
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm
 import jakarta.persistence.*
@@ -11,6 +11,11 @@ import org.hibernate.annotations.SQLRestriction
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
 class Post(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    var id: Long = 0,
+
     @Column(nullable = true)
     var title: String = "",
 
@@ -32,7 +37,7 @@ class Post(
     @Column
     val accountId: Long,
 
-) : BaseEntity() {
+) : AuditEntity() {
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()

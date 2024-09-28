@@ -1,10 +1,7 @@
 package io.hs.anohi.chat.domain
 
-import io.hs.anohi.core.BaseEntity
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
+import io.hs.anohi.core.AuditEntity
+import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -12,6 +9,11 @@ import org.hibernate.annotations.SQLRestriction
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE chat_request SET deleted_at = current_timestamp WHERE id = ?")
 class ChatRequest(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    var id: Long = 0,
+
     @Column
     val senderId: Long,
 
@@ -21,7 +23,7 @@ class ChatRequest(
     @Column
     @Enumerated(EnumType.STRING)
     var answerStatus: ChatRequestAnswerStatus = ChatRequestAnswerStatus.WAITING
-) : BaseEntity() {
+) : AuditEntity() {
 
 
     fun isSender(accountId: Long): Boolean {

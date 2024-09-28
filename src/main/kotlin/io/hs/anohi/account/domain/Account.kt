@@ -1,7 +1,7 @@
 package io.hs.anohi.account.domain
 
 import io.hs.anohi.account.application.payload.AccountUpdateForm
-import io.hs.anohi.core.BaseEntity
+import io.hs.anohi.core.AuditEntity
 import io.hs.anohi.infra.firebase.FirebaseUser
 import io.hs.anohi.post.application.payload.ImageDto
 import io.hs.anohi.post.domain.Image
@@ -14,20 +14,27 @@ import org.hibernate.annotations.*
 @Filter(name = "deletedAccountFilter", condition = "deleted_at IS NULL OR :deletedAt = true")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
 @SQLRestriction("deleted_at is null")
-class Account : BaseEntity() {
+class Account(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    var id: Long = 0,
 
     @Column(unique = true, nullable = false)
-    var uid: String = ""
+    var uid: String = "",
 
     @Column(nullable = false)
-    var email: String = ""
+    var email: String = "",
 
     @Column(nullable = false)
-    var name: String = ""
+    var name: String = "",
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var socialType: SocialType = SocialType.NONE;
+    var socialType: SocialType = SocialType.NONE
+
+) : AuditEntity() {
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()

@@ -1,6 +1,5 @@
 package io.hs.anohi.post.infra
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.post.domain.FavoritePost
 import io.hs.anohi.post.domain.FavoritePostRepository
 import io.hs.anohi.post.domain.Post
@@ -12,6 +11,6 @@ interface FavoritePostJpaRepository: FavoritePostRepository, JpaRepository<Favor
 
     @Modifying
     @Transactional
-    override fun deleteByPostAndAccount(post: Post, account: Account)
+    override fun deleteByPostAndAccountId(post: Post, accountId: Long)
 
 }

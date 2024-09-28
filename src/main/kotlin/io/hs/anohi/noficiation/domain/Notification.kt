@@ -1,11 +1,8 @@
 package io.hs.anohi.noficiation.domain
 
-import io.hs.anohi.core.BaseEntity
+import io.hs.anohi.core.AuditEntity
 import io.hs.anohi.noficiation.application.NotificationEvent
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
+import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -13,6 +10,11 @@ import org.hibernate.annotations.SQLRestriction
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE notification SET deleted_at = current_timestamp WHERE id = ?")
 class Notification(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    var id: Long = 0,
+
     @Column
     var message: String = "",
 
@@ -22,7 +24,7 @@ class Notification(
 
     @Column
     val accountId: Long
-) : BaseEntity() {
+) : AuditEntity() {
     companion object {
         fun from(notificationEvent: NotificationEvent): Notification {
             return Notification(

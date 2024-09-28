@@ -1,25 +1,26 @@
 package io.hs.anohi.post.domain
 
-import io.hs.anohi.account.domain.Account
-import io.hs.anohi.core.BaseEntity
-import jakarta.persistence.Entity
-import jakarta.persistence.ManyToOne
+import io.hs.anohi.core.AuditEntity
+import jakarta.persistence.*
 
 @Entity
-class FavoritePost: BaseEntity() {
+class FavoritePost(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    var id: Long = 0,
 
     @ManyToOne
-    lateinit var post: Post
+    var post: Post,
 
-    @ManyToOne
-    lateinit var account: Account
+    @Column
+    val accountId: Long
+) : AuditEntity() {
+
 
     companion object {
-        fun of(post: Post, account: Account): FavoritePost {
-            val favoritePost = FavoritePost()
-            favoritePost.post = post
-            favoritePost.account = account
-            return favoritePost
+        fun of(post: Post, accountId: Long): FavoritePost {
+            return FavoritePost(post = post, accountId = accountId)
         }
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.SliceImpl
 
-open class BaseQueryRepository<T : BaseEntity> {
+open class BaseQueryRepository<T : AuditEntity> {
     @Autowired
     protected lateinit var em: EntityManager
 

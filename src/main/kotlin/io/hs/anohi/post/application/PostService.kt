@@ -102,13 +102,13 @@ class PostService(
         val post = postRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_POST) }
 
-        val exist = favoritePostRepository.existsByPostAndAccount(post, account)
+        val exist = favoritePostRepository.existsByPostAndAccountId(post, account.id)
         if (exist) {
-            favoritePostRepository.deleteByPostAndAccount(post, account)
+            favoritePostRepository.deleteByPostAndAccountId(post, account.id)
             post.decreaseLike()
             return
         }
-        val favoritePost = FavoritePost.of(post, account)
+        val favoritePost = FavoritePost.of(post, account.id)
         favoritePostRepository.save(favoritePost)
         post.increaseLike()
     }
