@@ -7,7 +7,7 @@ import io.hs.anohi.chat.application.payload.ChatRequestUpdateDto
 import io.hs.anohi.chat.application.payload.ChatRoomDto
 import io.hs.anohi.core.Page
 import io.hs.anohi.core.Pagination
-import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
+import io.hs.anohi.infra.config.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

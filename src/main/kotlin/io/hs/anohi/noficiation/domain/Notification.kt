@@ -1,6 +1,6 @@
 package io.hs.anohi.noficiation.domain
 
-import io.hs.anohi.core.AuditEntity
+import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.noficiation.application.NotificationEvent
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete

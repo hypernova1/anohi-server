@@ -5,7 +5,7 @@ import io.hs.anohi.account.domain.QAccount.account
 import io.hs.anohi.chat.domain.ChatRequest
 import io.hs.anohi.chat.domain.ChatRequestAnswerStatus
 import io.hs.anohi.chat.domain.ChatRequestQueryRepository
-import io.hs.anohi.core.BaseQueryRepository
+import io.hs.anohi.core.persistence.BaseQueryRepository
 import io.hs.anohi.core.Pagination
 import io.hs.anohi.chat.domain.QChatRequest.chatRequest
 import org.springframework.data.domain.Pageable

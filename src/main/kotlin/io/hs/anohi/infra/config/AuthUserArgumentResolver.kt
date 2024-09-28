@@ -1,4 +1,4 @@
-package io.hs.anohi.infra.annotations
+package io.hs.anohi.infra.config
 
 import io.hs.anohi.core.ErrorCode
 import io.hs.anohi.core.exception.UnauthorizedException

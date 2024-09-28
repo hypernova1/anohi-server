@@ -10,9 +10,9 @@ import java.util.Date
 import java.util.UUID
 
 @Service
-class CommonService(private val amazonS3Config: AmazonS3Config) {
+class PreSignedUrlService(private val amazonS3Config: AmazonS3Config) {
 
-    fun getPreSignedUrl(folder: FolderType, extension: String, size: Int): List<URL> {
+    fun getUrls(folder: FolderType, extension: String, size: Int): List<URL> {
         val urls = mutableListOf<URL>()
         for (i: Int in 1..size) {
             val fileName = folder.value + "/" + UUID.randomUUID().toString() + "." + extension

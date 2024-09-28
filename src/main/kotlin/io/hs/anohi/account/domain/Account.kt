@@ -1,7 +1,7 @@
 package io.hs.anohi.account.domain
 
 import io.hs.anohi.account.application.payload.AccountUpdateForm
-import io.hs.anohi.core.AuditEntity
+import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.infra.firebase.FirebaseUser
 import io.hs.anohi.post.application.payload.ImageDto
 import io.hs.anohi.post.domain.Image

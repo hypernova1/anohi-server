@@ -1,4 +1,4 @@
-package io.hs.anohi.infra.annotations
+package io.hs.anohi.infra.config.annotations
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.TYPE_PARAMETER, AnnotationTarget.VALUE_PARAMETER)

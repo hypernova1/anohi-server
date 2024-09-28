@@ -1,6 +1,6 @@
 package io.hs.anohi.account.domain
 
-import io.hs.anohi.core.AuditEntity
+import io.hs.anohi.core.persistence.AuditEntity
 import jakarta.persistence.*
 
 @Entity

@@ -1,6 +1,6 @@
 package io.hs.anohi.post.domain
 
-import io.hs.anohi.core.AuditEntity
+import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm
 import jakarta.persistence.*

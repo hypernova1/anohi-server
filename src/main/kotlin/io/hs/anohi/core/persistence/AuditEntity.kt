@@ -1,4 +1,4 @@
-package io.hs.anohi.core
+package io.hs.anohi.core.persistence
 
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate

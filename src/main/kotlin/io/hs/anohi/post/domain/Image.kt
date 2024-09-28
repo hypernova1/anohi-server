@@ -1,7 +1,7 @@
 package io.hs.anohi.post.domain
 
 import io.hs.anohi.account.domain.Account
-import io.hs.anohi.core.AuditEntity
+import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.post.application.payload.ImageDto
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete

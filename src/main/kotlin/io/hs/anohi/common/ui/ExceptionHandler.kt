@@ -1,6 +1,8 @@
-package io.hs.anohi.core
+package io.hs.anohi.common.ui
 
 import com.google.firebase.auth.FirebaseAuthException
+import io.hs.anohi.core.ErrorCode
+import io.hs.anohi.core.ErrorResponse
 import io.hs.anohi.core.exception.HttpException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.ResponseEntity

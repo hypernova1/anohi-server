@@ -2,7 +2,7 @@ package io.hs.anohi.post.infra
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.dsl.Expressions
-import io.hs.anohi.core.BaseQueryRepository
+import io.hs.anohi.core.persistence.BaseQueryRepository
 import io.hs.anohi.post.domain.Post
 import io.hs.anohi.post.domain.QImage.image
 import io.hs.anohi.post.domain.QPost.post

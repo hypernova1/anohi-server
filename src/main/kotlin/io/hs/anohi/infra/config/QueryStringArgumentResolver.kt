@@ -1,7 +1,7 @@
 package io.hs.anohi.infra.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
+import io.hs.anohi.infra.config.annotations.QueryStringArgumentResolver
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration

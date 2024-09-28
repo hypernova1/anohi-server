@@ -1,7 +1,7 @@
 package io.hs.anohi.post.ui
 
 import io.hs.anohi.core.Page
-import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
+import io.hs.anohi.infra.config.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthUser
 import io.hs.anohi.post.application.PostService
 import io.hs.anohi.post.application.payload.PostDetail

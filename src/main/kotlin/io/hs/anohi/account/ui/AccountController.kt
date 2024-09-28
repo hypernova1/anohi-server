@@ -5,7 +5,7 @@ import io.hs.anohi.account.application.payload.AccountDetail
 import io.hs.anohi.account.application.payload.AccountJoinForm
 import io.hs.anohi.account.application.payload.AccountUpdateForm
 import io.hs.anohi.core.Page
-import io.hs.anohi.infra.annotations.QueryStringArgumentResolver
+import io.hs.anohi.infra.config.annotations.QueryStringArgumentResolver
 import io.hs.anohi.infra.security.AuthUser
 import io.hs.anohi.post.application.EmotionService
 import io.hs.anohi.post.application.PostService

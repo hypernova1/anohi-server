@@ -1,14 +1,12 @@
 package io.hs.anohi.chat.infra
 
 import com.querydsl.core.BooleanBuilder
-import io.hs.anohi.account.domain.Account
-import io.hs.anohi.account.domain.QAccount.account
 import io.hs.anohi.chat.domain.ChatRoom
 import io.hs.anohi.chat.domain.ChatRoomQueryRepository
 import io.hs.anohi.chat.domain.QChatMessage.chatMessage
 import io.hs.anohi.chat.domain.QChatRoom.chatRoom
 import io.hs.anohi.chat.domain.QChatRoomAccount.chatRoomAccount
-import io.hs.anohi.core.BaseQueryRepository
+import io.hs.anohi.core.persistence.BaseQueryRepository
 import org.springframework.stereotype.Repository
 
 @Repository

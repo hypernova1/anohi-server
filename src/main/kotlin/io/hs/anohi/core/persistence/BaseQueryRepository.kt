@@ -1,4 +1,4 @@
-package io.hs.anohi.core
+package io.hs.anohi.core.persistence
 
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.NumberPath
