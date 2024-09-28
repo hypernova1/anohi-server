@@ -15,7 +15,7 @@ class Tag(
     var id: Long = 0,
 
     @Column
-    var name: String = "",
+    val name: String,
 
     @ManyToMany(mappedBy = "tags")
     val posts: MutableList<Post> = mutableListOf()
@@ -24,8 +24,7 @@ class Tag(
 
     companion object {
         fun create(name: String): Tag {
-            val tag = Tag()
-            tag.name = name
+            val tag = Tag(name = name)
             return tag;
         }
     }

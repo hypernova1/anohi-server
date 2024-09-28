@@ -13,13 +13,11 @@ class ChatRoom(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @ManyToMany
     val accounts: List<Account> = mutableListOf(),
 
     @OneToMany
     val messages: List<ChatMessage> = mutableListOf()
-) : AuditEntity() {
-
-}
+) : AuditEntity()

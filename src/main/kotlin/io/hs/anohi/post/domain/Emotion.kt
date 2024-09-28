@@ -12,7 +12,7 @@ class Emotion(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column
     @Enumerated(EnumType.STRING)

@@ -8,12 +8,9 @@ class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Enumerated(EnumType.STRING)
-    var name: RoleName = RoleName.ROLE_USER,
-
-    @ManyToMany(mappedBy = "roles")
-    var accounts: MutableSet<Account> = HashSet()
+    val name: RoleName = RoleName.ROLE_USER,
 
 ) : AuditEntity()

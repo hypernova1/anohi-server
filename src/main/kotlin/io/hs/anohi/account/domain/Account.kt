@@ -18,23 +18,22 @@ class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column(unique = true, nullable = false)
-    var uid: String = "",
+    val uid: String = "",
 
     @Column(nullable = false)
-    var email: String = "",
+    val email: String = "",
 
     @Column(nullable = false)
     var name: String = "",
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var socialType: SocialType = SocialType.NONE
+    val socialType: SocialType = SocialType.NONE
 
 ) : AuditEntity() {
-
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
@@ -57,7 +56,7 @@ class Account(
     var numberOfVisitors: Int = 0
 
     @Column(nullable = false)
-    var isActive: Boolean = false
+    var isActive: Boolean = true
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()
@@ -78,11 +77,13 @@ class Account(
 
     companion object {
         fun of(firebaseUser: FirebaseUser, role: Role): Account {
-            val account = Account()
-            account.uid = firebaseUser.uid
-            account.name = firebaseUser.name.orEmpty()
-            account.email = firebaseUser.email
-            account.isActive = true
+            val account = Account(
+                uid = firebaseUser.uid,
+                name = firebaseUser.name.orEmpty(),
+                email = firebaseUser.email,
+                socialType = firebaseUser.socialType
+            )
+
             if (firebaseUser.profileImagePath != null) {
                 account.images =
                     mutableListOf(
@@ -99,7 +100,6 @@ class Account(
             } else {
                 account.images = mutableListOf()
             }
-            account.socialType = firebaseUser.socialType
             account.roles.add(role)
             return account
         }

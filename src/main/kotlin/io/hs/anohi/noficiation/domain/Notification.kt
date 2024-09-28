@@ -13,14 +13,14 @@ class Notification(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column
-    var message: String = "",
+    val message: String,
 
     @Enumerated(EnumType.STRING)
     @Column
-    var type: NotificationType = NotificationType.NONE,
+    val type: NotificationType = NotificationType.NONE,
 
     @Column
     val accountId: Long

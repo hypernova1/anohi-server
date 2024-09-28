@@ -17,7 +17,7 @@ class Image(
     var id: Long = 0,
 
     @Column(columnDefinition = "text")
-    var originUrl: String = "",
+    var originUrl: String,
 
     @Column(columnDefinition = "text")
     var thumbnailUrl: String = "",
@@ -43,12 +43,7 @@ class Image(
 
     companion object {
         fun from(dto: ImageDto): Image {
-            val image = Image()
-            image.originUrl = dto.path
-            image.width = dto.width
-            image.height = dto.height
-            image.blurHash = dto.blurHash
-            return image
+            return Image(originUrl = dto.path, width = dto.width, height = dto.height, blurHash = dto.blurHash)
         }
     }
 

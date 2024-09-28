@@ -12,16 +12,14 @@ class ChatMessage(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @ManyToOne
-    var chatRoom: ChatRoom,
+    val chatRoom: ChatRoom,
 
     @Column
     val senderId: Long,
 
     @Column
     val message: String = ""
-) : AuditEntity() {
-
-}
+) : AuditEntity()

@@ -12,7 +12,7 @@ class ChatRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column
     val senderId: Long,
@@ -24,7 +24,6 @@ class ChatRequest(
     @Enumerated(EnumType.STRING)
     var answerStatus: ChatRequestAnswerStatus = ChatRequestAnswerStatus.WAITING
 ) : AuditEntity() {
-
 
     fun isSender(accountId: Long): Boolean {
         return this.senderId == accountId

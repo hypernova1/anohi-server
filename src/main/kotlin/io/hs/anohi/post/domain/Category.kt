@@ -12,8 +12,8 @@ class Category(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column
-    val name: String = ""
+    val name: String
 ) : AuditEntity()

@@ -14,10 +14,10 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long = 0,
+    val id: Long = 0,
 
     @Column(nullable = true)
-    var title: String = "",
+    var title: String,
 
     @Column(nullable = false, columnDefinition = "text")
     var content: String = "",
@@ -37,7 +37,7 @@ class Post(
     @Column
     val accountId: Long,
 
-) : AuditEntity() {
+    ) : AuditEntity() {
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var images: MutableList<Image> = mutableListOf()
@@ -81,9 +81,13 @@ class Post(
     companion object {
 
         fun of(postRequestForm: PostRequestForm, accountId: Long, tags: List<Tag>, emotion: Emotion?): Post {
-            val post = Post(title = postRequestForm.title, content = postRequestForm.content, accountId = accountId)
+            val post = Post(
+                title = postRequestForm.title,
+                content = postRequestForm.content,
+                accountId = accountId,
+                emotion = emotion,
+            )
             post.tags.addAll(tags)
-            post.emotion = emotion
             val images = postRequestForm.images.map { Image.from(it) }
             post.images.addAll(images)
             return post
