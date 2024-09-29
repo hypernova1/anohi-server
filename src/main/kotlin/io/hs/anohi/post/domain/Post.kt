@@ -5,40 +5,47 @@ import io.hs.anohi.image.Image
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
-@Entity
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
+@Table(
+    name = "post", indexes = [
+        Index(name = "post_account_id_idx", columnList = "account_id")
+    ]
+)
+@Entity
 class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "id", columnDefinition = "bigint")
     val id: Long = 0,
 
-    @Column(nullable = true)
+    @Column(name = "title", columnDefinition = "varchar", nullable = true)
     var title: String,
 
-    @Column(nullable = false, columnDefinition = "text")
+    @Column(name = "content", columnDefinition = "text", nullable = false)
     var content: String = "",
 
-    @Column(nullable = false)
+    @ColumnDefault("0")
+    @Column(name = "hit", columnDefinition = "integer", nullable = false)
     var hit: Long = 0,
 
-    @Column(nullable = false)
+    @Column(name = "number_of_likes", columnDefinition = "integer", nullable = false)
     var numberOfLikes: Long = 0,
 
     @ManyToMany
     val tags: MutableList<Tag> = mutableListOf(),
 
     @ManyToOne
+    @JoinColumn(name = "emotion_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var emotion: Emotion? = null,
 
-    @Column
+    @Column(name = "account_id", columnDefinition = "bigint", nullable = false)
     val accountId: Long,
-
-    ) : AuditEntity() {
+) : AuditEntity() {
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL])
     var postImages: MutableList<PostImage> = mutableListOf()

@@ -7,29 +7,31 @@ import io.hs.anohi.post.application.payload.ImageDto
 import io.hs.anohi.image.Image
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Table
 import org.hibernate.annotations.*
 
-@Entity
 @FilterDef(name = "deletedAccountFilter", parameters = [ParamDef(name = "deletedAt", type = Boolean::class)])
 @Filter(name = "deletedAccountFilter", condition = "deleted_at IS NULL OR :deletedAt = true")
 @SQLDelete(sql = "UPDATE account SET deleted_at = current_timestamp WHERE id = ?")
 @SQLRestriction("deleted_at is null")
+@Table(name = "account")
+@Entity
 class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "id", columnDefinition = "bigint", nullable = false)
     val id: Long = 0,
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "uid", columnDefinition = "varchar", unique = true, nullable = false)
     val uid: String,
 
-    @Column(nullable = false)
+    @Column(name = "email", columnDefinition = "varchar", nullable = false)
     val email: String,
 
-    @Column(nullable = false)
+    @Column(name = "name", columnDefinition = "varchar", nullable = false)
     var name: String = "",
 
-    @Column(nullable = false)
+    @Column(name = "social_type", nullable = false)
     @Enumerated(EnumType.STRING)
     val socialType: SocialType = SocialType.NONE
 
@@ -42,14 +44,11 @@ class Account(
             field.addAll(value)
         }
 
-    @Column(nullable = true)
+    @Column(name = "description", columnDefinition = "varchar", nullable = true)
     var description: String = ""
 
-    @Column(nullable = false)
+    @Column(name = "number_of_visitors", columnDefinition = "integer", nullable = false)
     var numberOfVisitors: Int = 0
-
-    @Column(nullable = false)
-    var isActive: Boolean = true
 
     @ManyToMany(cascade = [CascadeType.ALL])
     var roles: MutableSet<Role> = HashSet()

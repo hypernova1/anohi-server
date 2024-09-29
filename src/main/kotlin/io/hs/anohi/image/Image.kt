@@ -17,19 +17,19 @@ class Image(
     @Column(nullable = false)
     val id: Long = 0,
 
-    @Column(columnDefinition = "text")
+    @Column(name = "origin_url", columnDefinition = "varchar", nullable = false)
     var originUrl: String,
 
-    @Column(columnDefinition = "text")
+    @Column(name = "thumbnail_url", columnDefinition = "varchar", nullable = true)
     var thumbnailUrl: String = "",
 
-    @Column(columnDefinition = "integer")
+    @Column(name = "width", columnDefinition = "integer", nullable = true)
     var width: Int? = null,
 
-    @Column(columnDefinition = "integer")
+    @Column(name = "height", columnDefinition = "integer", nullable = true)
     var height: Int? = null,
 
-    @Column(columnDefinition = "varchar(255)")
+    @Column(name = "blur_hash", columnDefinition = "varchar", nullable = true)
     var blurHash: String? = null,
 
     @OneToMany(mappedBy = "image", cascade = [CascadeType.ALL])

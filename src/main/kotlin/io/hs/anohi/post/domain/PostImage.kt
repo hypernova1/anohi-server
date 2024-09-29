@@ -8,6 +8,7 @@ import jakarta.persistence.*
 class PostImage(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", columnDefinition = "bigint")
     val id: Long = 0,
 
     @ManyToOne

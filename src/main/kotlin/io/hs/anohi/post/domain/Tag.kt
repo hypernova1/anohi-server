@@ -7,14 +7,15 @@ import org.hibernate.annotations.SQLRestriction
 
 @SQLRestriction("deleted_at is null")
 @SQLDelete(sql = "UPDATE tag SET deleted_at = current_timestamp WHERE id = ?")
+@Table(name = "tag")
 @Entity
 class Tag(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "id", columnDefinition = "bigint")
     val id: Long = 0,
 
-    @Column
+    @Column(name = "name", columnDefinition = "varchar", nullable = false)
     val name: String,
 
     @ManyToMany(mappedBy = "tags")
