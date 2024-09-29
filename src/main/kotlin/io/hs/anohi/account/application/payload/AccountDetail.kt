@@ -46,7 +46,7 @@ class AccountDetail(
         createdAt = account.createdAt.toString(),
         socialType = account.socialType,
         image = if (account.images.isNotEmpty()) {
-            ImageDto(account.images[0])
+            ImageDto(account.images[0].image)
         } else {
             null
         },

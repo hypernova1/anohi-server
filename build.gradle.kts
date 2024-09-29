@@ -64,6 +64,12 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 }
 
+configurations {
+    all {
+        exclude(group = "commons-logging", module = "commons-logging")
+    }
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")

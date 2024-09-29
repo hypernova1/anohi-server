@@ -1,6 +1,7 @@
 package io.hs.anohi.post.domain
 
 import io.hs.anohi.account.domain.Account
+import io.hs.anohi.account.domain.AccountImage
 import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.post.application.payload.ImageDto
 import jakarta.persistence.*
@@ -31,14 +32,8 @@ class Image(
     @Column(columnDefinition = "varchar(255)")
     var blurHash: String? = null,
 
-    @ManyToMany(mappedBy = "images")
-    var posts: MutableList<Post> = mutableListOf(),
-
-    @ManyToMany(mappedBy = "images")
-    var users: MutableList<Account> = mutableListOf(),
-
-    @ManyToMany(mappedBy = "backgroundImages")
-    var users2: MutableList<Account> = mutableListOf()
+    @OneToMany(mappedBy = "image", cascade = [CascadeType.ALL])
+    val accountImages: List<AccountImage> = mutableListOf()
 ) : AuditEntity() {
 
     companion object {

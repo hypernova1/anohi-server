@@ -9,7 +9,7 @@ data class Sender(
 ) {
     constructor(account: Account) : this(
         id = account.id, image = if (account.images.isNotEmpty()) {
-            ImageDto(account.images[0])
+            ImageDto(account.images[0].image)
         } else {
             null
         }

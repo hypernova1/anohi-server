@@ -35,8 +35,8 @@ class Account(
 
 ) : AuditEntity() {
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    var images: MutableList<Image> = mutableListOf()
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
+    var images: MutableList<AccountImage> = mutableListOf()
         set(value) {
             field.clear()
             field.addAll(value)
@@ -64,7 +64,13 @@ class Account(
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name
         if (updateForm.image != null) {
-            this.images = mutableListOf(Image.from(updateForm.image!!))
+            this.images = mutableListOf(
+                AccountImage(
+                    image = Image.from(updateForm.image),
+                    account = this,
+                    type = AccountImageType.REPRESENTATION,
+                )
+            )
         } else {
             this.images = mutableListOf()
         }
@@ -87,15 +93,18 @@ class Account(
             if (firebaseUser.profileImagePath != null) {
                 account.images =
                     mutableListOf(
-                        Image.from(
-                            ImageDto(
-                                id = null,
-                                path = firebaseUser.profileImagePath,
-                                null,
-                                null,
-                                null
-                            )
+                        AccountImage(
+                            account = account, image = Image.from(
+                                ImageDto(
+                                    id = null,
+                                    path = firebaseUser.profileImagePath,
+                                    null,
+                                    null,
+                                    null
+                                )
+                            ), type = AccountImageType.REPRESENTATION
                         )
+
                     )
             } else {
                 account.images = mutableListOf()

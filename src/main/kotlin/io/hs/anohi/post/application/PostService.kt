@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional(readOnly = true)
 class PostService(
     private val postRepository: PostRepository,
     private val tagService: TagService,
@@ -87,12 +86,10 @@ class PostService(
             mutableListOf()
         }
 
-
         val post =
             postRepository.findByIdAndAccountId(id, accountId) ?: throw NotFoundException(ErrorCode.CANNOT_FOUND_POST)
 
         post.update(postUpdateForm, tags = tags, emotion = emotion)
-        postRepository.save(post)
 
         return PostDetail(post)
     }
