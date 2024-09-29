@@ -1,6 +1,6 @@
 package io.hs.anohi.post.application.payload
 
-import io.hs.anohi.post.domain.Image
+import io.hs.anohi.image.Image
 
 
 data class ImageDto(

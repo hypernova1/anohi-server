@@ -1,9 +1,9 @@
-package io.hs.anohi.post.domain
+package io.hs.anohi.image
 
-import io.hs.anohi.account.domain.Account
 import io.hs.anohi.account.domain.AccountImage
 import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.post.application.payload.ImageDto
+import io.hs.anohi.post.domain.PostImage
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
@@ -33,7 +33,10 @@ class Image(
     var blurHash: String? = null,
 
     @OneToMany(mappedBy = "image", cascade = [CascadeType.ALL])
-    val accountImages: List<AccountImage> = mutableListOf()
+    val accountImages: List<AccountImage> = mutableListOf(),
+
+    @OneToMany(mappedBy = "image", cascade = [CascadeType.ALL])
+    val postImages: List<PostImage> = mutableListOf()
 ) : AuditEntity() {
 
     companion object {

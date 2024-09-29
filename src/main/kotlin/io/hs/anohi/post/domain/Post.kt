@@ -1,6 +1,7 @@
 package io.hs.anohi.post.domain
 
 import io.hs.anohi.core.persistence.AuditEntity
+import io.hs.anohi.image.Image
 import io.hs.anohi.post.application.payload.PostRequestForm
 import io.hs.anohi.post.application.payload.PostUpdateForm
 import jakarta.persistence.*
@@ -39,8 +40,8 @@ class Post(
 
     ) : AuditEntity() {
 
-    @ManyToMany(cascade = [CascadeType.ALL])
-    var images: MutableList<Image> = mutableListOf()
+    @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL])
+    var postImages: MutableList<PostImage> = mutableListOf()
         set(value) {
             field.clear()
             field.addAll(value)
@@ -57,13 +58,7 @@ class Post(
 
     private fun setImages(postUpdateForm: PostUpdateForm) {
         val images = postUpdateForm.images ?: return
-
-        if (images.isEmpty()) {
-            this.images = mutableListOf()
-            return
-        }
-
-        this.images = images.map { Image.from(it) }.toList().toMutableList()
+        this.postImages = images.map { PostImage(post = this, image = Image.from(it)) }.toList().toMutableList()
     }
 
     fun increaseHit() {
@@ -88,8 +83,8 @@ class Post(
                 emotion = emotion,
             )
             post.tags.addAll(tags)
-            val images = postRequestForm.images.map { Image.from(it) }
-            post.images.addAll(images)
+            val images = postRequestForm.images.map { PostImage(post = post, image = Image.from(it)) }
+            post.postImages.addAll(images)
             return post
         }
     }

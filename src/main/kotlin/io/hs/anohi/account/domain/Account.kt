@@ -4,7 +4,7 @@ import io.hs.anohi.account.application.payload.AccountUpdateForm
 import io.hs.anohi.core.persistence.AuditEntity
 import io.hs.anohi.infra.firebase.FirebaseUser
 import io.hs.anohi.post.application.payload.ImageDto
-import io.hs.anohi.post.domain.Image
+import io.hs.anohi.image.Image
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType
 import org.hibernate.annotations.*
@@ -21,10 +21,10 @@ class Account(
     val id: Long = 0,
 
     @Column(unique = true, nullable = false)
-    val uid: String = "",
+    val uid: String,
 
     @Column(nullable = false)
-    val email: String = "",
+    val email: String,
 
     @Column(nullable = false)
     var name: String = "",
@@ -37,13 +37,6 @@ class Account(
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
     var images: MutableList<AccountImage> = mutableListOf()
-        set(value) {
-            field.clear()
-            field.addAll(value)
-        }
-
-    @ManyToMany
-    var backgroundImages: MutableList<Image> = mutableListOf()
         set(value) {
             field.clear()
             field.addAll(value)
@@ -64,15 +57,13 @@ class Account(
     fun update(updateForm: AccountUpdateForm) {
         this.name = updateForm.name ?: this.name
         if (updateForm.image != null) {
-            this.images = mutableListOf(
+            this.images.add(
                 AccountImage(
                     image = Image.from(updateForm.image),
                     account = this,
                     type = AccountImageType.REPRESENTATION,
                 )
             )
-        } else {
-            this.images = mutableListOf()
         }
         this.description = updateForm.description ?: this.description
     }
@@ -82,7 +73,7 @@ class Account(
     }
 
     companion object {
-        fun of(firebaseUser: FirebaseUser, role: Role): Account {
+        fun create(firebaseUser: FirebaseUser, role: Role): Account {
             val account = Account(
                 uid = firebaseUser.uid,
                 name = firebaseUser.name.orEmpty(),
@@ -91,25 +82,23 @@ class Account(
             )
 
             if (firebaseUser.profileImagePath != null) {
-                account.images =
-                    mutableListOf(
-                        AccountImage(
-                            account = account, image = Image.from(
-                                ImageDto(
-                                    id = null,
-                                    path = firebaseUser.profileImagePath,
-                                    null,
-                                    null,
-                                    null
-                                )
-                            ), type = AccountImageType.REPRESENTATION
-                        )
-
+                account.images.add(
+                    AccountImage(
+                        account = account, image = Image.from(
+                            ImageDto(
+                                id = null,
+                                path = firebaseUser.profileImagePath,
+                                null,
+                                null,
+                                null
+                            )
+                        ), type = AccountImageType.REPRESENTATION
                     )
-            } else {
-                account.images = mutableListOf()
+                )
             }
+
             account.roles.add(role)
+
             return account
         }
     }

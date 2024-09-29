@@ -36,7 +36,7 @@ class AccountService(
         val role = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow { NotFoundException(ErrorCode.CANNOT_FOUND_ROLE) }
 
-        val account = Account.of(firebaseUser, role)
+        val account = Account.create(firebaseUser, role)
 
         return this.accountRepository.save(account)
     }

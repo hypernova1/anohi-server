@@ -47,7 +47,7 @@ data class PostDetail(
         post.content,
         post.tags.map { it.name },
         post.emotion?.id,
-        post.images.map { ImageDto(it) },
+        post.postImages.map { ImageDto(it.image) },
         null,
         post.createdAt.toString(),
         post.updatedAt.toString(),
