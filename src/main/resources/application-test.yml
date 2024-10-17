@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  datasource:
+    url: jdbc:h2:mem:anohi
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # 스웨거 설정
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+      hibernate:
+        type: trace

@@ -15,7 +15,7 @@ class TagService(private val tagRepository: TagRepository) {
         val existTagNames = tags.map { it.name }
         val notExistTagNames = tagNames.filter { !existTagNames.contains(it) }
         val notExistTags = notExistTagNames.map { Tag.create(it) }
-//        this.tagRepository.saveAll(notExistTags);
+        notExistTags.forEach { this.tagRepository.save(it) }
 
         tags.addAll(notExistTags)
 
